@@ -1,7 +1,6 @@
 <?php
-session_start();
+    session_start();
 ?>
-
 
 <?php
 function mostrarFormulario(){
@@ -176,6 +175,7 @@ function redireccionar(){
             mostrarFormulario();
         }else{
             redireccionar();
+            header('Location: dashboard.php');
         }
         //require_once("footer.php");
     ?>

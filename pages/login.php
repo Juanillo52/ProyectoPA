@@ -53,7 +53,7 @@ function comprobarFormulario(){
             if($ok){
                 $resultado = verificarLogin();
                 if(!$resultado){
-                    echo "Contrase&ntildea incorrecta.<br>";
+                    echo "Clave incorrecta.<br>";
                 }
             }         
     }
@@ -65,7 +65,7 @@ function comprobarDatosFormulario(){
     else{$_POST['dni'] = filter_input(INPUT_POST, "dni", FILTER_SANITIZE_STRING);} 
     
     if(!isset($_POST['password']) || $_POST['password'] == ''){$errores[] = "Introduzca la clave de acceso.";}
-    else{$_POST['pass'] = filter_input(INPUT_POST, "pass", FILTER_SANITIZE_STRING);} 
+    else{$_POST['password'] = filter_input(INPUT_POST, "password", FILTER_SANITIZE_STRING);} 
     
     if(!isset($errores)){
         return True;
@@ -92,12 +92,12 @@ function verificarLogin(){
         die ('No puedo usar la base de datos: ' . mysqli_error($con));
     }
 
-    $resQuery = mysqli_query($con, "SELECT dni, password from cliente WHERE dni = '$dni'");
+    $resQuery = mysqli_query($con, "SELECT dni, clave from cliente WHERE dni = '$dni'");
     if (!$resQuery) {
         die ("Error al ejecutar la consulta: " . mysqli_error($con));
     }else{
         $data = mysqli_fetch_array($resQuery);
-        $hash = $data['password'];
+        $hash = $data['clave'];
 
         if($data['dni'] == $dni && password_verify($password, $hash)){
             $resultado = True;
@@ -177,7 +177,9 @@ function redireccionar(){
         }else{
             redireccionar();
         }
+        //require_once("footer.php");
     ?>
+    
 
     <script src="https://cdn.jsdelivr.net/npm/jquery@2.2.4/dist/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.4/dist/umd/popper.min.js"></script>

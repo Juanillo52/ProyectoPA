@@ -1,3 +1,95 @@
+<?php
+    session_start();
+?>
+
+<?php
+    function mostrarPensiones(){
+        //Left Panel
+        require_once("nav.php");
+        //#left-panel
+        echo '<!-- Right Panel -->
+        <div id="right-panel" class="right-panel">';
+            //Header
+            require_once("header.php");
+            //#header
+            echo '<!-- Content -->
+            <div class="content">
+                <div class="row card">
+                    <h1 class="card-header">Plan de pensiones</h1>
+                        <div class="card-body">';
+
+                        $con = mysqli_connect("localhost","root","");
+
+                        if (!$con){
+                            die(' No puedo conectar: ' . mysqli_error($con));
+                        }
+                    
+                        $db_selected = mysqli_select_db($con, "mensabank");
+                    
+                        if (!$db_selected){
+                            die ('No puedo usar la base de datos: ' . mysqli_error($con));
+                        }
+                    
+                        $dni = $_SESSION['dni'];
+    
+                        $resQuery = mysqli_query($con, "SELECT * from plan_pensiones WHERE cliente = '$dni'");
+                        
+                        if (!$resQuery) {
+                            die ("Error al ejecutar la consulta: " . mysqli_error($con));
+                        }else{
+                            if(mysqli_num_rows($resQuery) != 0){
+                                while($row = mysqli_fetch_array($resQuery)){
+                                    echo '<p>Cantidad total depositada: '+ $row['cantidad'] +' euros</p>
+                                    <br/>';
+
+                                    $id = $row['id'];
+                                    $resQuery2 = mysqli_query($con, "SELECT * from deposito WHERE plan = '$id'");
+
+                                    if (!$resQuery2) {
+                                        die ("Error al ejecutar la consulta: " . mysqli_error($con));
+                                    }else{
+                                        if(mysqli_num_rows($resQuery2) != 0){
+                                            echo ' <p>Depósitos:</p>
+    
+                                            <table class="table table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <td>Fecha</td>
+                                                        <td>Importe</td>
+                                                        <td>Cuenta</td>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>';
+
+                                            while($row2 = mysqli_fetch_array($resQuery2)){
+                                                echo '<tr>
+                                                        <td>'+ $row2['fecha'] +'</td>
+                                                        <td>'+ $row2['importe'] +'</td>
+                                                        <td>'+ $row2['cuenta'] +'</td>
+                                                    </tr>';
+                                            }
+
+                                            echo '   </tbody>
+                                            </table>';
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                              
+                        mysqli_close($con);
+                        echo '</div>
+                </div>
+            </div>
+            <!-- /.content -->';
+            //Footer
+            require_once("footer.php");
+            //.site-footer
+        echo '</div>
+        <!-- /#right-panel -->';
+    }
+?>
+
 <!doctype html>
 <!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang=""> <![endif]-->
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8" lang=""> <![endif]-->
@@ -74,53 +166,13 @@
 </head>
 
 <body class="bg-color">
-    <!-- Left Panel -->
-    <?php require_once("nav.php"); ?>
-    <!-- /#left-panel -->
-    <!-- Right Panel -->
-    <div id="right-panel" class="right-panel">
-        <!-- Header-->
-        <?php require_once("header.php"); ?>
-        <!-- /#header -->
-        <!-- Content -->
-        <div class="content">
-            <div class="row card">
-                <h1 class="card-header">Plan de pensiones</h1>
-                    <div class="card-body">
-                        <p>Cantidad total depositada: 54670 euros</p>
-                        <br/>
-                        <p>Depósitos:</p>
-
-                        <table class="table table-bordered">
-                            <thead>
-                                <tr>
-                                    <td>Fecha</td>
-                                    <td>Importe</td>
-                                    <td>Cuenta</td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>20/12/2019</td>
-                                    <td>2500</td>
-                                    <td>ES6621000418401234567891</td>
-                                </tr>
-                                <tr>
-                                    <td>22/12/2019</td>
-                                    <td>2800</td>
-                                    <td>ES6621000418401234567891</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-            </div>
-        </div>
-        <!-- /.content -->
-        <!-- Footer -->
-        <?php require_once("footer.php"); ?>
-        <!-- /.site-footer -->
-    </div>
-    <!-- /#right-panel -->
+    <?php
+        if($_SESSION['login'] == True){
+            mostrarPensiones();
+        }else{
+            header('Location: login.php');
+        }
+    ?>
 
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/jquery@2.2.4/dist/jquery.min.js"></script>

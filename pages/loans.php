@@ -1,3 +1,94 @@
+<?php
+    session_start();
+?>
+
+
+<?php
+    function mostrarPrestamos(){
+        //Left Panel -->
+        require_once("nav.php");
+        //#left-panel
+        echo '<!-- Right Panel -->
+        <div id="right-panel" class="right-panel">';
+            //Header
+            require_once("header.php");
+            //#header
+            echo '<!-- Content -->
+            <div class="content">
+                <div class="row card">
+                    <h1 class="card-header">Préstamos</h1>
+                        <div class="card-body">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <td>Importe</td>
+                                        <td>Tipo</td>
+                                        <td>Entrada</td>
+                                        <td>Cuenta</td>
+                                        <td>Cuota</td>
+                                        <td>Interés</td>
+                                        <td>Pagado</td>
+                                        <td>Fecha límite</td>
+                                    </tr>
+                                </thead>
+                                <tbody>';
+
+                                $con = mysqli_connect("localhost","root","");
+
+                                if (!$con){
+                                    die(' No puedo conectar: ' . mysqli_error($con));
+                                }
+                            
+                                $db_selected = mysqli_select_db($con, "mensabank");
+                            
+                                if (!$db_selected){
+                                    die ('No puedo usar la base de datos: ' . mysqli_error($con));
+                                }
+                            
+                                $dni = $_SESSION['dni'];
+
+                                $resQuery = mysqli_query($con, "SELECT * from prestamo WHERE cliente = '$dni'");
+                                
+                                if (!$resQuery) {
+                                    die ("Error al ejecutar la consulta: " . mysqli_error($con));
+                                }else{
+                                    if(mysqli_num_rows($resQuery) != 0){
+
+                                        while($row = mysqli_fetch_array($resQuery)){
+                                            echo '<tr>
+                                                        <td>'+ $row['credito'] +' euros</td>
+                                                        <td>'+ $row['tipo'] +'</td>
+                                                        <td>'+ $row['entrada'] +'</td>
+                                                        <td>'+ $row['cuenta'] +'</td>
+                                                        <td>'+ $row['cuota'] +' euros</td>
+                                                        <td>'+ $row['intereses'] +'</td>
+                                                        <td>'+ $row['pagado'] +'</td>
+                                                        <td>'+ $row['fecha_limite'] +'</td>
+                                                    </tr>';
+                                        }
+
+                                        echo '</tbody>
+                                        </table>';
+                                    }
+
+                                }
+                                
+                                mysqli_close($con);
+
+                            echo '
+                        </div>
+                </div>
+            </div>
+            <!-- /.content -->';
+            //Footer
+            require_once("footer.php");
+            //.site-footer
+        
+        echo'    </div>
+        <!-- /#right-panel -->';
+    }
+?>
+
 <!doctype html>
 <!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang=""> <![endif]-->
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8" lang=""> <![endif]-->
@@ -67,83 +158,13 @@
 </head>
 
 <body class="bg-color">
-    <!-- Left Panel -->
-    <?php require_once("nav.php"); ?>
-    <!-- /#left-panel -->
-    <!-- Right Panel -->
-    <div id="right-panel" class="right-panel">
-        <!-- Header-->
-        <?php require_once("header.php"); ?>
-        <!-- /#header -->
-        <!-- Content -->
-        <div class="content">
-            <div class="row card">
-                <h1 class="card-header">Préstamos</h1>
-                    <div class="card-body">
-                        <table class="table table-bordered">
-                            <thead>
-                                <tr>
-                                    <td>Importe</td>
-                                    <td>Tipo</td>
-                                    <td>Entrada</td>
-                                    <td>Cuenta</td>
-                                    <td>Cuota</td>
-                                    <td>Interés</td>
-                                    <td>Pagado</td>
-                                    <td>Fecha límite</td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>5000</td>
-                                    <td>Personal</td>
-                                    <td>750</td>
-                                    <td>ES6621000418401234567891</td>
-                                    <td>343 euros</td>
-                                    <td>1,5%</td>
-                                    <td>1567</td>
-                                    <td>10/01/2020</td>
-                                </tr>
-                            </tbody>
-                        </table>
-
-                        <table class="table table-bordered">
-                            <thead>
-                                <tr>
-                                    <td>Importe</td>
-                                    <td>Tipo</td>
-                                    <td>Entrada</td>
-                                    <td>Cuenta</td>
-                                    <td>Cuota</td>
-                                    <td>Interés</td>
-                                    <td>Pagado</td>
-                                    <td>Fecha límite</td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>500000</td>
-                                    <td>Hipotecario</td>
-                                    <td>75000</td>
-                                    <td>ES6621000418401234567891</td>
-                                    <td>1500 euros</td>
-                                    <td>1,5%</td>
-                                    <td>120000</td>
-                                    <td>10/01/2020</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-            </div>
-
-        
-        </div>
-        <!-- /.content -->
-        <!-- Footer -->
-        <?php require_once("footer.php"); ?>
-        <!-- /.site-footer -->
-    </div>
-    <!-- /#right-panel -->
+    <?php
+        if($_SESSION['login'] == True){
+            mostrarPrestamos();
+        }else{
+            header('Location: login.php');
+        }
+    ?>
 
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/jquery@2.2.4/dist/jquery.min.js"></script>

@@ -1,3 +1,441 @@
+<?php
+    session_start();
+?>
+
+<?php
+    function mostrarCuentas(){
+        //Left Panel
+        require_once("nav.php");
+        //#left-panel
+        echo '
+        <!-- Right Panel -->
+        <div id="right-panel" class="right-panel">';
+            //Header
+            require_once("header.php");
+            //#header
+            echo '<!-- Content -->
+            <div class="content">
+                <div class="row card">
+                <h1 class="card-header">Cuentas</h1>
+                    <div class="card-body">';
+
+                    $con = mysqli_connect("localhost","root","");
+
+                    if (!$con){
+                        die(' No puedo conectar: ' . mysqli_error($con));
+                    }
+                
+                    $db_selected = mysqli_select_db($con, "mensabank");
+                
+                    if (!$db_selected){
+                        die ('No puedo usar la base de datos: ' . mysqli_error($con));
+                    }
+                
+                    $dni = $_SESSION['dni'];
+                    $tipo = '';
+
+                    $resQuery = mysqli_query($con, "SELECT iban, saldo, cliente from cuenta WHERE cliente = '$dni'");
+                    
+                    if (!$resQuery) {
+                        die ("Error al ejecutar la consulta: " . mysqli_error($con));
+                    }else{
+
+                        if(mysqli_num_rows($resQuery) != 0){
+                            $tipo = 'Cuenta corriente';
+                            
+                            while($row = mysqli_fetch_array($resQuery)){
+                                echo '<div class="card">
+                                <div class="card-body">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>Tipo de cuenta</th>
+                                                <th>IBAN</th>
+                                                <th>Saldo</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>'+ $tipo +'</td>
+                                                <td>'+ $row['iban'] +'</td>
+                                                <td>'+ $row['saldo'] +'</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>';
+                                
+                                $cuenta = $row['iban'];
+                                $resQuery2 = mysqli_query($con, "SELECT numero_tarjeta, tipo, cuenta from tarjeta WHERE cuenta = '$cuenta'");
+
+                                if(!resQuery2){
+                                    die('Error al ejecutar la consulta: ' . mysqli_error($con));
+                                }else{
+
+                                    if(mysqli_num_rows($resQuery2) != 0){
+
+                                        echo '<br/>
+                                        <table class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Tarjetas</th>
+                                                    <th>Tipo</th>
+                                                    <th>Número tarjeta</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>';
+                                        while($row2 = mysqli_fetch_array($resQuery2)){
+                                            echo '<tr>
+                                                        <td></td>
+                                                        <td>'+ $row2['tipo'] +'</td>
+                                                        <td>'+ $row2['numero_tarjeta'] +'</td>
+                                                    </tr>';
+                                        }
+
+                                        echo '</tbody>
+                                        </table>';
+                                    }
+                                }
+
+                                $resQuery3 = mysqli_query($con, "SELECT estado, cantidad, cliente from plan_pensiones WHERE cliente = '$dni'");
+
+                                if(!resQuery3){
+                                    die('Error al ejecutar la consulta: ' . mysqli_error($con));
+                                }else{
+
+                                    if(mysqli_num_rows($resQuery3) != 0){
+
+                                        echo '<br/>
+                                        <table class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Plan de pensiones</th>
+                                                    <th>Estado</th>
+                                                    <th>Cantidad depositada</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>';
+
+                                        while($row3 = mysqli_fetch_array($resQuery3)){
+                                            echo '<tr>
+                                                        <td></td>
+                                                        <td>'+ $row3['estado'] +'</td>
+                                                        <td>'+ $row3['cantidad'] +'</td>
+                                                    </tr>';
+                                        }
+
+                                        echo ' </tbody>
+                                        </table>';
+                                    }
+                                }
+
+                                $resQuery4 = mysqli_query($con, "SELECT tipo, credito, pagado, cuenta from tarjeta WHERE cuenta = '$cuenta'");
+
+                                if(!resQuery4){
+                                    die('Error al ejecutar la consulta: ' . mysqli_error($con));
+                                }else{
+
+                                    if(mysqli_num_rows($resQuery4) != 0){
+
+                                        echo '<br/>
+                                        <table class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Préstamos</th>
+                                                    <th>Tipo</th>
+                                                    <th>Crédito</th>
+                                                    <th>Cantidad pagada</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>';
+                                        while($row4 = mysqli_fetch_array($resQuery2)){
+                                            echo '<tr>
+                                                        <td></td>
+                                                        <td>'+ $row4['tipo'] +'</td>
+                                                        <td>'+ $row4['credito'] +'</td>
+                                                        <td>'+ $row4['pagado'] +'</td>
+                                                    </tr>';
+                                        }
+
+                                        echo '</tbody>
+                                        </table>';
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    
+                    $resQuery = mysqli_query($con, "SELECT iban, saldo, cliente from cuenta_ahorros WHERE cliente = '$dni'");
+                    
+                    if (!$resQuery) {
+                        die ("Error al ejecutar la consulta: " . mysqli_error($con));
+                    }else{
+
+                        if(mysqli_num_rows($resQuery) != 0){
+                            $tipo = 'Cuenta corriente';
+                            
+                            while($row = mysqli_fetch_array($resQuery)){
+                                echo '<div class="card">
+                                <div class="card-body">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>Tipo de cuenta</th>
+                                                <th>IBAN</th>
+                                                <th>Saldo</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>'+ $tipo +'</td>
+                                                <td>'+ $row['iban'] +'</td>
+                                                <td>'+ $row['saldo'] +'</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>';
+                                
+                                $cuenta = $row['iban'];
+                                $resQuery2 = mysqli_query($con, "SELECT numero_tarjeta, tipo, cuenta from tarjeta WHERE cuenta = '$cuenta'");
+
+                                if(!resQuery2){
+                                    die('Error al ejecutar la consulta: ' . mysqli_error($con));
+                                }else{
+
+                                    if(mysqli_num_rows($resQuery2) != 0){
+
+                                        echo '<br/>
+                                        <table class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Tarjetas</th>
+                                                    <th>Tipo</th>
+                                                    <th>Número tarjeta</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>';
+                                        while($row2 = mysqli_fetch_array($resQuery2)){
+                                            echo '<tr>
+                                                        <td></td>
+                                                        <td>'+ $row2['tipo'] +'</td>
+                                                        <td>'+ $row2['numero_tarjeta'] +'</td>
+                                                    </tr>';
+                                        }
+
+                                        echo ' </tbody>
+                                        </table>';
+                                    }
+                                }
+
+                                $resQuery3 = mysqli_query($con, "SELECT estado, cantidad, cliente from plan_pensiones WHERE cliente = '$dni'");
+
+                                if(!resQuery3){
+                                    die('Error al ejecutar la consulta: ' . mysqli_error($con));
+                                }else{
+
+                                    if(mysqli_num_rows($resQuery3) != 0){
+
+                                        echo '<br/>
+                                        <table class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Plan de pensiones</th>
+                                                    <th>Estado</th>
+                                                    <th>Cantidad depositada</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>';
+
+                                        while($row3 = mysqli_fetch_array($resQuery3)){
+                                            echo '<tr>
+                                                        <td></td>
+                                                        <td>'+ $row3['estado'] +'</td>
+                                                        <td>'+ $row3['cantidad'] +'</td>
+                                                    </tr>';
+                                        }
+
+                                        echo '</tbody>
+                                            </table>';
+                                    }
+                                }
+
+                                $resQuery4 = mysqli_query($con, "SELECT tipo, credito, pagado, cuenta from tarjeta WHERE cuenta = '$cuenta'");
+
+                                if(!resQuery4){
+                                    die('Error al ejecutar la consulta: ' . mysqli_error($con));
+                                }else{
+
+                                    if(mysqli_num_rows($resQuery4) != 0){
+
+                                        echo '<br/>
+                                        <table class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Préstamos</th>
+                                                    <th>Tipo</th>
+                                                    <th>Crédito</th>
+                                                    <th>Cantidad pagada</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>';
+                                        while($row4 = mysqli_fetch_array($resQuery2)){
+                                            echo '<tr>
+                                                        <td></td>
+                                                        <td>'+ $row4['tipo'] +'</td>
+                                                        <td>'+ $row4['credito'] +'</td>
+                                                        <td>'+ $row4['pagado'] +'</td>
+                                                    </tr>';
+                                        }
+
+                                        echo '</tbody>
+                                        </table>';
+                                    }
+                                }
+                            }
+                        }
+                    }
+                
+                    $resQuery = mysqli_query($con, "SELECT iban, saldo, cliente from cuenta_nomina WHERE cliente = '$dni'");
+                    
+                    if (!$resQuery) {
+                        die ("Error al ejecutar la consulta: " . mysqli_error($con));
+                    }else{
+
+                        if(mysqli_num_rows($resQuery) != 0){
+                            $tipo = 'Cuenta corriente';
+                            
+                            while($row = mysqli_fetch_array($resQuery)){
+                                echo '<div class="card">
+                                <div class="card-body">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>Tipo de cuenta</th>
+                                                <th>IBAN</th>
+                                                <th>Saldo</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>'+ $tipo +'</td>
+                                                <td>'+ $row['iban'] +'</td>
+                                                <td>'+ $row['saldo'] +'</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>';
+                                
+                                $cuenta = $row['iban'];
+                                $resQuery2 = mysqli_query($con, "SELECT numero_tarjeta, tipo, cuenta from tarjeta WHERE cuenta = '$cuenta'");
+
+                                if(!resQuery2){
+                                    die('Error al ejecutar la consulta: ' . mysqli_error($con));
+                                }else{
+
+                                    if(mysqli_num_rows($resQuery2) != 0){
+
+                                        echo '<br/>
+                                        <table class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Tarjetas</th>
+                                                    <th>Tipo</th>
+                                                    <th>Número tarjeta</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>';
+                                        while($row2 = mysqli_fetch_array($resQuery2)){
+                                            echo '<tr>
+                                                        <td></td>
+                                                        <td>'+ $row2['tipo'] +'</td>
+                                                        <td>'+ $row2['numero_tarjeta'] +'</td>
+                                                    </tr>';
+                                        }
+
+                                        echo '</tbody>
+                                        </table>';
+                                    }
+                                }
+
+                                $resQuery3 = mysqli_query($con, "SELECT estado, cantidad, cliente from plan_pensiones WHERE cliente = '$dni'");
+
+                                if(!resQuery3){
+                                    die('Error al ejecutar la consulta: ' . mysqli_error($con));
+                                }else{
+
+                                    if(mysqli_num_rows($resQuery3) != 0){
+
+                                        echo '<br/>
+                                        <table class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Plan de pensiones</th>
+                                                    <th>Estado</th>
+                                                    <th>Cantidad depositada</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>';
+
+                                        while($row3 = mysqli_fetch_array($resQuery3)){
+                                            echo '<tr>
+                                                        <td></td>
+                                                        <td>'+ $row3['estado'] +'</td>
+                                                        <td>'+ $row3['cantidad'] +'</td>
+                                                    </tr>';
+                                        }
+
+                                        echo '</tbody>
+                                        </table>';
+                                    }
+                                }
+
+                                $resQuery4 = mysqli_query($con, "SELECT tipo, credito, pagado, cuenta from tarjeta WHERE cuenta = '$cuenta'");
+
+                                if(!resQuery4){
+                                    die('Error al ejecutar la consulta: ' . mysqli_error($con));
+                                }else{
+
+                                    if(mysqli_num_rows($resQuery4) != 0){
+
+                                        echo '<br/>
+                                        <table class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Préstamos</th>
+                                                    <th>Tipo</th>
+                                                    <th>Crédito</th>
+                                                    <th>Cantidad pagada</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>';
+                                        while($row4 = mysqli_fetch_array($resQuery2)){
+                                            echo '<tr>
+                                                        <td></td>
+                                                        <td>'+ $row4['tipo'] +'</td>
+                                                        <td>'+ $row4['credito'] +'</td>
+                                                        <td>'+ $row4['pagado'] +'</td>
+                                                    </tr>';
+                                        }
+
+                                        echo '</tbody>
+                                        </table>';
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    mysqli_close($con);
+
+                        echo '
+                    </div>
+                </div>
+            </div>
+            <!-- /.content -->';
+            //Footer
+            require_once("footer.php");
+            //.site-footer
+        echo '</div>';
+
+    }
+?>
+
 <!doctype html>
 <!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang=""> <![endif]-->
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8" lang=""> <![endif]-->
@@ -78,106 +516,13 @@
 </head>
 
 <body class="bg-color">
-    <!-- Left Panel -->
-    <?php require_once("nav.php"); ?>
-    <!-- /#left-panel -->
-    <!-- Right Panel -->
-    <div id="right-panel" class="right-panel">
-        <!-- Header-->
-        <?php require_once("header.php"); ?>
-        <!-- /#header -->
-        <!-- Content -->
-        <div class="content">
-            <div class="row card">
-            <h1 class="card-header">Cuentas</h1>
-                <div class="card-body">
-                    <div class="card">
-                        <div class="card-body">
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <th>Tipo de cuenta</th>
-                                        <th>IBAN</th>
-                                        <th>Saldo</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>Cuenta nómina</td>
-                                        <td>ES6621000418401234567891</td>
-                                        <td>10000</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                            <br/>
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <th>Tarjetas</th>
-                                        <th>Tipo</th>
-                                        <th>Número tarjeta</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td></td>
-                                        <td>Crédito</td>
-                                        <td>5657 2019 1840 7869</td>
-                                    </tr>
-                                    <tr>
-                                        <td></td>
-                                        <td>Débito</td>
-                                        <td>2187 2020 1671 0869</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                            <br/>
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <th>Plan de pensiones</th>
-                                        <th>Estado</th>
-                                        <th>Cantidad depositada</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td></td>
-                                        <td>Depositando</td>
-                                        <td>13573</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                            <br/>
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <th>Préstamos</th>
-                                        <th>Tipo</th>
-                                        <th>Crédito</th>
-                                        <th>Cantidad pagada</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td></td>
-                                        <td>Personal</td>
-                                        <td>5000</td>
-                                        <td>3270</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- /.content -->
-        <!-- Footer -->
-        <?php require_once("footer.php"); ?>
-        <!-- /.site-footer -->
-    </div>
-    <!-- /#right-panel -->
+    <?php
+        if($_SESSION['login'] == True){
+            mostrarCuentas();
+        }else{
+            header('Location: login.php');
+        }
+    ?>
 
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/jquery@2.2.4/dist/jquery.min.js"></script>

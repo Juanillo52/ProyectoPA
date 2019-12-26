@@ -63,6 +63,13 @@
             height: 160px;
         }
 
+        p {
+            color: black;
+        }
+
+        .table {
+            width: 60%;
+        }
     </style>
 </head>
 
@@ -77,66 +84,7 @@
         <!-- /#header -->
         <!-- Content -->
         <div class="content">
-            <div class="row card">
-                <h1 class="card-header">Préstamos</h1>
-                    <div class="card-body">
-                        <table class="table table-bordered">
-                            <thead>
-                                <tr>
-                                    <td>Importe</td>
-                                    <td>Tipo</td>
-                                    <td>Entrada</td>
-                                    <td>Cuenta</td>
-                                    <td>Cuota</td>
-                                    <td>Interés</td>
-                                    <td>Pagado</td>
-                                    <td>Fecha límite</td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>5000</td>
-                                    <td>Personal</td>
-                                    <td>750</td>
-                                    <td>ES6621000418401234567891</td>
-                                    <td>343 euros</td>
-                                    <td>1,5%</td>
-                                    <td>1567</td>
-                                    <td>10/01/2020</td>
-                                </tr>
-                            </tbody>
-                        </table>
-
-                        <table class="table table-bordered">
-                            <thead>
-                                <tr>
-                                    <td>Importe</td>
-                                    <td>Tipo</td>
-                                    <td>Entrada</td>
-                                    <td>Cuenta</td>
-                                    <td>Cuota</td>
-                                    <td>Interés</td>
-                                    <td>Pagado</td>
-                                    <td>Fecha límite</td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>500000</td>
-                                    <td>Hipotecario</td>
-                                    <td>75000</td>
-                                    <td>ES6621000418401234567891</td>
-                                    <td>1500 euros</td>
-                                    <td>1,5%</td>
-                                    <td>120000</td>
-                                    <td>10/01/2020</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-            </div>
-
-        
+            
         </div>
         <!-- /.content -->
         <!-- Footer -->

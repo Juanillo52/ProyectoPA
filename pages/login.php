@@ -1,3 +1,148 @@
+<?php
+session_start();
+?>
+
+
+<?php
+function mostrarFormulario(){
+    
+    echo '<div class="sufee-login d-flex align-content-center flex-wrap">
+    <div class="container">
+        <div class="login-content">
+            <div class="login-logo">
+                <a href="index.html">
+                    <img class="align-content" src="../images/logo.png" alt="">
+                </a>
+            </div>
+            <div class="login-form">
+                <form method="POST">
+                    <div class="form-group">';
+                    echo '<label>DNI</label>';
+                    if(isset($_POST['dni'])){
+                       echo'<input type="text" name="dni" value="'. $_POST['dni']. '" class="form-control">';
+                    }else{
+                       echo '<input type="text" name="dni" class="form-control">';
+                    }
+                    echo'</div>
+                    <div class="form-group">
+                        <label>Clave de acceso</label>
+                        <input type="password" name="password" class="form-control">
+                    </div>
+                    <div class="checkbox">
+                        <label class="pull-right">
+                            <a href="#">¿Olvidaste tu clave?</a> 
+                        </label>
+                    </div>
+                    <button type="submit" name="submit" class="btn btn-main btn-flat m-b-30 m-t-30">Acceder</button>
+                    <div class="register-link m-t-15 text-center">
+                        <p>¿Todavía no eres cliente de MensaBank? <a href="register.php"> Regístrate aquí</a></p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>';
+}
+
+function comprobarFormulario(){
+    $resultado = False; ## le damos este valor para que muestre el login
+
+    if(isset($_POST['submit'])){
+
+            $ok = comprobarDatosFormulario();
+            if($ok){
+                $resultado = verificarLogin();
+                if(!$resultado){
+                    echo "Contrase&ntildea incorrecta.<br>";
+                }
+            }         
+    }
+    return $resultado;
+}
+
+function comprobarDatosFormulario(){
+    if(!isset($_POST['dni']) || $_POST['dni'] == ''){$errores[] = "Introduzca el dni.<br/>";}
+    else{$_POST['dni'] = filter_input(INPUT_POST, "dni", FILTER_SANITIZE_STRING);} 
+    
+    if(!isset($_POST['password']) || $_POST['password'] == ''){$errores[] = "Introduzca la clave de acceso.";}
+    else{$_POST['pass'] = filter_input(INPUT_POST, "pass", FILTER_SANITIZE_STRING);} 
+    
+    if(!isset($errores)){
+        return True;
+    }else {
+        foreach($errores as $e) echo $e;
+        return False;
+    }
+}
+
+function verificarLogin(){
+    $resultado = False;
+    $dni = $_POST['dni'];
+    $password = $_POST['password'];
+
+    $con = mysqli_connect("localhost","root","");
+
+    if (!$con){
+        die(' No puedo conectar: ' . mysqli_error($con));
+    }
+
+    $db_selected = mysqli_select_db($con,"mensabank");
+
+    if (!$db_selected){
+        die ('No puedo usar la base de datos: ' . mysqli_error($con));
+    }
+
+    $resQuery = mysqli_query($con, "SELECT dni, password from cliente WHERE dni = '$dni'");
+    if (!$resQuery) {
+        die ("Error al ejecutar la consulta: " . mysqli_error($con));
+    }else{
+        $data = mysqli_fetch_array($resQuery);
+        $hash = $data['password'];
+
+        if($data['dni'] == $dni && password_verify($password, $hash)){
+            $resultado = True;
+        }
+    }
+    
+
+    mysqli_close($con);
+    
+    return $resultado;
+}
+
+function getUser($dni){
+    $nombre = null;
+    $con = mysqli_connect("localhost","root","");
+
+    if (!$con){
+        die(' No puedo conectar: ' . mysqli_error($con));
+    }
+
+    $db_selected = mysqli_select_db($con,"mensabank");
+
+    if (!$db_selected){
+        die ('No puedo usar la base de datos: ' . mysqli_error($con));
+    }
+
+    $resQuery = mysqli_query($con, "SELECT nombre from cliente WHERE dni = '$dni'");
+    if (!$resQuery) {
+        die ("Error al ejecutar la consulta: " . mysqli_error($con));
+    }else{
+        $data = mysqli_fetch_array($resQuery);
+        $nombre = $data['nombre'];
+    }
+    mysqli_close($con);
+    
+    return $nombre;
+}
+
+function redireccionar(){
+    $_SESSION['login']=True;
+    $_SESSION['user'] = getUser($_POST['dni']);
+    $_SESSION['dni'] = $_POST['dni'];
+}
+
+?>
 <!doctype html>
 <!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang=""> <![endif]-->
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8" lang=""> <![endif]-->
@@ -25,39 +170,14 @@
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800' rel='stylesheet' type='text/css'>
 </head>
 <body class="bg-color">
-
-    <div class="sufee-login d-flex align-content-center flex-wrap">
-        <div class="container">
-            <div class="login-content">
-                <div class="login-logo">
-                    <a href="index.html">
-                        <img class="align-content" src="../images/logo.png" alt="">
-                    </a>
-                </div>
-                <div class="login-form">
-                    <form>
-                        <div class="form-group">
-                            <label>DNI</label>
-                            <input type="email" class="form-control">
-                        </div>
-                        <div class="form-group">
-                            <label>Clave de acceso</label>
-                            <input type="password" class="form-control">
-                        </div>
-                        <div class="checkbox">
-                            <label class="pull-right">
-                                <a href="#">¿Olvidaste tu clave?</a> 
-                            </label>
-                        </div>
-                        <button type="submit" class="btn btn-main btn-flat m-b-30 m-t-30">Acceder</button>
-                        <div class="register-link m-t-15 text-center">
-                            <p>¿Todavía no eres cliente de MensaBank? <a href="register.php"> Regístrate aquí</a></p>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
+    <?php
+        $ok = comprobarFormulario();        
+        if(!$ok){
+            mostrarFormulario();
+        }else{
+            redireccionar();
+        }
+    ?>
 
     <script src="https://cdn.jsdelivr.net/npm/jquery@2.2.4/dist/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.4/dist/umd/popper.min.js"></script>

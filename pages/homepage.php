@@ -97,7 +97,32 @@ and open the template in the editor.
             </div>
         </header>
     </div>
-
+    
+    <div id="divlogin">
+        <div class="login-content">
+                <div class="login-form">
+                    <form>
+                        <div class="form-group">
+                            <label>DNI</label>
+                            <input type="email" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label>Clave de acceso</label>
+                            <input type="password" class="form-control">
+                        </div>
+                        <div class="checkbox">
+                            <label class="pull-right">
+                                <a href="#">¿Olvidaste tu clave?</a> 
+                            </label>
+                        </div>
+                        <button type="submit" class="btn btn-main btn-flat m-b-30 m-t-30">Acceder</button>
+                        <div class="register-link m-t-15 text-center">
+                            <p>¿Todavía no eres cliente de MensaBank? <a href="register.php"> Regístrate aquí</a></p>
+                        </div>
+                    </form>
+                </div>
+        </div>
+    </div>
     
     <section class="content">
         <article class="row card">
@@ -425,7 +450,23 @@ and open the template in the editor.
         </article>
     </section>
     
+    </h2>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#divlogin").hide();
+                        
+            $("#signin").click(function(){
+                window.location.href = "register.php";
 
+            });
+
+            $("#login").click(function () {
+                $("#divlogin").slideToggle(500);
+            });
+
+        });
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/jquery@2.2.4/dist/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.4/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/js/bootstrap.min.js"></script>

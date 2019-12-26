@@ -545,7 +545,7 @@ canvas {
         font-size: 14px;
         border-radius: 7px; }
     .messenger-box .send-mgs .msg-send-btn {
-      background: #03a9f3;
+      background: #6b4996;
       color: #fff;
       font-size: 28px;
       border-radius: 7px;
@@ -616,7 +616,7 @@ aside.left-panel {
       width: 100%; }
       .navbar .navbar-nav li.active .menu-icon, .navbar .navbar-nav li:hover .toggle_nav_button:before,
       .navbar .navbar-nav li .toggle_nav_button.nav-open:before {
-        color: #03a9f3; }
+        color: #6b4996; }
       .navbar .navbar-nav li .dropdown-toggle:after {
         display: none; }
       .navbar .navbar-nav li > a {
@@ -629,7 +629,7 @@ aside.left-panel {
         position: relative;
         width: 100%; }
         .navbar .navbar-nav li > a:hover, .navbar .navbar-nav li > a:hover .menu-icon {
-          color: #03a9f3; }
+          color: #6b4996; }
         .navbar .navbar-nav li > a .menu-icon {
           color: #607d8b;
           float: left;
@@ -664,7 +664,7 @@ aside.left-panel {
             -webkit-transition: all .25s ease;
             transition: all .25s ease; }
           .navbar .navbar-nav li.menu-item-has-children a:hover:before {
-            border-color: #03a9f3 #03a9f3 transparent transparent; }
+            border-color: #6b4996 #6b4996 transparent transparent; }
         .navbar .navbar-nav li.menu-item-has-children .sub-menu {
           background: #fff;
           border: none;
@@ -696,7 +696,7 @@ aside.left-panel {
           top: 20px;
           right: -5px; }
         .navbar .navbar-nav li.menu-item-has-children.show a:hover:before {
-          border-color: transparent #03a9f3 #03a9f3 transparent; }
+          border-color: transparent #6b4996 #6b4996 transparent; }
         .navbar .navbar-nav li.menu-item-has-children.show .sub-menu {
           max-height: 1000px;
           opacity: 1;
@@ -705,7 +705,7 @@ aside.left-panel {
 .navbar .navbar-nav > .active > a,
 .navbar .navbar-nav > .active > a:focus,
 .navbar .navbar-nav > .active > a:hover {
-  color: #03a9f3; }
+  color: #6b4996; }
 
 .navbar-nav li span.count {
   background: #a9d86e;

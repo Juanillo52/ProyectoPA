@@ -9,9 +9,11 @@
         <div class="header-menu">
             <div class="header-left">
                 <span class="alert">Te damos la bienvenida, nombre</span>
+                <div class="logout"> 
                 <form method="POST">
-                <input type="submit" class="btn btn-main btn-lg" name="logout">Salir</button>
+                    <input type="submit" id="logout" name="logout" value="Salir">
                 </form>
+                </div>
             </div>
         </div>
     </div>

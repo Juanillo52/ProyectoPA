@@ -105,27 +105,42 @@ and open the template in the editor.
     
     <div id="divlogin">
         <div class="login-content">
-                <div class="login-form">
-                    <form>
-                        <div class="form-group">
-                            <label>DNI</label>
-                            <input type="email" class="form-control">
-                        </div>
-                        <div class="form-group">
-                            <label>Clave de acceso</label>
-                            <input type="password" class="form-control">
-                        </div>
-                        <div class="checkbox">
-                            <label class="pull-right">
-                                <a href="#">¿Olvidaste tu clave?</a> 
-                            </label>
-                        </div>
-                        <button type="submit" class="btn btn-main btn-flat m-b-30 m-t-30">Acceder</button>
-                        <div class="register-link m-t-15 text-center">
-                            <p>¿Todavía no eres cliente de MensaBank? <a href="register.php"> Regístrate aquí</a></p>
-                        </div>
-                    </form>
-                </div>
+            <div class="login-form">
+                <form>
+                    <div class="form-group">
+                    <label>DNI</label>
+                    <input type="text" name="dni" class="form-control"></div>
+                    <div class="form-group">
+                        <label>Clave de acceso</label>
+                        <input type="password" name="password" class="form-control">
+                    </div>
+                    <div class="checkbox">
+                        <label class="pull-right">
+                            <a href="#" id="forgotpass">¿Olvidaste tu clave?</a>
+                        </label>
+                    </div>
+                    <button type="submit" name="submit" class="btn btn-main btn-flat m-b-30 m-t-30">Acceder</button>
+                    <div class="register-link m-t-15 text-center">
+                        <p>¿Todavía no eres cliente de MensaBank? <a href="register.php"> Regístrate aquí</a></p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div id="divforgotpass">
+        <div class="login-content">
+            <div class="login-form">
+                <form>
+                    <div class="form-group">
+                    <label>DNI</label>
+                    <input type="text" name="dni" class="form-control"></div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" name="password" class="form-control">
+                    </div>
+                    <button type="submit" class="btn btn-main btn-flat m-b-30 m-t-30">Recuperar clave</button>
+                </form>
+            </div>
         </div>
     </div>
     
@@ -460,6 +475,7 @@ and open the template in the editor.
     <script>
         $(document).ready(function () {
             $("#divlogin").hide();
+            $("#divforgotpass").hide();
                         
             $("#signin").click(function(){
                 window.location.href = "register.php";
@@ -467,7 +483,13 @@ and open the template in the editor.
             });
 
             $("#login").click(function () {
+                $("#divforgotpass").hide(500);
                 $("#divlogin").slideToggle(500);
+            });
+
+            $("#forgotpass").click(function () {
+                $("#divlogin").hide(500);
+                $("#divforgotpass").slideToggle(500);
             });
 
         });

@@ -5,9 +5,9 @@
         unset($_SESSION['register']);
     }
     var_dump($_SESSION['pass']);
-?>
 
-<?php
+var_dump($_POST['forgotpasword']);
+
 function mostrarFormulario(){
     
     echo '<div class="sufee-login d-flex align-content-center flex-wrap">
@@ -41,25 +41,16 @@ function mostrarFormulario(){
                     <div class="register-link m-t-15 text-center">
                         <p>¿Todavía no eres cliente de MensaBank? <a href="register.php"> Regístrate aquí</a></p>
                     </div>
-                </form>
-            </div>
-        </div>
-        <div id="divforgotpass">
-            <div class="login-content">
-                <div class="login-form">
-                    <form>
-                        <div class="form-group">
-                        <label>DNI</label>
-                        <input type="text" name="dni" class="form-control"></div>
+                    <div id="divforgotpass">            
                         <div class="form-group">
                             <label>Email</label>
                             <input type="email" name="password" class="form-control">
                         </div>
-                        <button type="submit" class="btn btn-main btn-flat m-b-30 m-t-30">Recuperar clave</button>
-                    </form>
-                </div>
+                        <button type="submit" class="btn btn-main btn-flat m-b-30 m-t-30" name="forgotpass">Recuperar clave</button>                    
+                    </div>
+                </form>
             </div>
-        </div>
+        </div>        
     </div>    
 </div>';
 }
@@ -76,6 +67,17 @@ function comprobarFormulario(){
                     echo "Clave incorrecta.<br>";
                 }
             }         
+    }
+    if(isset($_POST['forgotpass'])){
+        $enviar = true;
+        $_POST['email'] = filter_input(INPUT_POST, "email", FILTER_SANITIZE_EMAIL);
+        if(!isset($_POST['email']) || $_POST['email'] == ''|| !filter_input(INPUT_POST, "email", FILTER_VALIDATE_EMAIL)){
+            $errores[] = "Introduzca un email válido.<br/>";
+            $enviar = false;
+        }
+        if($enviar){
+            enviarClave($_POST['email']);
+        }
     }
     return $resultado;
 }
@@ -162,6 +164,53 @@ function redireccionar(){
     $_SESSION['dni'] = $_POST['dni'];
 }
 
+function enviarClave($email){
+    $con = mysqli_connect("localhost","root","");
+
+    if (!$con){
+        die(' No puedo conectar: ' . mysqli_error($con));
+    }
+
+    $db_selected = mysqli_select_db($con,"mensabank");
+
+    if (!$db_selected){
+        die ('No puedo usar la base de datos: ' . mysqli_error($con));
+    }
+
+    $resQuery = mysqli_query($con, "SELECT * from cliente WHERE email='$email'");
+    if (!$resQuery) {
+        die ("Error al ejecutar la consulta: " . mysqli_error($con));
+    }else{
+        if($row=mysqli_fethc_array($resQuery)){
+            $nombre=$row['nombre'];
+
+            $password= "";
+
+            for($i =0 ; $i < 8 ; $i++){
+                $password.= rand(0,9);
+            }
+            var_dump($password);
+            $clave = password_hash($password, PASSWORD_DEFAULT);
+            $resQuery = mysqli_query($con, "UPDATE cliente SET clave='$clave' WHERE email='$email'");
+            if (!$resQuery) {
+                die ("Error al ejecutar la consulta: " . mysqli_error($con));
+            }else{
+                ini_set( 'display_errors', 1 );
+                error_reporting( E_ALL );
+                $from = 'mensabank@support.es';
+                $to = $email;
+                $subject = 'Aquí tienes tu nueva clave, '.$nombre;
+                $message = 'Tu nueva clave de acceso es: '.$password;
+                $headers = "From:" . $from;
+                mail($to,$subject,$message, $headers);
+            }              
+        }else{
+            echo 'No se han encontrado coincidencias con el email introducido</br>';
+        }
+    }
+    mysqli_close($con);
+}
+
 ?>
 <!doctype html>
 <!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang=""> <![endif]-->
@@ -223,6 +272,7 @@ function redireccionar(){
         require_once("footer.php");
     ?>
     
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script>
         $(document).ready(function () {
             $("#divforgotpass").hide();

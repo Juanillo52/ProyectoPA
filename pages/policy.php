@@ -157,7 +157,7 @@
                         <br/>Somos conscientes de que hay muchas cosas que mejorar, pero tenemos claro que ser rentables no pasa por hacer negocio de cualquier modo.
                         <br/>
                         <br/>Por eso hablamos de rentabilidad ajustada a los <strong>principios de integridad, prudencia y transparencia</strong>.
-
+                        <br/>
                         <br/>En España, Negocio responsable significa principalmente:
 
                         <ul>
@@ -171,23 +171,7 @@
         </div>
 
     <!--Local Stuff-->
-    <script>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <script>
-        $(document).ready(function () {
-            $("#divlogin").hide();
-                        
-            $("#signin").click(function(){
-                window.location.href = "register.php";
-
-            });
-
-            $("#login").click(function () {
-                $("#divlogin").slideToggle(500);
-            });
-
-        });
-    </script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jquery@2.2.4/dist/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.4/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/js/bootstrap.min.js"></script>

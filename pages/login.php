@@ -32,7 +32,7 @@ function mostrarFormulario(){
                     </div>
                     <div class="checkbox">
                         <label class="pull-right">
-                            <a href="forgot_pass.php">¿Olvidaste tu clave?</a>
+                            <a href="#" id="forgotpass">¿Olvidaste tu clave?</a>
                         </label>
                     </div>
                     <button type="submit" name="submit" class="btn btn-main btn-flat m-b-30 m-t-30">Acceder</button>
@@ -42,7 +42,23 @@ function mostrarFormulario(){
                 </form>
             </div>
         </div>
-    </div>
+        <div id="divforgotpass">
+            <div class="login-content">
+                <div class="login-form">
+                    <form>
+                        <div class="form-group">
+                        <label>DNI</label>
+                        <input type="text" name="dni" class="form-control"></div>
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input type="email" name="password" class="form-control">
+                        </div>
+                        <button type="submit" class="btn btn-main btn-flat m-b-30 m-t-30">Recuperar clave</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>    
 </div>';
 }
 
@@ -205,7 +221,16 @@ function redireccionar(){
         require_once("footer.php");
     ?>
     
+    <script>
+        $(document).ready(function () {
+            $("#divforgotpass").hide();
 
+            $("#forgotpass").click(function () {
+                $("#divforgotpass").slideToggle(500);
+            });
+
+        });
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/jquery@2.2.4/dist/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.4/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/js/bootstrap.min.js"></script>

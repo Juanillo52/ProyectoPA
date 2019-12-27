@@ -5,7 +5,6 @@ session_start();
 
 <?php
 function mostrarFormulario(){
-    
     echo '<div class="sufee-login d-flex align-content-center flex-wrap">
     <div class="container">
         <div class="login-content">
@@ -18,43 +17,103 @@ function mostrarFormulario(){
                 <form method="POST">
                     <div class="form-group">
                         <label>Nombre</label>
-                        <input type="text" name="nombre" class="form-control" required>
+                        <input type="text" name="nombre"'; 
+                        
+                        if(isset($_POST['nombre'])){
+                            echo 'value="' . $_POST['nombre'] .'"';
+                        }
+                        
+                        echo 'class="form-control" required>
                     </div>
                     <div class="form-group">
                         <label>Apellidos</label>
-                        <input type="text" name="apellidos" class="form-control" required>
+                        <input type="text" name="apellidos"'; 
+                        
+                        if(isset($_POST['apellidos'])){
+                            echo 'value="' . $_POST['apellidos'] .'"';
+                        }
+
+                        echo 'class="form-control" required>
                     </div>
                     <div class="form-group">
                         <label>DNI</label>
-                        <input type="text" name="dni" class="form-control" required>
+                        <input type="text" name="dni"';
+                        
+                        if(isset($_POST['dni'])){
+                            echo 'value="' . $_POST['dni'] .'"';
+                        }
+
+                        echo 'class="form-control" required>
                     </div>
                     <div class="form-group">
                         <label>Fecha de nacimiento</label>
-                        <input type="date" name="fecha_nacimiento" class="form-control" required>
+                        <input type="date" name="fecha_nacimiento"';
+                        
+                        if(isset($_POST['fecha_nacimiento'])){
+                            echo 'value="' . $_POST['fecha_nacimiento'] .'"';
+                        }
+                        
+                        echo 'class="form-control" required>
                     </div>
                     <div class="form-group">
                         <label>Dirección</label>
-                        <input type="text" name="direccion" class="form-control" required>
+                        <input type="text" name="direccion"'; 
+                        
+                        if(isset($_POST['direccion'])){
+                            echo 'value="' . $_POST['direccion'] .'"';
+                        }
+
+                        echo 'class="form-control" required>
                     </div>
                     <div class="form-group">
                         <label>Ciudad</label>
-                        <input type="text" name="ciudad" class="form-control" required>
+                        <input type="text" name="ciudad"'; 
+                        
+                        if(isset($_POST['ciudad'])){
+                            echo 'value="' . $_POST['ciudad'] .'"';
+                        }
+                        
+                        echo'class="form-control" required>
                     </div>
                     <div class="form-group">
                         <label>Provincia</label>
-                        <input type="text" name="provincia" class="form-control" required>
+                        <input type="text" name="provincia"'; 
+                        
+                        if(isset($_POST['provincia'])){
+                            echo 'value="' . $_POST['provincia'] .'"';
+                        }
+                        
+                        echo 'class="form-control" required>
                     </div>
                     <div class="form-group">
                         <label>Código Postal</label>
-                        <input type="text" name="cp" class="form-control" required>
+                        <input type="text" name="cp"'; 
+                        
+                        if(isset($_POST['cp'])){
+                            echo 'value="' . $_POST['cp'] .'"';
+                        }
+                        
+                        echo 'class="form-control" required>
                     </div>
                     <div class="form-group">
                         <label>Correo electrónico</label>
-                        <input type="email" name="email" class="form-control" required>
+                        <input type="email" name="email"'; 
+                        
+                        if(isset($_POST['email'])){
+                            echo 'value="' . $_POST['email'] .'"';
+                        }
+                        
+                        echo 'class="form-control" required>
                     </div>
                     <div class="form-group">
                         <label>Teléfono</label>
-                        <input type="text" name="telefono" class="form-control" required>
+                        <input type="text" name="telefono"'; 
+                        
+                        if(isset($_POST['telefono'])){
+                            echo 'value="' . $_POST['telefono'] .'"';
+                        }
+
+                        echo 'class="form-control" required>
                     </div>
                     <div class="checkbox">
                         <label>
@@ -93,7 +152,8 @@ function comprobarDatosFormulario(){
     if(!isset($_POST['apellidos']) || $_POST['apellidos'] == ''){$errores[] = "Introduzca los apellidos.<br/>";}
     else{$_POST['apellidos'] = filter_input(INPUT_POST, "apellidos", FILTER_SANITIZE_STRING);} 
 
-    if(!isset($_POST['dni']) || $_POST['dni'] == ''){$errores[] = "Introduzca el dni.<br/>";}
+    if(!isset($_POST['dni']) || $_POST['dni'] == '' || !preg_match('/^([0-9]{8})([A-Z])$/', $_POST['dni'])){
+        $errores[] = "Introduzca un DNI válido.<br/>";}
     else{$_POST['dni'] = filter_input(INPUT_POST, "dni", FILTER_SANITIZE_STRING);} 
 
     if(!isset($_POST['fecha_nacimiento']) || $_POST['fecha_nacimiento'] == ''){$errores[] = "Introduzca la fecha de nacimiento.<br/>";}
@@ -118,10 +178,11 @@ function comprobarDatosFormulario(){
     if(!isset($_POST['cp']) || $_POST['cp'] == ''){$errores[] = "Introduzca el código postal.<br/>";}
     else{$_POST['cp'] = filter_input(INPUT_POST, "cp", FILTER_SANITIZE_STRING);}
     
-    if(!isset($_POST['email']) || $_POST['email'] == ''){$errores[] = "Introduzca el email.<br/>";}
-    else{$_POST['email'] = filter_input(INPUT_POST, "email", FILTER_SANITIZE_EMAIL);} 
+    if(!isset($_POST['email']) || $_POST['email'] == ''|| !filter_input(INPUT_POST, "email", FILTER_VALIDATE_EMAIL)){
+        $errores[] = "Introduzca un email válido.<br/>";}
+    else{$_POST['email'] = filter_input(INPUT_POST, "email", FILTER_SANITIZE_EMAIL);}
     
-    if(!isset($_POST['telefono']) || $_POST['telefono'] == ''){$errores[] = "Introduzca el teléfono.<br/>";}
+    if(!isset($_POST['telefono']) || $_POST['telefono'] == ''|| !preg_match('/^([0-9]{9})$/', $_POST['telefono']) ){$errores[] = "Introduzca un teléfono válido.<br/>";}
     else{$_POST['telefono'] = filter_input(INPUT_POST, "telefono", FILTER_SANITIZE_STRING);}
 
     if(!isset($_POST['terminos'])){$errores[] = "Acepte los términos y condiciones.<br/>";}
@@ -188,7 +249,8 @@ function crearPassword(){
     }
 
     enviarEmail($password);
-    return password_hash($password, PASSWORD_DEFAULT);
+    $password = password_hash($password, PASSWORD_DEFAULT);
+    return $password;
 }
 
 function altaCliente(){

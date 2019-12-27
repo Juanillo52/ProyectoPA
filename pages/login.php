@@ -4,11 +4,6 @@
         echo $_SESSION['register'];
         unset($_SESSION['register']);
     }
-    var_dump($_SESSION['pass']);
-    var_dump($_SESSION['cliente']);
-?>
-<?php
-var_dump($_POST['forgotpasword']);
 
 function mostrarFormulario(){
     

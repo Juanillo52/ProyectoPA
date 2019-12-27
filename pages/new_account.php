@@ -30,7 +30,7 @@
                             <option value="cuenta_ahorros">Cuenta de ahorros</option>
                         </select>';
 
-                        if(isset($_POST["select"]) && $_POST["select"] == "cuenta"){
+                        if($_POST["select"] == "cuenta"){
                             echo '<p>CUENTA</p>';
                         }
 
@@ -64,31 +64,7 @@
     function comprobarDatosNuevaCuenta(){
         $resultado = False;
 
-        $_POST['nombre'] = filter_input(INPUT_POST, "nombre", FILTER_SANITIZE_STRING);
-        if(!isset($_POST['nombre']) || $_POST['nombre'] == ''){
-            $errores[] = "Introduzca un nombre. <br/>";
-        }
         
-        if(!isset($_POST['telefono']) || $_POST['telefono'] == '' || !preg_match('/^(6|7|9){1}[[:digit:]]{8}/', $_POST['telefono'])){
-            $errores[] = "Introduzca un teléfono. <br/>";
-        }
-        
-        $_POST['email'] = filter_input(INPUT_POST, "email", FILTER_SANITIZE_EMAIL);
-        if(!isset($_POST['email']) || $_POST['email'] == '' || !filter_input(INPUT_POST, "email", FILTER_VALIDATE_EMAIL)){
-            $errores[] = "Introduzca un email. <br/>";
-        }
-        
-        if($_FILES['foto']['error'] != 4){
-            $tiposAceptados = Array('image/png', 'image/jpeg');
-            
-            if($_FILES['foto']['size'] > (500*1024)){
-                $errores[] = "El tamaño del archivo no debe sobrepasar los 500KB.<br>";
-            }
-            
-            if(array_search($_FILES['foto']['type'], $tiposAceptados) === False){
-                $errores[] = "Tipo de archivo no aceptado.<br>";
-            }
-        }
         
         if(!isset($errores)){
             $resultado = True;

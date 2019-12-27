@@ -1,9 +1,9 @@
 <?php
     session_start();
     
-    /*if(!isset($_SESSION['login']) || !$_SESSION['login']){
+    if(!isset($_SESSION['login']) || !$_SESSION['login']){
         header('Location: login.php');
-    }*/
+    }
 ?>
 
 <?php
@@ -11,8 +11,7 @@
         //Left Panel
         require_once("nav.php");
         //#left-panel
-        echo '
-        <!-- Right Panel -->
+        echo '<!-- Right Panel -->
         <div id="right-panel" class="right-panel">';
             //Header
             require_once("header.php");
@@ -20,7 +19,7 @@
             echo '<!-- Content -->
             <div class="content">
                 <div class="row card">
-                <h1 class="card-header">Crear nueva Cuenta</h1>
+                <h1 class="card-header">Pedir préstamo</h1>
                     <div class="card-body">
                     <form action="#" method="POST" enctype="multipart/form-data">
                         Tipo de préstamo
@@ -30,13 +29,13 @@
                         </select>
                         <br/>
                         <label class=" form-control-label" for="credito">Cantidad del credito a pedir</label>
-                        <input id="credito" class="form-control" type="number" step="1">
+                        <input id="credito" class="form-control" type="number" step="1" name="credito">
                         <br/>
                         <label class=" form-control-label" for="entrada">Entrada para el crédito</label>
-                        <input id="entrada" class="form-control" type="number" step="1">
+                        <input id="entrada" class="form-control" type="number" step="1" name="entrada">
                         <br/>
-                        <label class=" form-control-label" for="Tipo">Cuenta</label>
-                        <input id="cuenta" class="form-control" type="cuenta">
+                        <label class=" form-control-label" for="cuenta">Cuenta</label>
+                        <input id="cuenta" class="form-control" type="text" name="cuenta">
 
                         <br/>
                         <button class="btn btn-primary btn-sm" type="submit" name="btnSolicitar">Solicitar</button>
@@ -61,6 +60,10 @@
             
             if($ok){
                 $resultado = nuevoPrestamo();
+
+                if($resultado){
+                    header('Location: loans.php');
+                }
             }
         }
         
@@ -75,7 +78,7 @@
         }
 
         $_POST['credito'] = filter_input(INPUT_POST, "credito", FILTER_SANITIZE_NUMBER_INT);
-        if(!isset($_POST['credito']) || $_POST['credito'] == '' || filter_input(INPUT_POST, "credito", FILTER_VALIDATE_INT)){
+        if(!isset($_POST['credito']) || $_POST['credito'] == '' || !filter_input(INPUT_POST, "credito", FILTER_VALIDATE_INT)){
             $errores[] = "Introduzca un crédito válido. <br/>";
         }
 
@@ -83,12 +86,12 @@
             $errores[] = "La mínima cantidad a solicitar para los préstamos personales son 1000 euros y la máxima 100000 euros. <br/>";
         }
 
-        if(isset($_POST['credito']) && ($_POST['credito'] < 40000 || $_POST['credito'] > 1000000)&& $_POST['select'] == "hipotecario"){
+        if(isset($_POST['credito']) && ($_POST['credito'] < 40000 || $_POST['credito'] > 1000000) && $_POST['select'] == "hipotecario"){
             $errores[] = "La mínima cantidad a solicitar para los préstamos hipotecarios son 40000 euros y la máxima 1000000 euros. <br/>";
         }
 
         $_POST['entrada'] = filter_input(INPUT_POST, "entrada", FILTER_SANITIZE_NUMBER_INT);
-        if($_POST['entrada'] == '' || filter_input(INPUT_POST, "entrada", FILTER_VALIDATE_INT)){
+        if($_POST['entrada'] == '' || !filter_input(INPUT_POST, "entrada", FILTER_VALIDATE_INT)){
             $errores[] = "Introduzca una entrada válida. <br/>";
         }
 

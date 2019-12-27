@@ -24,15 +24,12 @@
                     <div class="card-body">
                     <form action="#" method="POST" enctype="multipart/form-data">
                         <select id="select" class="form-control" name="select">
-                            <option value="Ninguna">Seleccione un tipo de cuenta</option>
                             <option value="cuenta">Cuenta Corriente</option>
                             <option value="cuenta_nomina">Cuenta nómina</option>
                             <option value="cuenta_ahorros">Cuenta de ahorros</option>
                         </select>';
 
-                        if($_POST["select"] == "cuenta"){
-                            echo '<p>CUENTA</p>';
-                        }
+                        
 
                     echo '</form>';
 

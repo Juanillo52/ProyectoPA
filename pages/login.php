@@ -1,8 +1,10 @@
 <?php
     session_start();
     if(isset($_SESSION['register'])){
-        //mostrar mensaje
+        echo $_SESSION['register'];
+        unset($_SESSION['register']);
     }
+    var_dump($_SESSION['pass']);
 ?>
 
 <?php

@@ -157,11 +157,11 @@ function comprobarDatosFormulario(){
     else{$_POST['dni'] = filter_input(INPUT_POST, "dni", FILTER_SANITIZE_STRING);} 
 
     if(!isset($_POST['fecha_nacimiento']) || $_POST['fecha_nacimiento'] == ''){$errores[] = "Introduzca la fecha de nacimiento.<br/>";}
-    else{//arreglar
+    else{
         $fecha_actual = date("d-m-Y");
-        $fecha_mayor_edad = strtotime($fecha_actual . "-18 year");
-        
-        if($fecha_mayor_edad < $_POST['fecha_nacimiento']){
+        $fecha_mayor_edad = strtotime($fecha_actual . "-216 months");
+        $menor = $fecha_mayor_edad < strtotime($_POST['fecha_nacimiento']);
+        if($menor){
             $errores[] = "Debes ser mayor de edad para poder registrarte.</br>";
         }
     } 
@@ -239,16 +239,14 @@ function buscarCliente(){
 }
 
 function crearPassword(){
-    $password = "";
-
-    $longitudPass=8;
-
-    for($i=1 ; $i<=$longitudPass ; $i++){
-        $digito=rand(0,9);
-        $password .= $digito;
+    
+    $password= "";
+    
+    for($i =0 ; $i < 8 ; $i++){
+        $password.= rand(0,9);
     }
-
     enviarEmail($password);
+    $_SESSION['pass'] = $password;
     $password = password_hash($password, PASSWORD_DEFAULT);
     return $password;
 }
@@ -265,8 +263,7 @@ function altaCliente(){
     $ciudad = $_POST['ciudad'];
     $provincia =  $_POST['provincia'];
     $cp =  $_POST['cp'];
-    $password = crearPassword();
-    $clave =  substr(microtime(), 1, 8);
+    $clave = crearPassword();
 
     $con = mysqli_connect("localhost","root","");
 

@@ -1,5 +1,167 @@
 <?php
-    session_start();
+    session_start();    
+
+    function comprobarFormulario(){
+        $resultado = False; ## le damos este valor para que muestre el login
+    
+        if(isset($_POST['submit'])){    
+            $ok = comprobarDatosFormulario();
+
+            if($ok){
+                $resultado = verificarLogin();
+
+                if(!$resultado){
+                    echo "Clave incorrecta.<br>";
+                }
+            }         
+        }
+
+        if(isset($_POST['forgotpass'])){
+            $enviar = true;
+            $_POST['email'] = filter_input(INPUT_POST, "email", FILTER_SANITIZE_EMAIL);
+            if(!isset($_POST['email']) || $_POST['email'] == '' || !filter_input(INPUT_POST, "email", FILTER_VALIDATE_EMAIL)){
+                $errores[] = "Introduzca un email válido.<br/>";
+                $enviar = false;
+            }
+            if($enviar){
+                enviarClave($_POST['email']);
+            }
+        }
+        return $resultado;
+    }
+    
+    function comprobarDatosFormulario(){
+        if(!isset($_POST['dni']) || $_POST['dni'] == ''){$errores[] = "Introduzca el dni.<br/>";}
+        else{$_POST['dni'] = filter_input(INPUT_POST, "dni", FILTER_SANITIZE_STRING);} 
+        
+        if(!isset($_POST['password']) || $_POST['password'] == ''){$errores[] = "Introduzca la clave de acceso.";}
+        else{$_POST['password'] = filter_input(INPUT_POST, "password", FILTER_SANITIZE_STRING);} 
+        
+        if(!isset($errores)){
+            return True;
+        }else {
+            foreach($errores as $e) echo $e;
+            return False;
+        }
+    }
+    
+    function verificarLogin(){
+        $resultado = False;
+        $dni = $_POST['dni'];
+        $password = $_POST['password'];
+    
+        $con = mysqli_connect("localhost","root","");
+    
+        if (!$con){
+            die(' No puedo conectar: ' . mysqli_error($con));
+        }
+    
+        $db_selected = mysqli_select_db($con,"mensabank");
+    
+        if (!$db_selected){
+            die ('No puedo usar la base de datos: ' . mysqli_error($con));
+        }
+    
+        $resQuery = mysqli_query($con, "SELECT dni, clave from cliente WHERE dni = '$dni'");
+        if (!$resQuery) {
+            die ("Error al ejecutar la consulta: " . mysqli_error($con));
+        }else{
+            $data = mysqli_fetch_array($resQuery);
+            $hash = $data['clave'];
+    
+            if($data['dni'] == $dni && password_verify($password, $hash)){
+                $resultado = True;
+            }
+        }
+        
+    
+        mysqli_close($con);
+        
+        return $resultado;
+    }
+    
+    function getUser($dni){
+        $nombre = null;
+        $dni = $_POST['dni'];
+        $con = mysqli_connect("localhost","root","");
+    
+        if (!$con){
+            die(' No puedo conectar: ' . mysqli_error($con));
+        }
+    
+        $db_selected = mysqli_select_db($con,"mensabank");
+    
+        if (!$db_selected){
+            die ('No puedo usar la base de datos: ' . mysqli_error($con));
+        }
+    
+        $resQuery = mysqli_query($con, "SELECT nombre, dni from cliente WHERE dni='$dni'");
+
+        if (!$resQuery) {
+            die ("Error al ejecutar la consulta: " . mysqli_error($con));
+        }else{
+            $data = mysqli_fetch_array($resQuery);
+            $nombre = $data['nombre'];
+        }
+
+        mysqli_close($con);
+        
+        return $nombre;
+    }
+    
+    function redireccionar(){
+        $_SESSION['login']= True;
+        $_SESSION['user'] = getUser($_POST['dni']);
+        $_SESSION['dni'] = $_POST['dni'];
+    }
+
+    function enviarClave($email){
+        $con = mysqli_connect("localhost","root","");
+        $email = $_POST['email'];
+    
+        if (!$con){
+            die(' No puedo conectar: ' . mysqli_error($con));
+        }
+    
+        $db_selected = mysqli_select_db($con,"mensabank");
+    
+        if (!$db_selected){
+            die ('No puedo usar la base de datos: ' . mysqli_error($con));
+        }
+    
+        $resQuery = mysqli_query($con, "SELECT * from cliente WHERE email='$email'");
+        if (!$resQuery) {
+            die ("Error al ejecutar la consulta: " . mysqli_error($con));
+        }else{
+            if($row=mysqli_fetch_array($resQuery)){
+                $nombre=$row['nombre'];
+
+                $password= "";
+    
+                for($i =0 ; $i < 8 ; $i++){
+                    $password.= rand(0,9);
+                }
+                var_dump($password);
+                $clave = password_hash($password, PASSWORD_DEFAULT);
+                $resQuery = mysqli_query($con, "UPDATE cliente SET clave='$clave' WHERE email='$email'");
+                if (!$resQuery) {
+                    die ("Error al ejecutar la consulta: " . mysqli_error($con));
+                }else{
+                    ini_set( 'display_errors', 1 );
+                    error_reporting( E_ALL );
+                    $from = 'mensabank@support.es';
+                    $to = $email;
+                    $subject = 'Aquí tienes tu nueva clave, '.$nombre;
+                    $message = 'Tu nueva clave de acceso es: '.$password;
+                    $headers = "From:" . $from;
+                    mail($to,$subject,$message, $headers);
+                }              
+            }else{
+                echo 'No se han encontrado coincidencias con el email introducido</br>';
+            }
+        }
+        mysqli_close($con);
+    }
 ?>
 
 <!DOCTYPE html>
@@ -85,6 +247,13 @@ and open the template in the editor.
 </head>
 
 <body class="bg-color">
+    <?php
+        if(comprobarFormulario()){
+            redireccionar();
+            header('Location: dashboard.php');
+        }
+    ?>
+
     <div id="right-panel" class="right-panel">
         <header id="header" class="header">
             <div class="top-left">
@@ -106,7 +275,7 @@ and open the template in the editor.
     <div id="divlogin">
         <div class="login-content">
             <div class="login-form">
-                <form>
+                <form method="POST">
                     <div class="form-group">
                     <label>DNI</label>
                     <input type="text" name="dni" class="form-control"></div>
@@ -123,27 +292,18 @@ and open the template in the editor.
                     <div class="register-link m-t-15 text-center">
                         <p>¿Todavía no eres cliente de MensaBank? <a href="register.php"> Regístrate aquí</a></p>
                     </div>
-                </form>
-            </div>
-        </div>
-    </div>
-    <div id="divforgotpass">
-        <div class="login-content">
-            <div class="login-form">
-                <form>
-                    <div class="form-group">
-                    <label>DNI</label>
-                    <input type="text" name="dni" class="form-control"></div>
-                    <div class="form-group">
-                        <label>Email</label>
-                        <input type="email" name="password" class="form-control">
+                    <div id="divforgotpass">
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input type="email" name="email" class="form-control">
+                        </div>
+                        <button type="submit" class="btn btn-main btn-flat m-b-30 m-t-30" name="forgotpass">Recuperar clave</button>                
                     </div>
-                    <button type="submit" class="btn btn-main btn-flat m-b-30 m-t-30">Recuperar clave</button>
                 </form>
             </div>
         </div>
     </div>
-    
+        
     <section class="content">
         <article class="row card">
             <h1 class="card-header">¿Qué es MensaBank?</h1>
@@ -488,7 +648,6 @@ and open the template in the editor.
             });
 
             $("#forgotpass").click(function () {
-                $("#divlogin").hide(500);
                 $("#divforgotpass").slideToggle(500);
             });
 
@@ -499,7 +658,9 @@ and open the template in the editor.
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jquery-match-height@0.7.2/dist/jquery.matchHeight.min.js"></script>
     <script src="assets/js/main.js"></script>
-    <?php require_once("footer.php"); ?>
+    <?php      
+        require_once("footer.php"); 
+    ?>
 </body>
 
 </html>

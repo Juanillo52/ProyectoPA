@@ -75,6 +75,11 @@ and open the template in the editor.
         #cellPaiChart {
             height: 160px;
         }
+
+        .site-footer{
+            padding-right: 13px;
+            padding-left: 13px;
+        }
     </style>
 
 </head>

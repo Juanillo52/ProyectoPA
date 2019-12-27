@@ -11,7 +11,11 @@
                 <li><a href="transfers.php">Transferencias</a></li>
                 <li><a href="loans.php">Préstamos</a></li>
                 <li><a href="pensionplans.php">Plan de pensiones</a></li>
+                <li><a href="new_account.php">Nueva cuenta</a></li>
+                <li><a href="new_card.php">Nueva tarjeta</a></li>
                 <li><a href="new_transfer.php">Nueva transferencia</a></li>
+                <li><a href="new_loan.php">Nuevo préstamo</a></li>
+                <li><a href="new_pensionplan.php">Nuevo plan de pensiones</a></li>
             </ul>
         </div><!-- /.navbar-collapse -->
     </nav>

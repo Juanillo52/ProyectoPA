@@ -58,7 +58,7 @@ function mostrarFormulario(){
                     </div>
                     <div class="checkbox">
                         <label>
-                            <input type="checkbox" name="terminos"> Acepto los <a href="#">términos y condiciones</a>
+                            <input type="checkbox" name="terminos"> Acepto los <a href="policy.php" target="_blank">términos y condiciones</a>
                         </label>
                     </div>
                     <button type="submit" name="submit" class="btn btn-main btn-flat m-b-30 m-t-30">Registrarme</button>                        

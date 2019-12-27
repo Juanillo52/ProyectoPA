@@ -1,5 +1,8 @@
 <?php
     session_start();
+    if(isset($_SESSION['register'])){
+        //mostrar mensaje
+    }
 ?>
 
 <?php
@@ -29,7 +32,7 @@ function mostrarFormulario(){
                     </div>
                     <div class="checkbox">
                         <label class="pull-right">
-                            <a href="#">¿Olvidaste tu clave?</a> 
+                            <a href="forgot_pass.php">¿Olvidaste tu clave?</a>
                         </label>
                     </div>
                     <button type="submit" name="submit" class="btn btn-main btn-flat m-b-30 m-t-30">Acceder</button>

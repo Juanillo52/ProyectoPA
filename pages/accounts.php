@@ -1,5 +1,8 @@
 <?php
     session_start();
+    if(!isset($_SESSION['login']) || !$_SESSION['login']){
+        header('Location: login.php');
+    }
 ?>
 
 <?php
@@ -422,11 +425,8 @@
 
 <body class="bg-color">
     <?php
-        //if($_SESSION['login'] == True){
-            mostrarCuentas();
-        /*}else{
-            header('Location: login.php');
-        }*/
+        mostrarCuentas();
+
     ?>
 
     <!-- Scripts -->

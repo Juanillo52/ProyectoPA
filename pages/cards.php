@@ -94,42 +94,47 @@
                                     <th>Número de tarjeta</th>
                                     <th>CVV</th>
                                     <th>Fecha de Caducidad</th>
-                                    <th>Tipo de tarjeta</th>
                                     <th>Pin</th>
                                 </tr>
                             </thead>
                             <tbody>
                                <?php 
-                                $usuario = $_POST['usuario'];
-                                $contrasenya = $_POST['contrasenya'];
-                        
                                 $con = mysqli_connect("localhost","root","");
-                        
+
                                 if (!$con){
                                     die(' No puedo conectar: ' . mysqli_error($con));
                                 }
-                        
-                                $db_selected = mysqli_select_db($con,"ej1");
-                        
+                            
+                                $db_selected = mysqli_select_db($con, "mensabank");
+                            
                                 if (!$db_selected){
                                     die ('No puedo usar la base de datos: ' . mysqli_error($con));
                                 }
-                        
-                                $resQuery = mysqli_query($con, "SELECT usuario, contrasenya from ej1 WHERE usuario = '$usuario'");
+                            
+                                $dni = $_SESSION['dni'];
+            
+                                $resQuery = mysqli_query($con, "SELECT * from tarjeta WHERE cliente = '$dni'");
                                 if (!$resQuery) {
                                     die ("Error al ejecutar la consulta: " . mysqli_error($con));
                                 }else{
-                                    $data = mysqli_fetch_array($resQuery);
-                                    $hash = $data['contrasenya'];
-                        
-                                    if($data['usuario'] == $usuario && password_verify($contrasenya, $hash)){
-                                        $resultado = True;
+                                    while($row = mysqli_fetch_array($resQuery)){
+                                        $numero_tarjeta = $row['numero_tarjeta'];
+                                        $cvv = $row['cvv'];
+                                        $tipo = $row['tipo'];
+                                        $fecha_caducidad = $row['fecha_caducidad'];
+                                        $pin = $row['pin'];
+                                        $cuenta = $row['cuenta'];
+
+                                        echo '<td>'+ $cuenta +'</td>
+                                        <td>'+ $tipo +'</td>
+                                        <td>'+ $numero_tarjeta +'</td>
+                                        <td>'+ $cvv +'</td>
+                                        <td>'+ $fecha_caducidad +'</td>
+                                        <td>'+ $pin +'</td>';
                                     }
                                 }
-                                
-                        
+                                                        
                                 mysqli_close($con);
-                               //COMPLETAR
                                
                                ?>
                             </tbody>

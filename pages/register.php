@@ -79,10 +79,7 @@ function comprobarFormulario(){
 
             $ok = comprobarDatosFormulario();
             if($ok){
-                $resultado = verificarLogin();
-                if(!$resultado){
-                    echo "Contrase&ntildea incorrecta.<br>";
-                }
+                $resultado = !buscarCliente();
             }         
     }
     return $resultado;
@@ -207,6 +204,7 @@ function altaCliente(){
     $provincia =  $_POST['provincia'];
     $cp =  $_POST['cp'];
     $password = crearPassword();
+    $clave =  substr(microtime(), 1, 8);
 
     $con = mysqli_connect("localhost","root","");
 
@@ -221,7 +219,7 @@ function altaCliente(){
     }
 
     $resQuery = mysqli_query($con, "INSERT INTO cliente (nombre, apellidos, dni, direccion, telefono, fecha_nacimiento, email, clave, ciudad, provincia, cp) 
-    VALUES ('$nombre','$apellidos','$dni','$direccion','$telefono','$fecha_nacimiento', '$email', '$ciudad', '$provincia', '$cp')");
+    VALUES ('$nombre','$apellidos','$dni','$direccion','$telefono','$fecha_nacimiento', '$email','$clave', '$ciudad', '$provincia', '$cp')");
     if (!$resQuery) {
         die ("Error al ejecutar la consulta: " . mysqli_error($con));
     }else{

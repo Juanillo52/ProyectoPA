@@ -9,7 +9,9 @@
         <div class="header-menu">
             <div class="header-left">
                 <span class="alert">Te damos la bienvenida, nombre</span>
-                <button class="btn btn-main btn-lg" type="button" id="logout">Salir</button>
+                <form method="POST">
+                <input type="submit" class="btn btn-main btn-lg" name="logout">Salir</button>
+                </form>
             </div>
         </div>
     </div>

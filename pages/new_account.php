@@ -1,5 +1,9 @@
 <?php
-    require_once("test_log.php");
+    session_start();
+
+    /*if(!isset($_SESSION['login']) || !$_SESSION['login']){
+        header('Location: login.php');
+    }*/
 ?>
 
 <?php
@@ -19,14 +23,28 @@
                 <h1 class="card-header">Crear nueva Cuenta</h1>
                     <div class="card-body">
                     <form action="#" method="POST" enctype="multipart/form-data">
+                        <label class=" form-control-label" for="select" onchange="Select()">Seleccione el tipo de cuenta</label>
                         <select id="select" class="form-control" name="select">
-                            <option value="cuenta">Cuenta Corriente</option>
+                            <option value="cuenta">Cuenta corriente</option>
                             <option value="cuenta_nomina">Cuenta nómina</option>
                             <option value="cuenta_ahorros">Cuenta de ahorros</option>
-                        </select>';
+                        </select><br/>';
 
-                        
+                            echo '<div id="div_nomina" style="display:none">
+                                    <label class=" form-control-label" for="nomina">Adjunte su nomina en pdf</label>
+                                    <input type="file" name="nomina">
+                            </div>';
 
+                        echo '  <label class=" form-control-label" for="dni">DNI</label>
+                                <input id="dni" class="form-control" type="text" name="dni">
+                                <br/>
+                                <label class=" form-control-label" for="email">Email</label>
+                                <input id="email" class="form-control" type="text" name="email">
+                                <br/>
+                                <label class=" form-control-label" for="clave">Clave</label>
+                                <input id="clave" class="form-control" type="password" name="clave">
+                                <br/>
+                                <button class="btn btn-primary btn-sm" type="submit" name="btnSolicitar">Solicitar</button>';
                     echo '</form>';
 
                         echo '
@@ -48,6 +66,10 @@
             
             if($ok){
                 $resultado = nuevaCuenta();
+
+                if($resultado){
+                    header('Location: accounts.php');
+                }
             }
         }
         
@@ -57,8 +79,29 @@
     function comprobarDatosNuevaCuenta(){
         $resultado = False;
 
-        
-        
+        $_POST['dni'] = filter_input(INPUT_POST, "dni", FILTER_SANITIZE_STRING);
+        if(!isset($_POST['dni']) || $_POST['dni'] == '' || !preg_match('/^([0-9]{8})([A-Z])$/', $_POST['dni'])){
+            $errores[] = "Introduzca un dni válido. <br/>";
+        }
+
+        $_POST['email'] = filter_input(INPUT_POST, "email", FILTER_SANITIZE_EMAIL);
+        if(!isset($_POST['email']) || $_POST['email'] == '' || !filter_input(INPUT_POST, "email", FILTER_VALIDATE_EMAIL)){
+            $errores[] = "Introduzca un email válido. <br/>";
+        }
+
+        $_POST['clave'] = filter_input(INPUT_POST, "clave", FILTER_SANITIZE_STRING);
+        if(!isset($_POST['clave']) || $_POST['clave'] == ''){
+            $errores[] = "Introduzca una clave válida. <br/>";
+        }
+
+        if(!isset($_POST['select'])){
+            $errores[] = "Elija el tipo de cuenta. <br/>";
+        }
+
+        if ($_FILES['nomina']['error'] != 4 && ($_FILES['anexo']['type'] != 'application/pdf' || $_FILES['anexo']['size'] > (1024 * 1024 * 10))) {
+            $errores[] = "El fichero no debe de pasar los 10 mb de tamaño y debe ser pdf.<br/>";
+        }
+
         if(!isset($errores)){
             $resultado = True;
         }else{
@@ -66,6 +109,96 @@
                 echo $e;
             }
         }
+
+        return $resultado;
+    }
+
+    function nuevaCuenta(){
+        $resultado = False;
+        $cliente = $_POST['dni'];
+        $email = $_POST['email'];
+        $clave = $_POST['clave'];
+        $tipo = $_POST['select'];
+        $saldo = 0;
+        $iban = "ES";
+        
+        for($i = 0; $i < 22; $i++){
+            $iban .= rand(0,9);
+        }
+
+        if($tipo == "cuenta_ahorros"){
+            $tae = 2.5;
+        }elseif($tipo == "cuenta_nomina"){
+            $nomina = $_FILES['nomina']['name'];
+            $nomina = time() . $nomina;
+        }
+
+        $con = mysqli_connect("localhost", "root", "");
+        
+        if(!$con){
+            die('No puedo conectar: ' . mysqli_error($con));
+        }
+        
+        $db_selected = mysqli_select_db($con, "mensabank");
+        
+        if(!$db_selected){
+            die('No puedo usar la base de datos: ' . mysqli_error($con));
+        }
+
+        $resQuery = mysqli_query($con, "SELECT clave, dni, email from cliente WHERE dni='$cliente' AND email='$email'");
+
+        if(!$resQuery){
+            mysqli_close($con);
+            die('No puedo ejecutar la consulta: ' . mysqli_error($con));
+        }else{
+            if(mysqli_num_rows($resQuery) != 0){
+
+                if($tipo == "cuenta_ahorros"){
+                    $row = mysqli_fetch_array($resQuery);
+                    
+                    if(password_verify($clave, $row['clave'])){
+                        $resQuery2 = mysqli_query($con, "INSERT INTO cuenta_ahorros(iban, saldo, tae, cliente) VALUES ('$iban', '$saldo', '$tae', $cliente)");
+
+                        if(!$resQuery2){
+                            mysqli_close($con);
+                            die('No puedo ejecutar la consulta: ' . mysqli_error($con));
+                        }else{
+                            $resultado = True;
+                        }
+                    }
+                }elseif($tipo == "cuenta_nomina"){
+                    $row = mysqli_fetch_array($resQuery);
+                    
+                    if(password_verify($clave, $row['clave'])){
+                        $resQuery2 = mysqli_query($con, "INSERT INTO cuenta_nomina(iban, saldo, nomina, cliente) VALUES ('$iban', '$saldo', '$nomina', $cliente)");
+
+                        if(!$resQuery2){
+                            mysqli_close($con);
+                            die('No puedo ejecutar la consulta: ' . mysqli_error($con));
+                        }else{
+                            $resultado = True;
+                        }
+                    }
+                }else{
+                    $row = mysqli_fetch_array($resQuery);
+                    
+                    if(password_verify($clave, $row['clave'])){
+                        $resQuery2 = mysqli_query($con, "INSERT INTO cuenta(iban, saldo, cliente) VALUES ('$iban', '$saldo', '$cliente)");
+
+                        if(!$resQuery2){
+                            mysqli_close($con);
+                            die('No puedo ejecutar la consulta: ' . mysqli_error($con));
+                        }else{
+                            $resultado = True;
+                        }
+                    }
+                }
+            }
+        }
+
+        mysqli_close($con);
+        
+        return $resultado;
     }
 ?>
 
@@ -373,6 +506,14 @@
                 }
             });
             // Bar Chart #flotBarChart End
+
+            $("#select").change(function(){
+                if($("select[id=select]").val() == "cuenta_nomina"){*/
+                    $("#div_nomina").css("display", "");
+                }else{
+                    $("#div_nomina").css("display", "none");
+                }
+            });
         });
     </script>
     <script src="https://cdn.jsdelivr.net/npm/jquery@2.2.4/dist/jquery.min.js"></script>

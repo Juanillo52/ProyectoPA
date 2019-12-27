@@ -153,7 +153,7 @@
             die('No puedo usar la base de datos: ' . mysqli_error($con));
         }
 
-        $resQuery = mysqli_query($con, "SELECT clave, dni, email from cliente WHERE dni='$dni' AND email='$email'");
+        $resQuery = mysqli_query($con, "SELECT clave, dni, email from cliente WHERE dni='$cliente' AND email='$email'");
 
         if(!$resQuery){
             mysqli_close($con);
@@ -491,6 +491,10 @@
                 }
             });
             // Bar Chart #flotBarChart End
+
+            $("select").change(function(){
+                alert("The text has been changed.");
+            });
         });
     </script>
     <script src="https://cdn.jsdelivr.net/npm/jquery@2.2.4/dist/jquery.min.js"></script>

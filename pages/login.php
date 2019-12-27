@@ -170,6 +170,22 @@ function redireccionar(){
     <link rel="stylesheet" href="../plantilla-boostrap/assets/css/style.css">
 
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800' rel='stylesheet' type='text/css'>
+
+    <style>
+        html {
+            min-height: 100%;
+            position: relative;
+        }
+
+        body {
+            margin: 0;
+            margin-bottom: 40px;
+        }
+
+        footer {
+            height: 40px;
+        }
+    </style>
 </head>
 <body class="bg-color">
     <?php
@@ -180,7 +196,8 @@ function redireccionar(){
             redireccionar();
             header('Location: dashboard.php');
         }
-        //require_once("footer.php");
+        
+        require_once("footer.php");
     ?>
     
 

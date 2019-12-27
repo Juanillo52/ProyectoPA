@@ -2545,8 +2545,8 @@ ul {
 }
 .site-footer{
   clear: both;
-  padding-right: 13px;
-  padding-left: 13px;
+  /*padding-right: 13px;
+  padding-left: 13px;*/
 }
 .footer-inner{
   border: 1px solid white;
@@ -2554,8 +2554,8 @@ ul {
   
 }
 footer{
-  margin-left: 2px;
-  margin-right: 2px;
+  /*margin-left: 2px;
+  margin-right: 2px;*/
 }
 
 .enlace-footer {

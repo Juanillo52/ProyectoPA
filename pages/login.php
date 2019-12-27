@@ -5,6 +5,11 @@
         unset($_SESSION['register']);
     }
     var_dump($_SESSION['pass']);
+<<<<<<< HEAD
+=======
+    var_dump($_SESSION['cliente']);
+?>
+>>>>>>> 1cc174fa240f57d3a9894737aecd2839bf70cff2
 
 var_dump($_POST['forgotpasword']);
 

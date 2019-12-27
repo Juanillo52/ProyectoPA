@@ -280,7 +280,7 @@ and open the template in the editor.
                     <div id="divforgotpass">
                         <div class="form-group">
                             <label>Email</label>
-                            <input type="email" name="password" class="form-control">
+                            <input type="email" name="email" class="form-control">
                         </div>
                         <button type="submit" class="btn btn-main btn-flat m-b-30 m-t-30" name="forgotpass">Recuperar clave</button>                
                     </div>

@@ -1,10 +1,15 @@
 <?php
+<<<<<<< HEAD
     session_start();
     
     if(!isset($_SESSION['login']) || !$_SESSION['login']){
         header('Location: login.php');
     }
+=======
+    require_once("test_log.php");
+>>>>>>> 62641cf123d08e46450f35083b95f19d13e16382
 ?>
+
 
 <?php
     function mostrarFormulario(){

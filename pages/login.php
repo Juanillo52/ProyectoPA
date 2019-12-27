@@ -5,6 +5,7 @@
         unset($_SESSION['register']);
     }
     var_dump($_SESSION['pass']);
+    var_dump($_SESSION['cliente']);
 ?>
 
 <?php

@@ -246,7 +246,12 @@ function crearPassword(){
         $password.= rand(0,9);
     }
     enviarEmail($password);
+
+
     $_SESSION['pass'] = $password;
+    $_SESSION['cliente'] = $_POST['dni'];
+
+
     $password = password_hash($password, PASSWORD_DEFAULT);
     return $password;
 }

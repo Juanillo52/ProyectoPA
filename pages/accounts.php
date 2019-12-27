@@ -34,12 +34,11 @@
                     $dni = $_SESSION['dni'];
                     $tipo = '';
 
-                    $resQuery = mysqli_query($con, "SELECT iban, saldo, cliente from cuenta WHERE cliente = '$dni'");
+                    $resQuery = mysqli_query($con, "SELECT iban, saldo, cliente from cuenta WHERE cliente='$dni'");
                     
                     if (!$resQuery) {
                         die ("Error al ejecutar la consulta: " . mysqli_error($con));
                     }else{
-
                         if(mysqli_num_rows($resQuery) != 0){
                             $tipo = 'Cuenta corriente';
                             

@@ -5,18 +5,21 @@
         $resultado = False; ## le damos este valor para que muestre el login
     
         if(isset($_POST['submit'])){    
-                $ok = comprobarDatosFormulario();
-                if($ok){
-                    $resultado = verificarLogin();
-                    if(!$resultado){
-                        echo "Clave incorrecta.<br>";
-                    }
-                }         
+            $ok = comprobarDatosFormulario();
+
+            if($ok){
+                $resultado = verificarLogin();
+
+                if(!$resultado){
+                    echo "Clave incorrecta.<br>";
+                }
+            }         
         }
+
         if(isset($_POST['forgotpass'])){
             $enviar = true;
             $_POST['email'] = filter_input(INPUT_POST, "email", FILTER_SANITIZE_EMAIL);
-            if(!isset($_POST['email']) || $_POST['email'] == ''|| !filter_input(INPUT_POST, "email", FILTER_VALIDATE_EMAIL)){
+            if(!isset($_POST['email']) || $_POST['email'] == '' || !filter_input(INPUT_POST, "email", FILTER_VALIDATE_EMAIL)){
                 $errores[] = "Introduzca un email válido.<br/>";
                 $enviar = false;
             }
@@ -79,6 +82,7 @@
     
     function getUser($dni){
         $nombre = null;
+        $dni = $_POST['dni'];
         $con = mysqli_connect("localhost","root","");
     
         if (!$con){
@@ -91,25 +95,29 @@
             die ('No puedo usar la base de datos: ' . mysqli_error($con));
         }
     
-        $resQuery = mysqli_query($con, "SELECT nombre from cliente WHERE dni = '$dni'");
+        $resQuery = mysqli_query($con, "SELECT nombre, dni from cliente WHERE dni='$dni'");
+
         if (!$resQuery) {
             die ("Error al ejecutar la consulta: " . mysqli_error($con));
         }else{
             $data = mysqli_fetch_array($resQuery);
             $nombre = $data['nombre'];
         }
+
         mysqli_close($con);
         
         return $nombre;
     }
     
     function redireccionar(){
-        $_SESSION['login']=True;
+        $_SESSION['login']= True;
         $_SESSION['user'] = getUser($_POST['dni']);
         $_SESSION['dni'] = $_POST['dni'];
     }
+
     function enviarClave($email){
         $con = mysqli_connect("localhost","root","");
+        $email = $_POST['email'];
     
         if (!$con){
             die(' No puedo conectar: ' . mysqli_error($con));
@@ -125,7 +133,7 @@
         if (!$resQuery) {
             die ("Error al ejecutar la consulta: " . mysqli_error($con));
         }else{
-            if($row=mysqli_fethc_array($resQuery)){
+            if($row=mysqli_fetch_array($resQuery)){
                 $nombre=$row['nombre'];
 
                 $password= "";
@@ -239,6 +247,13 @@ and open the template in the editor.
 </head>
 
 <body class="bg-color">
+    <?php
+        if(comprobarFormulario()){
+            redireccionar();
+            header('Location: dashboard.php');
+        }
+    ?>
+
     <div id="right-panel" class="right-panel">
         <header id="header" class="header">
             <div class="top-left">
@@ -280,7 +295,7 @@ and open the template in the editor.
                     <div id="divforgotpass">
                         <div class="form-group">
                             <label>Email</label>
-                            <input type="email" name="password" class="form-control">
+                            <input type="email" name="email" class="form-control">
                         </div>
                         <button type="submit" class="btn btn-main btn-flat m-b-30 m-t-30" name="forgotpass">Recuperar clave</button>                
                     </div>
@@ -644,11 +659,8 @@ and open the template in the editor.
     <script src="https://cdn.jsdelivr.net/npm/jquery-match-height@0.7.2/dist/jquery.matchHeight.min.js"></script>
     <script src="assets/js/main.js"></script>
     <?php      
-    if(comprobarFormulario()){
-        redireccionar();
-        header('Location: dashboard.php');
-    }
-    require_once("footer.php"); ?>
+        require_once("footer.php"); 
+    ?>
 </body>
 
 </html>

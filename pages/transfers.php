@@ -1,8 +1,7 @@
 <?php
-    require_once("test_log.php");
+    session_start();
 ?>
 
-?>
 
 <!doctype html>
 <!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang=""> <![endif]-->
@@ -89,7 +88,7 @@
         <!-- /.content -->
         <div class="content">
         <div class="row card">
-        <h1 class="card-header">Tarjetas</h1>
+        <h1 class="card-header">Transferencias</h1>
             <div class="card-body">
                 <div class="card">
                     <div class="card-body">

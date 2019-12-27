@@ -4,14 +4,6 @@
         echo $_SESSION['register'];
         unset($_SESSION['register']);
     }
-    var_dump($_SESSION['pass']);
-<<<<<<< HEAD
-=======
-    var_dump($_SESSION['cliente']);
-?>
->>>>>>> 1cc174fa240f57d3a9894737aecd2839bf70cff2
-
-var_dump($_POST['forgotpasword']);
 
 function mostrarFormulario(){
     
@@ -49,7 +41,7 @@ function mostrarFormulario(){
                     <div id="divforgotpass">            
                         <div class="form-group">
                             <label>Email</label>
-                            <input type="email" name="password" class="form-control">
+                            <input type="email" name="email" class="form-control">
                         </div>
                         <button type="submit" class="btn btn-main btn-flat m-b-30 m-t-30" name="forgotpass">Recuperar clave</button>                    
                     </div>
@@ -186,7 +178,7 @@ function enviarClave($email){
     if (!$resQuery) {
         die ("Error al ejecutar la consulta: " . mysqli_error($con));
     }else{
-        if($row=mysqli_fethc_array($resQuery)){
+        if($row=mysqli_fetch_array($resQuery)){
             $nombre=$row['nombre'];
 
             $password= "";

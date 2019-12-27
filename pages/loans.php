@@ -1,5 +1,5 @@
 <?php
-    require_once("test_log.php");
+    session_start();
 ?>
 
 <?php
@@ -83,8 +83,7 @@
             require_once("footer.php");
             //.site-footer
         
-        echo'    </div>
-        <!-- /#right-panel -->';
+        echo'</div>';
     }
 ?>
 
@@ -154,16 +153,23 @@
             height: 160px;
         }
 
+        .table thead th{
+            border: 0;
+        }
+
+        .table td {
+            border: 0;
+        }
+
+        .card {
+            border: 1px solid rgba(0,0,0,.125)
+        }
     </style>
 </head>
 
 <body class="bg-color">
     <?php
-        if($_SESSION['login'] == True){
-            mostrarPrestamos();
-        }else{
-            header('Location: login.php');
-        }
+        mostrarPrestamos()
     ?>
 
     <!-- Scripts -->

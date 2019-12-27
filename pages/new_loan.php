@@ -122,7 +122,7 @@
         $fecha_actual = date("d-m-Y");
 
         if($tipo == "personal"){
-            $intereses = 4,95;
+            $intereses = 4.95;
 
             if($credito >= 1000 && $credito <= 10000){
                 $cuota = $credito/14;
@@ -144,7 +144,7 @@
                 $fecha_limite = date("Y-m-d", strtotime($fecha_actual."+ 55 month"));
             }
         }else{
-            $intereses = 1,95;
+            $intereses = 1.95;
 
             if($credito >= 40000 && $credito <= 100000){
                 $cuota = $credito/34;

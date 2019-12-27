@@ -1,5 +1,8 @@
 <?php
     session_start();
+    if(!isset($_SESSION['login']) || !$_SESSION['login']){
+        header('Location: login.php');
+    }
 ?>
 
 <?php
@@ -91,38 +94,6 @@
                                         }
 
                                         echo '</tbody>
-                                        </table>';
-                                    }
-                                }
-
-                                $resQuery3 = mysqli_query($con, "SELECT estado, cantidad, cliente from plan_pensiones WHERE cliente = '$dni'");
-
-                                if(!resQuery3){
-                                    die('Error al ejecutar la consulta: ' . mysqli_error($con));
-                                }else{
-
-                                    if(mysqli_num_rows($resQuery3) != 0){
-
-                                        echo '<br/>
-                                        <table class="table">
-                                            <thead>
-                                                <tr>
-                                                    <th>Plan de pensiones</th>
-                                                    <th>Estado</th>
-                                                    <th>Cantidad depositada</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>';
-
-                                        while($row3 = mysqli_fetch_array($resQuery3)){
-                                            echo '<tr>
-                                                        <td></td>
-                                                        <td>'+ $row3['estado'] +'</td>
-                                                        <td>'+ $row3['cantidad'] +'</td>
-                                                    </tr>';
-                                        }
-
-                                        echo ' </tbody>
                                         </table>';
                                     }
                                 }
@@ -224,38 +195,6 @@
                                     }
                                 }
 
-                                $resQuery3 = mysqli_query($con, "SELECT estado, cantidad, cliente from plan_pensiones WHERE cliente = '$dni'");
-
-                                if(!resQuery3){
-                                    die('Error al ejecutar la consulta: ' . mysqli_error($con));
-                                }else{
-
-                                    if(mysqli_num_rows($resQuery3) != 0){
-
-                                        echo '<br/>
-                                        <table class="table">
-                                            <thead>
-                                                <tr>
-                                                    <th>Plan de pensiones</th>
-                                                    <th>Estado</th>
-                                                    <th>Cantidad depositada</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>';
-
-                                        while($row3 = mysqli_fetch_array($resQuery3)){
-                                            echo '<tr>
-                                                        <td></td>
-                                                        <td>'+ $row3['estado'] +'</td>
-                                                        <td>'+ $row3['cantidad'] +'</td>
-                                                    </tr>';
-                                        }
-
-                                        echo '</tbody>
-                                            </table>';
-                                    }
-                                }
-
                                 $resQuery4 = mysqli_query($con, "SELECT tipo, credito, pagado, cuenta from tarjeta WHERE cuenta = '$cuenta'");
 
                                 if(!resQuery4){
@@ -353,38 +292,6 @@
                                     }
                                 }
 
-                                $resQuery3 = mysqli_query($con, "SELECT estado, cantidad, cliente from plan_pensiones WHERE cliente = '$dni'");
-
-                                if(!resQuery3){
-                                    die('Error al ejecutar la consulta: ' . mysqli_error($con));
-                                }else{
-
-                                    if(mysqli_num_rows($resQuery3) != 0){
-
-                                        echo '<br/>
-                                        <table class="table">
-                                            <thead>
-                                                <tr>
-                                                    <th>Plan de pensiones</th>
-                                                    <th>Estado</th>
-                                                    <th>Cantidad depositada</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>';
-
-                                        while($row3 = mysqli_fetch_array($resQuery3)){
-                                            echo '<tr>
-                                                        <td></td>
-                                                        <td>'+ $row3['estado'] +'</td>
-                                                        <td>'+ $row3['cantidad'] +'</td>
-                                                    </tr>';
-                                        }
-
-                                        echo '</tbody>
-                                        </table>';
-                                    }
-                                }
-
                                 $resQuery4 = mysqli_query($con, "SELECT tipo, credito, pagado, cuenta from tarjeta WHERE cuenta = '$cuenta'");
 
                                 if(!resQuery4){
@@ -447,6 +354,7 @@
     <title>MensaBank</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link type="text/css" rel="stylesheet" href="../plantilla-boostrap/assets/css/style.css">
+    <link type="text/css" rel="stylesheet" href="../css/footer_style.css">
 
     <link rel="apple-touch-icon" href="https://i.imgur.com/QRAUqs9.png">
     <link rel="shortcut icon" href="../images/icon.png">
@@ -517,11 +425,8 @@
 
 <body class="bg-color">
     <?php
-        if($_SESSION['login'] == True){
-            mostrarCuentas();
-        }else{
-            header('Location: login.php');
-        }
+        mostrarCuentas();
+
     ?>
 
     <!-- Scripts -->

@@ -1,7 +1,9 @@
 <?php
-    session_start();
+session_start();
+    if(!isset($_SESSION['login']) || !$_SESSION['login']){
+        header('Location: login.php');
+    }
 ?>
-
 
 <?php
     function mostrarPrestamos(){
@@ -100,6 +102,7 @@
     <title>MensaBank</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link type="text/css" rel="stylesheet" href="../plantilla-boostrap/assets/css/style.css">
+    <link type="text/css" rel="stylesheet" href="../css/footer_style.css">
 
     <link rel="apple-touch-icon" href="https://i.imgur.com/QRAUqs9.png">
     <link rel="shortcut icon" href="../images/icon.png">

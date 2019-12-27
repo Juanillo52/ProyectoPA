@@ -182,6 +182,11 @@ function redireccionar(){
         footer {
             height: 40px;
         }
+
+        .site-footer{
+            padding-right: 13px;
+            padding-left: 13px;
+        }
     </style>
 </head>
 <body class="bg-color">

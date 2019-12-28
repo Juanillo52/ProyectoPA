@@ -20,14 +20,14 @@
                             <table class="table table-bordered">
                                 <thead>
                                     <tr>
-                                        <td>Importe</td>
-                                        <td>Tipo</td>
-                                        <td>Entrada</td>
-                                        <td>Cuenta</td>
-                                        <td>Cuota</td>
-                                        <td>Interés</td>
-                                        <td>Pagado</td>
-                                        <td>Fecha límite</td>
+                                        <th>Importe</th>
+                                        <th>Tipo</th>
+                                        <th>Entrada</th>
+                                        <th>Cuenta</th>
+                                        <th>Cuota</th>
+                                        <th>Interés</th>
+                                        <th>Pagado</th>
+                                        <th>Fecha límite</th>
                                     </tr>
                                 </thead>
                                 <tbody>';
@@ -65,12 +65,12 @@
                                                         <td>'+ $row['fecha_limite'] +'</td>
                                                     </tr>';
                                         }
-
-                                        echo '</tbody>
-                                        </table>';
                                     }
 
                                 }
+
+                                echo '</tbody>
+                                </table>';
                                 
                                 mysqli_close($con);
 

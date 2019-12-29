@@ -25,8 +25,15 @@
                         <label class=" form-control-label" for="clave">Clave</label>
                         <input id="clave" class="form-control" type="password" name="clave">
                         <br/>
-                        <label class=" form-control-label" for="origen">Cuenta de origen</label>
-                        <input id="origen" class="form-control" type="text" name="origen">
+                        <label class=" form-control-label" for="origen">Cuenta de origen</label>';
+
+                        echo '<select class="form-control" name="origen" id="origen">';
+                        foreach (obtenerCuentas() as $cuenta) {
+                            echo "<option value='$cuenta'>$cuenta</option>";
+                        }
+                        echo "</select>";
+
+                        echo'
                         <br/>
                         <label class=" form-control-label" for="destino">Cuenta de destino</label>
                         <input id="destino" class="form-control" type="text" name="destino">
@@ -195,6 +202,35 @@
         mysqli_close($con);
         
         return $resultado;
+    }
+
+         
+    function obtenerCuentas(){
+        $cliente = $_SESSION['dni'];
+        $cuentas = [];
+        $con = mysqli_connect("localhost","root","");
+
+        if (!$con){
+            die(' No puedo conectar: ' . mysqli_error($con));
+        }
+
+        $db_selected = mysqli_select_db($con,"mensabank");
+
+        if (!$db_selected){
+            die ('No puedo usar la base de datos: ' . mysqli_error($con));
+        }
+
+        $result = mysqli_query($con, "SELECT iban from cuenta where cliente = '$cliente'");
+
+        if($result){
+            while($row = mysqli_fetch_array($result)) $cuentas[] = $row['iban'];
+        }else{
+            die ("Error al ejecutar la consulta: " . mysqli_error($con));
+        }
+    
+        mysqli_close($con);
+
+        return $cuentas;
     }
 ?>
 

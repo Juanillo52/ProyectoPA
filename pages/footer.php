@@ -8,7 +8,7 @@
             </div>
             
             <div class="col-sm-6 text-right">
-                Copyright © 2019 MensaBank
+                Copyright © <?php echo date("Y");?> MensaBank
                 <a href="https://github.com/Juanillo52/ProyectoPA" class="enlace-footer" target="_blank">Code Source <i class="fa fa-github pr-1"></i></a>
             </div>
         </div>

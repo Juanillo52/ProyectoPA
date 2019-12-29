@@ -1768,8 +1768,7 @@ header .form-inline {
 
 .login-form label {
   color: #878787;
-  text-transform: uppercase; }
-
+}
 .login-form label a {
   color: #6b4996; }
 
@@ -2586,4 +2585,14 @@ footer{
 
 .logout{
   display: inline-block;
+}
+
+.cookie-alert{
+  position: fixed;
+  bottom: 0px;
+  left: 0px;
+  opacity: 0.8;
+  width: 100%;
+  z-index: 999999;
+  display: block;
 }

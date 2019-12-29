@@ -1,5 +1,6 @@
 <?php
 session_start();
+require_once("cookie_alert.php");
 ?>
 
 
@@ -301,7 +302,7 @@ function enviarEmail($password){
     //ENVIAR EMAIL
 }
 function redireccionar(){
-    $_SESSION["register"] = "Se ha registrado correctamente. La contraseña será enviada a su correo en breves momentos.";
+    $_SESSION["register"] = "Se ha registrado correctamente. La clave de acceso será enviada a su correo en breves momentos.";
     header("Location: login.php");
 }
 

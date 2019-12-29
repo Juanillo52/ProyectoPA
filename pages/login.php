@@ -1,9 +1,18 @@
 <?php
     session_start();
     if(isset($_SESSION['register'])){
-        echo $_SESSION['register'];
+        echo ' <div class="sufee-alert alert with-close alert-secondary alert-dismissible fade show">
+        <span class="badge badge-pill badge-secondary">Registrado</span>
+        ' . $_SESSION['register'] .
+        '<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        </div>';
         unset($_SESSION['register']);
     }
+
+    require_once("cookie_alert.php");
+
 
 function mostrarFormulario(){
     
@@ -265,7 +274,7 @@ function enviarClave($email){
             redireccionar();
             header('Location: dashboard.php');
         }
-        
+
         require_once("footer.php");
     ?>
     

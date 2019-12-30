@@ -263,6 +263,9 @@ function enviarClave($email){
             padding-right: 13px;
             padding-left: 13px;
         }
+        .container{
+            padding-bottom:15.2%;
+        }
     </style>
 </head>
 <body class="bg-color">

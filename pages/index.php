@@ -242,6 +242,12 @@ and open the template in the editor.
             padding-right: 13px;
             padding-left: 13px;
         }
+        body{
+            padding-top:3%;
+        }
+        .right-panel{
+            margin-top:0px;
+        }
     </style>
 
 </head>

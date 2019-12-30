@@ -2602,3 +2602,14 @@ footer{
   z-index: 999999;
   display: block;
 }
+.col-lg-12, .col-lg-6, .col-lg-4{
+  float: left;
+}
+
+.alert{
+  position: fixed;
+  opacity: 0.8;
+  width: 100%;
+  z-index: 999999;
+  display: block;
+}

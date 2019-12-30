@@ -17,30 +17,36 @@
             <div class="content">
                 <div class="row card">
                 <h1 class="card-header">Crear nueva Cuenta</h1>
-                    <div class="card-body">
+                    <div class="card-body ">
                     <form action="#" method="POST" enctype="multipart/form-data">
+                    <div class="col-lg-12">
                         <label class=" form-control-label" for="select" onchange="Select()">Seleccione el tipo de cuenta</label>
                         <select id="select" class="form-control" name="select">
                             <option value="cuenta" selected="true">Cuenta corriente</option>
                             <option value="cuenta_nomina">Cuenta nómina</option>
                             <option value="cuenta_ahorros">Cuenta de ahorros</option>
-                        </select><br/>';
+                        </select>
+                    </div>
+                        <br/>';
 
-                            echo '<div id="div_nomina" style="display:none">
+                            echo '<div id="div_nomina" class="col-lg-12" style="display:none">
                                     <label class=" form-control-label" for="nomina">Adjunte su nómina en formato PDF:</label><br/>
                                     <input class="upload-files-btn" type="file" name="nomina">
-                            </div><br/>';
+                            </div><br/><br/>';
                                 
-                        echo '  <label class=" form-control-label" for="dni">DNI</label>
-                                <input id="dni" class="form-control" type="text" name="dni">
-                                <br/>
-                                <label class=" form-control-label" for="email">Email</label>
-                                <input id="email" class="form-control" type="text" name="email">
-                                <br/>
-                                <label class=" form-control-label" for="clave">Clave</label>
-                                <input id="clave" class="form-control" type="password" name="clave">
-                                <br/>
+                        echo '
+                                    <label class=" form-control-label" for="dni">DNI</label>
+                                    <input id="dni" class="form-control" type="text" name="dni">
+                                
+                                    <label class=" form-control-label" for="email">Email</label>
+                                    <input id="email" class="form-control" type="text" name="email">
+                                
+                                
+                                    <label class=" form-control-label" for="clave">Clave</label>
+                                    <input id="clave" class="form-control" type="password" name="clave">
+                                    <br/>
                                 <button class="btn btn-primary btn-sm" type="submit" name="btnSolicitar">Solicitar</button>';
+                                
                     echo '</form>';
 
                         echo '

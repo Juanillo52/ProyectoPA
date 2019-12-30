@@ -55,9 +55,9 @@
                                         </thead>
                                         <tbody>
                                             <tr>
-                                                <td>'+ $tipo +'</td>
-                                                <td>'+ $row['iban'] +'</td>
-                                                <td>'+ $row['saldo'] +'</td>
+                                                <td>'. $tipo .'</td>
+                                                <td>'. $row['iban'] .'</td>
+                                                <td>'. $row['saldo'] .'</td>
                                             </tr>
                                         </tbody>
                                     </table>';
@@ -65,12 +65,11 @@
                                 $cuenta = $row['iban'];
                                 $resQuery2 = mysqli_query($con, "SELECT numero_tarjeta, tipo, cuenta from tarjeta WHERE cuenta = '$cuenta'");
 
-                                if(!resQuery2){
+                                if(!$resQuery2){
                                     die('Error al ejecutar la consulta: ' . mysqli_error($con));
                                 }else{
 
                                     if(mysqli_num_rows($resQuery2) != 0){
-
                                         echo '<br/>
                                         <table class="table">
                                             <thead>
@@ -84,8 +83,8 @@
                                         while($row2 = mysqli_fetch_array($resQuery2)){
                                             echo '<tr>
                                                         <td></td>
-                                                        <td>'+ $row2['tipo'] +'</td>
-                                                        <td>'+ $row2['numero_tarjeta'] +'</td>
+                                                        <td>'. $row2['tipo'] .'</td>
+                                                        <td>'. $row2['numero_tarjeta'] .'</td>
                                                     </tr>';
                                         }
 
@@ -94,14 +93,13 @@
                                     }
                                 }
 
-                                $resQuery4 = mysqli_query($con, "SELECT tipo, credito, pagado, cuenta from tarjeta WHERE cuenta = '$cuenta'");
+                                $resQuery4 = mysqli_query($con, "SELECT tipo, credito, pagado, cuenta from prestamo WHERE cuenta = '$cuenta'");
 
-                                if(!resQuery4){
+                                if(!$resQuery4){
                                     die('Error al ejecutar la consulta: ' . mysqli_error($con));
                                 }else{
 
                                     if(mysqli_num_rows($resQuery4) != 0){
-
                                         echo '<br/>
                                         <table class="table">
                                             <thead>
@@ -116,9 +114,9 @@
                                         while($row4 = mysqli_fetch_array($resQuery2)){
                                             echo '<tr>
                                                         <td></td>
-                                                        <td>'+ $row4['tipo'] +'</td>
-                                                        <td>'+ $row4['credito'] +'</td>
-                                                        <td>'+ $row4['pagado'] +'</td>
+                                                        <td>'. $row4['tipo'] .'</td>
+                                                        <td>'. $row4['credito'] .'</td>
+                                                        <td>'. $row4['pagado'] .'</td>
                                                     </tr>';
                                         }
 
@@ -126,6 +124,9 @@
                                         </table>';
                                     }
                                 }
+
+                                echo '</div>
+                                </div>';
                             }
                         }
                     }
@@ -137,7 +138,7 @@
                     }else{
 
                         if(mysqli_num_rows($resQuery) != 0){
-                            $tipo = 'Cuenta corriente';
+                            $tipo = 'Cuenta de ahorros';
                             
                             while($row = mysqli_fetch_array($resQuery)){
                                 echo '<div class="card">
@@ -152,9 +153,9 @@
                                         </thead>
                                         <tbody>
                                             <tr>
-                                                <td>'+ $tipo +'</td>
-                                                <td>'+ $row['iban'] +'</td>
-                                                <td>'+ $row['saldo'] +'</td>
+                                                <td>'. $tipo .'</td>
+                                                <td>'. $row['iban'] .'</td>
+                                                <td>'. $row['saldo'] .'</td>
                                             </tr>
                                         </tbody>
                                     </table>';
@@ -162,7 +163,7 @@
                                 $cuenta = $row['iban'];
                                 $resQuery2 = mysqli_query($con, "SELECT numero_tarjeta, tipo, cuenta from tarjeta WHERE cuenta = '$cuenta'");
 
-                                if(!resQuery2){
+                                if(!$resQuery2){
                                     die('Error al ejecutar la consulta: ' . mysqli_error($con));
                                 }else{
 
@@ -181,8 +182,8 @@
                                         while($row2 = mysqli_fetch_array($resQuery2)){
                                             echo '<tr>
                                                         <td></td>
-                                                        <td>'+ $row2['tipo'] +'</td>
-                                                        <td>'+ $row2['numero_tarjeta'] +'</td>
+                                                        <td>'. $row2['tipo'] .'</td>
+                                                        <td>'. $row2['numero_tarjeta'] .'</td>
                                                     </tr>';
                                         }
 
@@ -191,9 +192,9 @@
                                     }
                                 }
 
-                                $resQuery4 = mysqli_query($con, "SELECT tipo, credito, pagado, cuenta from tarjeta WHERE cuenta = '$cuenta'");
+                                $resQuery4 = mysqli_query($con, "SELECT tipo, credito, pagado, cuenta from prestamo WHERE cuenta = '$cuenta'");
 
-                                if(!resQuery4){
+                                if(!$resQuery4){
                                     die('Error al ejecutar la consulta: ' . mysqli_error($con));
                                 }else{
 
@@ -213,9 +214,9 @@
                                         while($row4 = mysqli_fetch_array($resQuery2)){
                                             echo '<tr>
                                                         <td></td>
-                                                        <td>'+ $row4['tipo'] +'</td>
-                                                        <td>'+ $row4['credito'] +'</td>
-                                                        <td>'+ $row4['pagado'] +'</td>
+                                                        <td>'. $row4['tipo'] .'</td>
+                                                        <td>'. $row4['credito'] .'</td>
+                                                        <td>'. $row4['pagado'] .'</td>
                                                     </tr>';
                                         }
 
@@ -223,6 +224,9 @@
                                         </table>';
                                     }
                                 }
+
+                                echo '</div>
+                                </div>';
                             }
                         }
                     }
@@ -234,7 +238,7 @@
                     }else{
 
                         if(mysqli_num_rows($resQuery) != 0){
-                            $tipo = 'Cuenta corriente';
+                            $tipo = 'Cuenta nomina';
                             
                             while($row = mysqli_fetch_array($resQuery)){
                                 echo '<div class="card">
@@ -249,9 +253,9 @@
                                         </thead>
                                         <tbody>
                                             <tr>
-                                                <td>'+ $tipo +'</td>
-                                                <td>'+ $row['iban'] +'</td>
-                                                <td>'+ $row['saldo'] +'</td>
+                                                <td>'. $tipo .'</td>
+                                                <td>'. $row['iban'] .'</td>
+                                                <td>'. $row['saldo'] .'</td>
                                             </tr>
                                         </tbody>
                                     </table>';
@@ -259,7 +263,7 @@
                                 $cuenta = $row['iban'];
                                 $resQuery2 = mysqli_query($con, "SELECT numero_tarjeta, tipo, cuenta from tarjeta WHERE cuenta = '$cuenta'");
 
-                                if(!resQuery2){
+                                if(!$resQuery2){
                                     die('Error al ejecutar la consulta: ' . mysqli_error($con));
                                 }else{
 
@@ -278,8 +282,8 @@
                                         while($row2 = mysqli_fetch_array($resQuery2)){
                                             echo '<tr>
                                                         <td></td>
-                                                        <td>'+ $row2['tipo'] +'</td>
-                                                        <td>'+ $row2['numero_tarjeta'] +'</td>
+                                                        <td>'. $row2['tipo'] .'</td>
+                                                        <td>'. $row2['numero_tarjeta'] .'</td>
                                                     </tr>';
                                         }
 
@@ -288,9 +292,9 @@
                                     }
                                 }
 
-                                $resQuery4 = mysqli_query($con, "SELECT tipo, credito, pagado, cuenta from tarjeta WHERE cuenta = '$cuenta'");
+                                $resQuery4 = mysqli_query($con, "SELECT tipo, credito, pagado, cuenta from prestamo WHERE cuenta = '$cuenta'");
 
-                                if(!resQuery4){
+                                if(!$resQuery4){
                                     die('Error al ejecutar la consulta: ' . mysqli_error($con));
                                 }else{
 
@@ -310,16 +314,20 @@
                                         while($row4 = mysqli_fetch_array($resQuery2)){
                                             echo '<tr>
                                                         <td></td>
-                                                        <td>'+ $row4['tipo'] +'</td>
-                                                        <td>'+ $row4['credito'] +'</td>
-                                                        <td>'+ $row4['pagado'] +'</td>
+                                                        <td>'. $row4['tipo'] .'</td>
+                                                        <td>'. $row4['credito'] .'</td>
+                                                        <td>'. $row4['pagado'] .'</td>
                                                     </tr>';
                                         }
 
                                         echo '</tbody>
                                         </table>';
+                                        
                                     }
                                 }
+
+                                echo '</div>
+                                </div>';
                             }
                         }
                     }

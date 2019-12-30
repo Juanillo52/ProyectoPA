@@ -17,9 +17,8 @@
             <div class="content">
                 <div class="row card">
                 <h1 class="card-header">Crear nueva Cuenta</h1>
-                    <div class="card-body ">
-                    <form action="#" method="POST" enctype="multipart/form-data">
-                    <div class="col-lg-12">
+                    <div class="card-body">
+                    <form method="POST" enctype="multipart/form-data">
                         <label class=" form-control-label" for="select" onchange="Select()">Seleccione el tipo de cuenta</label>
                         <select id="select" class="form-control" name="select">
                             <option value="cuenta" selected="true">Cuenta corriente</option>
@@ -29,16 +28,16 @@
                     </div>
                         <br/>';
 
-                            echo '<div id="div_nomina" class="col-lg-12" style="display:none">
+                            echo '<div id="div_nomina" style="display:none">
                                     <label class=" form-control-label" for="nomina">Adjunte su nómina en formato PDF:</label><br/>
                                     <input class="upload-files-btn" type="file" name="nomina">
                             </div><br/><br/>';
                                 
                         echo '
-                                    <label class=" form-control-label" for="dni">DNI</label>
+                                    <label class="form-control-label" for="dni">DNI</label>
                                     <input id="dni" class="form-control" type="text" name="dni">
                                 
-                                    <label class=" form-control-label" for="email">Email</label>
+                                    <label class="form-control-label" for="email">Email</label>
                                     <input id="email" class="form-control" type="text" name="email">
                                 
                                 
@@ -63,7 +62,7 @@
     function comprobarNuevaCuenta(){
         $resultado = False;
         
-        if(isset($_POST['btnInsertar'])){
+        if(isset($_POST['btnSolicitar'])){
             $ok = comprobarDatosNuevaCuenta();
             
             if($ok){
@@ -100,8 +99,10 @@
             $errores[] = "Elija el tipo de cuenta. <br/>";
         }
 
-        if ($_FILES['nomina']['error'] != 4 && ($_FILES['anexo']['type'] != 'application/pdf' || $_FILES['anexo']['size'] > (1024 * 1024 * 10))) {
-            $errores[] = "El fichero no debe de pasar los 10 mb de tamaño y debe ser pdf.<br/>";
+        if(isset($_POST['select']) && $_POST['select'] == 'cuenta_nomina'){
+            if ($_FILES['nomina']['error'] != 4 && /*$_FILES['nomina']['type'] != 'application/pdf'*/ $_FILES['nomina']['size'] > (1024 * 1024 *10)) {
+                $errores[] = "El fichero no debe de pasar los 10 mb de tamaño y debe ser pdf.<br/>";
+            }
         }
 
         if(!isset($errores)){
@@ -121,7 +122,7 @@
         $email = $_POST['email'];
         $clave = $_POST['clave'];
         $tipo = $_POST['select'];
-        $saldo = 0;
+        $saldo = 5000;
         $iban = "ES";
         
         for($i = 0; $i < 22; $i++){
@@ -135,8 +136,8 @@
             mkdir($ruta);
             
             $ruta = $_FILES['nomina']['name'];
-            $ruta .= time();
-            move_uploaded_file($_FILES['nomina']['tmp_name'], $ruta);
+            $ruta = time() . $ruta;
+            move_uploaded_file($_FILES['nomina']['tmp_name'], "../nominas/". $cliente ."/". $ruta);
         }
 
         $con = mysqli_connect("localhost", "root", "");
@@ -163,7 +164,7 @@
                     $row = mysqli_fetch_array($resQuery);
                     
                     if(password_verify($clave, $row['clave'])){
-                        $resQuery2 = mysqli_query($con, "INSERT INTO cuenta_ahorros(iban, saldo, tae, cliente) VALUES ('$iban', '$saldo', '$tae', $cliente)");
+                        $resQuery2 = mysqli_query($con, "INSERT INTO cuenta_ahorros(iban, saldo, tae, cliente) VALUES ('$iban', '$saldo', '$tae', '$cliente')");
 
                         if(!$resQuery2){
                             mysqli_close($con);
@@ -176,7 +177,7 @@
                     $row = mysqli_fetch_array($resQuery);
                     
                     if(password_verify($clave, $row['clave'])){
-                        $resQuery2 = mysqli_query($con, "INSERT INTO cuenta_nomina(iban, saldo, nomina, cliente) VALUES ('$iban', '$saldo', '$nomina', $cliente)");
+                        $resQuery2 = mysqli_query($con, "INSERT INTO cuenta_nomina(iban, saldo, nomina, cliente) VALUES ('$iban', '$saldo', '$ruta', '$cliente')");
 
                         if(!$resQuery2){
                             mysqli_close($con);
@@ -189,12 +190,13 @@
                     $row = mysqli_fetch_array($resQuery);
                     
                     if(password_verify($clave, $row['clave'])){
-                        $resQuery2 = mysqli_query($con, "INSERT INTO cuenta(iban, saldo, cliente) VALUES ('$iban', '$saldo', '$cliente)");
+                        $resQuery2 = mysqli_query($con, "INSERT INTO cuenta(iban, saldo, cliente) VALUES ('$iban', '$saldo', '$cliente')");
 
                         if(!$resQuery2){
                             mysqli_close($con);
                             die('No puedo ejecutar la consulta: ' . mysqli_error($con));
                         }else{
+                            
                             $resultado = True;
                         }
                     }

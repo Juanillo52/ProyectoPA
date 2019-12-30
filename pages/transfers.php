@@ -14,7 +14,6 @@
     <title>MensaBank</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link type="text/css" rel="stylesheet" href="../plantilla-boostrap/assets/css/style.css">
-    <link type="text/css" rel="stylesheet" href="../css/footer_style.css">
 
     <link rel="apple-touch-icon" href="https://i.imgur.com/QRAUqs9.png">
     <link rel="shortcut icon" href="../images/icon.png">
@@ -82,9 +81,6 @@
         <?php require_once("header.php"); ?>
         <!-- /#header -->
         <!-- Content -->
-        <div class="content">
-            
-        </div>
         <!-- /.content -->
         <div class="content">
         <div class="row card">
@@ -107,22 +103,24 @@
                                 }
                             
                                 $dni = $_SESSION['dni'];
-            
-                                $resQuery = mysqli_query($con, "SELECT iban from cuenta WHERE cliente = '$dni'");
-                                if (!$resQuery) {
-                                    die ("Error al ejecutar la consulta: " . mysqli_error($con));
-                                }else{
-                                    while($row = mysqli_fetch_array($resQuery)){
-                                        echo '<table class="table">
+
+                                echo '<table class="table">
                                         <thead>
                                             <tr>
                                                 <th>Fecha</th>
                                                 <th>Importe</th>
                                                 <th>Receptor</th>
-                                                <th>Emison</th>
+                                                <th>Emisor</th>
                                             </tr>
                                         </thead>
                                         <tbody>';
+
+                                $resQuery = mysqli_query($con, "SELECT iban from cuenta WHERE cliente = '$dni'");
+                                if (!$resQuery) {
+                                    die ("Error al ejecutar la consulta: " . mysqli_error($con));
+                                }else{
+                                    while($row = mysqli_fetch_array($resQuery)){
+                                        
                                         
                                         $iban = $row['iban'];
 
@@ -136,18 +134,88 @@
                                                 $receptor = $row2['receptor'];
                                                 $emisor = $row2['emisor'];
 
-                                                echo '<td>'+ $fecha +'</td>
-                                                <td>'+ $importe +'</td>
-                                                <td>'+ $receptor +'</td>
-                                                <td>'+ $emisor +'</td>';
+                                                echo '<tr>
+                                                <td>'. $fecha .'</td>
+                                                <td>'. $importe .'</td>
+                                                <td>'. $receptor .'</td>
+                                                <td>'. $emisor .'</td>
+                                                </tr>';
 
                                             }
                                         }
 
-                                        echo '</tbody>
-                                        </table>';
+                                        
                                     }
                                 }
+
+                                $resQuery = mysqli_query($con, "SELECT iban from cuenta_ahorros WHERE cliente = '$dni'");
+                                if (!$resQuery) {
+                                    die ("Error al ejecutar la consulta: " . mysqli_error($con));
+                                }else{
+                                    while($row = mysqli_fetch_array($resQuery)){
+                                        
+                                        
+                                        $iban = $row['iban'];
+
+                                        $resQuery2 = mysqli_query($con, "SELECT * from transferencia WHERE receptor = '$iban' OR emisor = '$iban'");
+                                        if (!$resQuery2) {
+                                            die ("Error al ejecutar la consulta: " . mysqli_error($con));
+                                        }else{
+                                            while($row2 = mysqli_fetch_array($resQuery2)){                                               
+                                                $fecha = $row2['fecha'];
+                                                $importe = $row2['importe'];
+                                                $receptor = $row2['receptor'];
+                                                $emisor = $row2['emisor'];
+
+                                                echo '<tr>
+                                                <td>'. $fecha .'</td>
+                                                <td>'. $importe .'</td>
+                                                <td>'. $receptor .'</td>
+                                                <td>'. $emisor .'</td>
+                                                </tr>';
+
+                                            }
+                                        }
+
+                                        
+                                    }
+                                }
+
+                                $resQuery = mysqli_query($con, "SELECT iban from cuenta_nomina WHERE cliente = '$dni'");
+                                if (!$resQuery) {
+                                    die ("Error al ejecutar la consulta: " . mysqli_error($con));
+                                }else{
+                                    while($row = mysqli_fetch_array($resQuery)){
+                                        
+                                        
+                                        $iban = $row['iban'];
+
+                                        $resQuery2 = mysqli_query($con, "SELECT * from transferencia WHERE receptor = '$iban' OR emisor = '$iban'");
+                                        if (!$resQuery2) {
+                                            die ("Error al ejecutar la consulta: " . mysqli_error($con));
+                                        }else{
+                                            while($row2 = mysqli_fetch_array($resQuery2)){                                               
+                                                $fecha = $row2['fecha'];
+                                                $importe = $row2['importe'];
+                                                $receptor = $row2['receptor'];
+                                                $emisor = $row2['emisor'];
+
+                                                echo '<tr>
+                                                <td>'. $fecha .'</td>
+                                                <td>'. $importe .'</td>
+                                                <td>'. $receptor .'</td>
+                                                <td>'. $emisor .'</td>
+                                                </tr>';
+
+                                            }
+                                        }
+
+                                        
+                                    }
+                                }
+
+                                echo '</tbody>
+                                        </table>';
                                                         
                                 mysqli_close($con);
                                

@@ -14,9 +14,9 @@
             require_once("header.php");
             //#header
             echo '<!-- Content -->
-            <div class="content">
+            <div class="content col-md-6">
                 <div class="row card">
-                <h1 class="card-header">Crear nueva Cuenta</h1>
+                <h4 class="card-header">Crear nueva cuenta</h4>
                     <div class="card-body">
                     <form method="POST" enctype="multipart/form-data">
                         <label class=" form-control-label" for="select" onchange="Select()">Seleccione el tipo de cuenta</label>
@@ -24,23 +24,23 @@
                             <option value="cuenta" selected="true">Cuenta corriente</option>
                             <option value="cuenta_nomina">Cuenta nómina</option>
                             <option value="cuenta_ahorros">Cuenta de ahorros</option>
-                        </select><br/>';
+                        </select>';
 
                             echo '<div id="div_nomina" style="display:none">
                                     <label class=" form-control-label" for="nomina">Adjunte su nómina en formato PDF:</label><br/>
                                     <input class="upload-files-btn" type="file" name="nomina">
                             </div><br/>';
                                 
-                        echo '  <label class=" form-control-label" for="dni">DNI</label>
-                                <input id="dni" class="form-control" type="text" name="dni">
-                                <br/>
-                                <label class=" form-control-label" for="email">Email</label>
-                                <input id="email" class="form-control" type="text" name="email">
-                                <br/>
+                        echo ' <label class=" form-control-label" for="dni">DNI</label>
+                                <input id="dni" class="form-control col-md-5" type="text" name="dni">
+                               
+                                <label class=" form-control-label " for="email">Email</label>
+                                <input id="email" class="form-control col-md-5" type="text" name="email">
+                               
                                 <label class=" form-control-label" for="clave">Clave</label>
                                 <input id="clave" class="form-control" type="password" name="clave">
-                                <br/>
-                                <button class="btn btn-primary btn-sm" type="submit" name="btnSolicitar">Solicitar</button>';
+                              
+                                <button class="btn btn-primary btn-sm margin-top-20" type="submit" name="btnSolicitar">Solicitar</button>';
                     echo '</form>';
 
                         echo '
@@ -217,7 +217,6 @@
     <title>MensaBank</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link type="text/css" rel="stylesheet" href="../plantilla-boostrap/assets/css/style.css">
-    <link type="text/css" rel="stylesheet" href="../css/footer_style.css">
 
     <link rel="apple-touch-icon" href="https://i.imgur.com/QRAUqs9.png">
     <link rel="shortcut icon" href="../images/icon.png">

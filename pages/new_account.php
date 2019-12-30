@@ -21,7 +21,7 @@
                     <form action="#" method="POST" enctype="multipart/form-data">
                         <label class=" form-control-label" for="select" onchange="Select()">Seleccione el tipo de cuenta</label>
                         <select id="select" class="form-control" name="select">
-                            <option value="cuenta">Cuenta corriente</option>
+                            <option value="cuenta" selected="true">Cuenta corriente</option>
                             <option value="cuenta_nomina">Cuenta nómina</option>
                             <option value="cuenta_ahorros">Cuenta de ahorros</option>
                         </select><br/>';
@@ -125,8 +125,12 @@
         if($tipo == "cuenta_ahorros"){
             $tae = 2.5;
         }elseif($tipo == "cuenta_nomina"){
-            $nomina = $_FILES['nomina']['name'];
-            $nomina = time() . $nomina;
+            $ruta = "../nominas/" . $cliente;
+            mkdir($ruta);
+            
+            $ruta = $_FILES['nomina']['name'];
+            $ruta .= time();
+            move_uploaded_file($_FILES['nomina']['tmp_name'], $ruta);
         }
 
         $con = mysqli_connect("localhost", "root", "");
@@ -288,6 +292,8 @@
     ?>
 
     <!-- Scripts -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
     <script src="https://cdn.jsdelivr.net/npm/jquery@2.2.4/dist/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.4/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/js/bootstrap.min.js"></script>
@@ -313,9 +319,30 @@
     <script src="../plantilla-boostrap/assets/js/init/fullcalendar-init.js"></script>
 
     <!--Local Stuff-->
+<script>
+    $(document).ready(function(){
+
+        if($("#select option:selected").html() == "Cuenta nómina"){
+                    $("#div_nomina").css("display", "");
+        } //Si para cuando carga está puesta ya la opción de cuenta nómina, salga el div de la nómina
+        
+        $("#select").change(function(){
+                if($("#select option:selected").html() == "Cuenta nómina"){
+                    $("#div_nomina").css("display", "");
+                }else{
+                    $("#div_nomina").css("display", "none");
+                }
+            });
+    });
+
+</script>
+
     <script>
         jQuery(document).ready(function($) {
             "use strict";
+
+            
+            
 
             // Pie chart flotPie1
             var piedata = [
@@ -503,13 +530,6 @@
             });
             // Bar Chart #flotBarChart End
 
-            $("#select").change(function(){
-                if($("select[id=select]").val() == "cuenta_nomina"){*/
-                    $("#div_nomina").css("display", "");
-                }else{
-                    $("#div_nomina").css("display", "none");
-                }
-            });
         });
     </script>
     <script src="https://cdn.jsdelivr.net/npm/jquery@2.2.4/dist/jquery.min.js"></script>

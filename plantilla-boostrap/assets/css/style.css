@@ -2565,22 +2565,28 @@ footer{
   border-left: 2px solid #6b4996;
 }
 
-#logout{
+#logout, .upload-files-btn{
   background-color:#6b4996;
   color:white;
   display: inline-block;
-  font-weight: 400;
+  font-weight: 200;
   text-align: center;
   white-space: nowrap;
   vertical-align: middle;
   transition: all .15s ease-in-out;
   border-radius: 3px;
   padding: .5rem 1rem;
-  font-size: 1.25rem;
+  font-size: 1rem;
   line-height: 1.5;
   border: 1px solid transparent;
   margin: 0;
   font-family: inherit;
+}
+
+
+.btn-main:hover, #logout:hover{
+  background-color: #58369c;
+  cursor: pointer;
 }
 
 .logout{

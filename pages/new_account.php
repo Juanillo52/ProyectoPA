@@ -1,5 +1,5 @@
 <?php
-    require_once("test_log.php");
+    //require_once("test_log.php");
 ?>
 
 <?php
@@ -27,10 +27,10 @@
                         </select><br/>';
 
                             echo '<div id="div_nomina" style="display:none">
-                                    <label class=" form-control-label" for="nomina">Adjunte su nomina en pdf</label>
-                                    <input type="file" name="nomina">
-                            </div>';
-
+                                    <label class=" form-control-label" for="nomina">Adjunte su nómina en formato PDF:</label><br/>
+                                    <input class="upload-files-btn" type="file" name="nomina">
+                            </div><br/>';
+                                
                         echo '  <label class=" form-control-label" for="dni">DNI</label>
                                 <input id="dni" class="form-control" type="text" name="dni">
                                 <br/>

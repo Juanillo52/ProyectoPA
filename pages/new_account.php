@@ -24,28 +24,23 @@
                             <option value="cuenta" selected="true">Cuenta corriente</option>
                             <option value="cuenta_nomina">Cuenta nómina</option>
                             <option value="cuenta_ahorros">Cuenta de ahorros</option>
-                        </select>
-                    </div>
-                        <br/>';
+                        </select><br/>';
 
                             echo '<div id="div_nomina" style="display:none">
                                     <label class=" form-control-label" for="nomina">Adjunte su nómina en formato PDF:</label><br/>
                                     <input class="upload-files-btn" type="file" name="nomina">
-                            </div><br/><br/>';
+                            </div><br/>';
                                 
-                        echo '
-                                    <label class="form-control-label" for="dni">DNI</label>
-                                    <input id="dni" class="form-control" type="text" name="dni">
-                                
-                                    <label class="form-control-label" for="email">Email</label>
-                                    <input id="email" class="form-control" type="text" name="email">
-                                
-                                
-                                    <label class=" form-control-label" for="clave">Clave</label>
-                                    <input id="clave" class="form-control" type="password" name="clave">
-                                    <br/>
+                        echo '  <label class=" form-control-label" for="dni">DNI</label>
+                                <input id="dni" class="form-control" type="text" name="dni">
+                                <br/>
+                                <label class=" form-control-label" for="email">Email</label>
+                                <input id="email" class="form-control" type="text" name="email">
+                                <br/>
+                                <label class=" form-control-label" for="clave">Clave</label>
+                                <input id="clave" class="form-control" type="password" name="clave">
+                                <br/>
                                 <button class="btn btn-primary btn-sm" type="submit" name="btnSolicitar">Solicitar</button>';
-                                
                     echo '</form>';
 
                         echo '
@@ -100,7 +95,8 @@
         }
 
         if(isset($_POST['select']) && $_POST['select'] == 'cuenta_nomina'){
-            if ($_FILES['nomina']['error'] != 4 && /*$_FILES['nomina']['type'] != 'application/pdf'*/ $_FILES['nomina']['size'] > (1024 * 1024 *10)) {
+            /*$_FILES['nomina']['type'] != 'application/pdf'*/
+            if ($_FILES['nomina']['error'] != 4 &&  $_FILES['nomina']['size'] > (1024 * 1024 *10)) {
                 $errores[] = "El fichero no debe de pasar los 10 mb de tamaño y debe ser pdf.<br/>";
             }
         }

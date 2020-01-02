@@ -1,9 +1,5 @@
 <?php
-    session_start();
-    
-    if(!isset($_SESSION['login']) || !$_SESSION['login']){
-        header('Location: login.php');
-    }
+    require_once("test_log.php");
 ?>
 
 <?php
@@ -29,8 +25,15 @@
                         <label class=" form-control-label" for="clave">Clave</label>
                         <input id="clave" class="form-control" type="password" name="clave">
                         <br/>
-                        <label class=" form-control-label" for="origen">Cuenta de origen</label>
-                        <input id="origen" class="form-control" type="text" name="origen">
+                        <label class=" form-control-label" for="origen">Cuenta de origen</label>';
+
+                        echo '<select class="form-control" name="origen" id="origen">';
+                        foreach (obtenerCuentas() as $cuenta) {
+                            echo "<option value='$cuenta'>$cuenta</option>";
+                        }
+                        echo "</select>";
+
+                        echo'
                         <br/>
                         <label class=" form-control-label" for="destino">Cuenta de destino</label>
                         <input id="destino" class="form-control" type="text" name="destino">
@@ -62,7 +65,7 @@
                 $resultado = nuevaTransferencia();
 
                 if($resultado){
-                    header('Location: cards.php');
+                    header('Location: transfers.php');
                 }
             }
         }
@@ -109,17 +112,17 @@
         return $resultado;
     }
 
-    function nuevaTransferncia(){
+    function nuevaTransferencia(){
         $resultado = False;
         $cliente = $_POST['dni'];
         $clave = $_POST['clave'];
         $origen = $_POST['origen'];
         $destino = $_POST['destino'];
-        $cantidad = floatval($_POST['cantidad']);
-        $fecha = date("d-m-Y");
+        $cantidad = $_POST['cantidad'];
+        $fecha = date('Y-m-d');
         
 
-        $con = mysqli_connect("localhost", "root", "");
+        $con = mysqli_connect("68.183.69.142", "root", "");
         
         if(!$con){
             die('No puedo conectar: ' . mysqli_error($con));
@@ -132,7 +135,7 @@
         }
 
         $cuentaYsaldo = false;
-        $resQuery = mysqli_query($con, "SELECT saldo from cuenta WHERE cliente='$cliente'");
+        $resQuery = mysqli_query($con, "SELECT saldo from cuenta WHERE cliente='$cliente' and iban='$origen'");
         if(!$resQuery){
             mysqli_close($con);
             die('No puedo ejecutar la consulta: ' . mysqli_error($con));
@@ -145,7 +148,7 @@
                 }
             }
         }
-        $resQuery = mysqli_query($con, "SELECT saldo from cuenta_nomina WHERE cliente='$cliente'");
+        $resQuery = mysqli_query($con, "SELECT saldo from cuenta_nomina WHERE cliente='$cliente' and iban='$origen'");
         if(!$resQuery){
             mysqli_close($con);
             die('No puedo ejecutar la consulta: ' . mysqli_error($con));
@@ -158,7 +161,7 @@
                 }
             }
         }
-        $resQuery = mysqli_query($con, "SELECT saldo from cuenta_ahorros WHERE cliente='$cliente'");
+        $resQuery = mysqli_query($con, "SELECT saldo from cuenta_ahorros WHERE cliente='$cliente' and iban='$origen'");
         if(!$resQuery){
             mysqli_close($con);
             die('No puedo ejecutar la consulta: ' . mysqli_error($con));
@@ -173,7 +176,7 @@
         }
 
         if($cuentaYsaldo){
-            $resQuery = mysqli_query($con, "SELECT clave, dni from cliente WHERE dni='$dni'");
+            $resQuery = mysqli_query($con, "SELECT clave, dni from cliente WHERE dni='$cliente'");
             if(!$resQuery){
                 mysqli_close($con);
                 die('No puedo ejecutar la consulta: ' . mysqli_error($con));
@@ -182,15 +185,77 @@
                     $row = mysqli_fetch_array($resQuery);
                     
                     if(password_verify($clave, $row['clave'])){
-                        $resQuery2 = mysqli_query($con, "INSERT INTO transferencia(fecha, importe, receptor, emisor) VALUES ('$fecha', '$cantidad', '$destino', '$origen')");
+                        $resQuery2 = mysqli_query($con, "INSERT INTO transferencia (fecha, importe, receptor, emisor) VALUES ('$fecha', '$cantidad', '$destino', '$origen')");
                         $saldo = $saldo - $cantidad;
-                        $resQuery2 = mysqli_query($con, "UPDATE $tabla set saldo='$saldo");
+
+                        switch ($tabla) {
+                            case 'cuenta':
+                                $resQuery2 = mysqli_query($con, "UPDATE cuenta set saldo='$saldo' where iban='$origen'");                                
+                            break;
+                            case 'cuenta_ahorros':
+                                $resQuery2 = mysqli_query($con, "UPDATE cuenta_ahorros set saldo='$saldo' where iban='$origen'");
+                            break;
+                            case 'cuenta_nomina':
+                                $resQuery2 = mysqli_query($con, "UPDATE cuenta_nomina set saldo='$saldo' where iban='$origen'");
+                            break;
+                        }
+                        
+                        
                         if(!$resQuery2){
                             mysqli_close($con);
                             die('No puedo ejecutar la consulta: ' . mysqli_error($con));
                         }else{
                             $resultado = True;
                         }
+                    }
+                    $tabla = '';
+                    $resQuery = mysqli_query($con, "SELECT * from cuenta WHERE iban='$destino'");
+                    if(!$resQuery){
+                        mysqli_close($con);
+                        die('No puedo ejecutar la consulta: ' . mysqli_error($con));
+                    }else{
+                        if($row=mysqli_fetch_array($resQuery)){
+                            $tabla = 'cuenta';
+                            
+                        }
+                    }
+                    $resQuery = mysqli_query($con, "SELECT * from cuenta_ahorros WHERE iban='$destino'");
+                    if(!$resQuery){
+                        mysqli_close($con);
+                        die('No puedo ejecutar la consulta: ' . mysqli_error($con));
+                    }else{
+                        if($row=mysqli_fetch_array($resQuery)){
+                            $tabla = 'cuenta_ahorros';
+                            
+                        }
+                    }
+                    $resQuery = mysqli_query($con, "SELECT * from cuenta_nomina WHERE iban='$destino'");
+                    if(!$resQuery){
+                        mysqli_close($con);
+                        die('No puedo ejecutar la consulta: ' . mysqli_error($con));
+                    }else{
+                        if($row=mysqli_fetch_array($resQuery)){
+                            $tabla = 'cuenta_nomina';
+                        }
+                    }
+                    
+                    switch ($tabla) {
+                        case 'cuenta':
+                            $resQuery2 = mysqli_query($con, "UPDATE cuenta set saldo=saldo+'$cantidad' where iban='$destino'");                                
+                        break;
+                        case 'cuenta_ahorros':
+                            $resQuery2 = mysqli_query($con, "UPDATE cuenta_ahorros set saldo=saldo+'$cantidad' where iban='$destino'");
+                        break;
+                        case 'cuenta_nomina':
+                            $resQuery2 = mysqli_query($con, "UPDATE cuenta_nomina set saldo=saldo+'$cantidad'where iban='$destino'");
+                        break;
+                    }
+                                        
+                    if(!$resQuery2){
+                        mysqli_close($con);
+                        die('No puedo ejecutar la consulta: ' . mysqli_error($con));
+                    }else{
+                        $resultado = True;
                     }
                 }
             }
@@ -199,6 +264,51 @@
         mysqli_close($con);
         
         return $resultado;
+    }
+
+         
+    function obtenerCuentas(){
+        $cliente = $_SESSION['dni'];
+        $cuentas = [];
+        $con = mysqli_connect("68.183.69.142","root","");
+
+        if (!$con){
+            die(' No puedo conectar: ' . mysqli_error($con));
+        }
+
+        $db_selected = mysqli_select_db($con,"mensabank");
+
+        if (!$db_selected){
+            die ('No puedo usar la base de datos: ' . mysqli_error($con));
+        }
+
+        $result = mysqli_query($con, "SELECT iban from cuenta where cliente = '$cliente'");
+
+        if($result){
+            while($row = mysqli_fetch_array($result)) $cuentas[] = $row['iban'];
+        }else{
+            die ("Error al ejecutar la consulta: " . mysqli_error($con));
+        }
+
+        $result = mysqli_query($con, "SELECT iban from cuenta_ahorros where cliente = '$cliente'");
+
+        if($result){
+            while($row = mysqli_fetch_array($result)) $cuentas[] = $row['iban'];
+        }else{
+            die ("Error al ejecutar la consulta: " . mysqli_error($con));
+        }
+
+        $result = mysqli_query($con, "SELECT iban from cuenta_nomina where cliente = '$cliente'");
+
+        if($result){
+            while($row = mysqli_fetch_array($result)) $cuentas[] = $row['iban'];
+        }else{
+            die ("Error al ejecutar la consulta: " . mysqli_error($con));
+        }
+    
+        mysqli_close($con);
+
+        return $cuentas;
     }
 ?>
 
@@ -213,10 +323,13 @@
     <title>MensaBank</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link type="text/css" rel="stylesheet" href="../plantilla-boostrap/assets/css/style.css">
-    <link type="text/css" rel="stylesheet" href="../css/footer_style.css">
 
     <link rel="apple-touch-icon" href="https://i.imgur.com/QRAUqs9.png">
     <link rel="shortcut icon" href="../images/icon.png">
+
+    
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css"/>
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/normalize.css@8.0.0/normalize.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/css/bootstrap.min.css">

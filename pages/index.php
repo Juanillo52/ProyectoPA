@@ -1,5 +1,6 @@
 <?php
     session_start();    
+    
 
     function comprobarFormulario(){
         $resultado = False; ## le damos este valor para que muestre el login
@@ -50,7 +51,7 @@
         $dni = $_POST['dni'];
         $password = $_POST['password'];
     
-        $con = mysqli_connect("localhost","root","");
+        $con = mysqli_connect("68.183.69.142","root","");
     
         if (!$con){
             die(' No puedo conectar: ' . mysqli_error($con));
@@ -83,7 +84,7 @@
     function getUser($dni){
         $nombre = null;
         $dni = $_POST['dni'];
-        $con = mysqli_connect("localhost","root","");
+        $con = mysqli_connect("68.183.69.142","root","");
     
         if (!$con){
             die(' No puedo conectar: ' . mysqli_error($con));
@@ -116,7 +117,7 @@
     }
 
     function enviarClave($email){
-        $con = mysqli_connect("localhost","root","");
+        $con = mysqli_connect("68.183.69.142","root","");
         $email = $_POST['email'];
     
         if (!$con){
@@ -149,7 +150,7 @@
                 }else{
                     ini_set( 'display_errors', 1 );
                     error_reporting( E_ALL );
-                    $from = 'mensabank@support.es';
+                    $from = 'infomensabank@gmail.com';
                     $to = $email;
                     $subject = 'Aquí tienes tu nueva clave, '.$nombre;
                     $message = 'Tu nueva clave de acceso es: '.$password;
@@ -242,6 +243,12 @@ and open the template in the editor.
             padding-right: 13px;
             padding-left: 13px;
         }
+        body{
+            padding-top:3%;
+        }
+        .right-panel{
+            margin-top:0px;
+        }
     </style>
 
 </head>
@@ -303,6 +310,17 @@ and open the template in the editor.
             </div>
         </div>
     </div>
+
+    <?php 
+    if(isset($_SESSION['nologin']) && $_SESSION['nologin']){
+        echo '<div class="sufee-alert alert with-close alert-danger alert-dismissible fade show alert">
+        <span> Usted no está logueado, por lo que no podrá acceder a nuestros servicios hasta que lo haga. Gracias.
+        <button type="button" class="close" data-dismiss="alert" aria-label="Entendido">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        </div>';
+    }
+    ?>
         
     <section class="content">
         <article class="row card">

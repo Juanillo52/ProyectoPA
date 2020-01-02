@@ -1203,7 +1203,8 @@ header .form-inline {
   display: block; }
 
 .content {
-  float: left;
+  margin-left: auto;
+  margin-right: auto;
   padding: 1.875em;
   width: 100%; }
 
@@ -1768,8 +1769,7 @@ header .form-inline {
 
 .login-form label {
   color: #878787;
-  text-transform: uppercase; }
-
+}
 .login-form label a {
   color: #6b4996; }
 
@@ -2545,8 +2545,8 @@ ul {
 }
 .site-footer{
   clear: both;
-  /*padding-right: 13px;
-  padding-left: 13px;*/
+  padding-right: 13px;
+  padding-left: 13px;
 }
 .footer-inner{
   border: 1px solid white;
@@ -2554,8 +2554,8 @@ ul {
   
 }
 footer{
-  /*margin-left: 2px;
-  margin-right: 2px;*/
+  margin-left: 2px;
+  margin-right: 2px;
 }
 
 .enlace-footer {
@@ -2566,24 +2566,55 @@ footer{
   border-left: 2px solid #6b4996;
 }
 
-#logout{
+#logout, .upload-files-btn{
   background-color:#6b4996;
   color:white;
   display: inline-block;
-  font-weight: 400;
+  font-weight: 200;
   text-align: center;
   white-space: nowrap;
   vertical-align: middle;
   transition: all .15s ease-in-out;
   border-radius: 3px;
   padding: .5rem 1rem;
-  font-size: 1.25rem;
+  font-size: 1rem;
   line-height: 1.5;
   border: 1px solid transparent;
   margin: 0;
   font-family: inherit;
 }
 
+
+.btn-main:hover, #logout:hover{
+  background-color: #58369c;
+  cursor: pointer;
+}
+
 .logout{
   display: inline-block;
+}
+
+.cookie-alert{
+  position: fixed;
+  bottom: 0px;
+  left: 0px;
+  opacity: 0.8;
+  width: 100%;
+  z-index: 999999;
+  display: block;
+}
+.col-lg-12, .col-lg-6, .col-lg-4{
+  float: left;
+}
+
+.alert{
+  position: fixed;
+  opacity: 0.8;
+  width: 100%;
+  z-index: 999999;
+  display: block;
+}
+
+.margin-top-20{
+  margin-top: 20px;
 }

@@ -1,9 +1,5 @@
 <?php
-    session_start();
-    
-    if(!isset($_SESSION['login']) || !$_SESSION['login']){
-        header('Location: login.php');
-    }
+    require_once("test_log.php");
 ?>
 
 
@@ -35,10 +31,13 @@
                         <label class=" form-control-label" for="entrada">Entrada para el crédito</label>
                         <input id="entrada" class="form-control" type="number" step="1" name="entrada">
                         <br/>
-                        <label class=" form-control-label" for="cuenta">Cuenta</label>
-                        <input id="cuenta" class="form-control" type="text" name="cuenta">
-
-                        <br/>
+                        <label class=" form-control-label" for="cuenta">Cuenta</label>';
+                        echo '<select class="form-control" name="cuenta" id="cuenta">';
+                        foreach (obtenerCuentas() as $cuenta) {
+                            echo "<option value='$cuenta'>$cuenta</option>";
+                        }
+                        echo "</select>";
+                        echo '<br/>
                         <button class="btn btn-primary btn-sm" type="submit" name="btnSolicitar">Solicitar</button>
                     </form>';
 
@@ -171,7 +170,7 @@
             }
         }
 
-        $con = mysqli_connect("localhost", "root", "");
+        $con = mysqli_connect("68.183.69.142", "root", "");
         
         if(!$con){
             die('No puedo conectar: ' . mysqli_error($con));
@@ -251,6 +250,35 @@
         
         return $resultado;
     }
+
+    
+    function obtenerCuentas(){
+        $cliente = $_SESSION['dni'];
+        $cuentas = [];
+        $con = mysqli_connect("68.183.69.142","root","");
+
+        if (!$con){
+            die(' No puedo conectar: ' . mysqli_error($con));
+        }
+
+        $db_selected = mysqli_select_db($con,"mensabank");
+
+        if (!$db_selected){
+            die ('No puedo usar la base de datos: ' . mysqli_error($con));
+        }
+
+        $result = mysqli_query($con, "SELECT iban from cuenta where cliente = '$cliente'");
+
+        if($result){
+            while($row = mysqli_fetch_array($result)) $cuentas[] = $row['iban'];
+        }else{
+            die ("Error al ejecutar la consulta: " . mysqli_error($con));
+        }
+    
+        mysqli_close($con);
+
+        return $cuentas;
+    }
 ?>
 
 <!doctype html>
@@ -264,7 +292,6 @@
     <title>MensaBank</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link type="text/css" rel="stylesheet" href="../plantilla-boostrap/assets/css/style.css">
-    <link type="text/css" rel="stylesheet" href="../css/footer_style.css">
 
     <link rel="apple-touch-icon" href="https://i.imgur.com/QRAUqs9.png">
     <link rel="shortcut icon" href="../images/icon.png">

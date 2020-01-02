@@ -1,16 +1,20 @@
+
+
 <aside id="left-panel" class="left-panel">
     <nav class="navbar navbar-expand-sm navbar-default">
         <div id="main-menu" class="main-menu collapse navbar-collapse">
             <ul class="nav navbar-nav">
                 <li class="active">
-                    <a href="dashboard.php">Dashboard </a>
+                    <a href="dashboard.php"><i class="menu-icon fa fa-bar-chart-o"></i>Dashboard </a>
                 </li>
+                
                 <li class="menu-title">Productos</li><!-- /.menu-title -->
-                <li><a href="accounts.php">Cuentas</a></li>
-                <li><a href="cards.php">Tarjetas</a></li>
-                <li><a href="transfers.php">Transferencias</a></li>
-                <li><a href="loans.php">Préstamos</a></li>
-                <li><a href="pensionplans.php">Plan de pensiones</a></li>
+                <li><a href="accounts.php"><i class="menu-icon fa fa-folder-open-o"></i>Cuentas</a></li>
+                <li><a href="cards.php"><i class="menu-icon fa fa-credit-card"></i>Tarjetas</a></li>
+                <li><a href="transfers.php"><i class="menu-icon fa fa-exchange"></i>Transferencias</a></li>
+                <li><a href="loans.php"><i class="menu-icon fa fa-money"></i>Préstamos</a></li>
+                <li><a href="pensionplans.php"><i class="menu-icon fa fa-briefcase"></i>Plan de pensiones</a></li>
+                <li><hr/></li>
                 <li><a href="new_account.php">Nueva cuenta</a></li>
                 <li><a href="new_card.php">Nueva tarjeta</a></li>
                 <li><a href="new_transfer.php">Nueva transferencia</a></li>

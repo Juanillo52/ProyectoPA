@@ -1,9 +1,5 @@
 <?php
-    session_start();
-
-    if(!isset($_SESSION['login']) || !$_SESSION['login']){
-        header('Location: login.php');
-    }
+    //require_once("test_log.php");
 ?>
 
 <?php
@@ -18,33 +14,33 @@
             require_once("header.php");
             //#header
             echo '<!-- Content -->
-            <div class="content">
+            <div class="content col-md-6">
                 <div class="row card">
-                <h1 class="card-header">Crear nueva Cuenta</h1>
+                <h4 class="card-header">Crear nueva cuenta</h4>
                     <div class="card-body">
-                    <form action="#" method="POST" enctype="multipart/form-data">
+                    <form method="POST" enctype="multipart/form-data">
                         <label class=" form-control-label" for="select" onchange="Select()">Seleccione el tipo de cuenta</label>
                         <select id="select" class="form-control" name="select">
-                            <option value="cuenta">Cuenta corriente</option>
+                            <option value="cuenta" selected="true">Cuenta corriente</option>
                             <option value="cuenta_nomina">Cuenta nómina</option>
                             <option value="cuenta_ahorros">Cuenta de ahorros</option>
-                        </select><br/>';
+                        </select>';
 
                             echo '<div id="div_nomina" style="display:none">
-                                    <label class=" form-control-label" for="nomina">Adjunte su nomina en pdf</label>
-                                    <input type="file" name="nomina">
-                            </div>';
-
-                        echo '  <label class=" form-control-label" for="dni">DNI</label>
-                                <input id="dni" class="form-control" type="text" name="dni">
-                                <br/>
-                                <label class=" form-control-label" for="email">Email</label>
-                                <input id="email" class="form-control" type="text" name="email">
-                                <br/>
+                                    <label class=" form-control-label" for="nomina">Adjunte su nómina en formato PDF:</label><br/>
+                                    <input class="upload-files-btn" type="file" name="nomina">
+                            </div><br/>';
+                                
+                        echo ' <label class=" form-control-label" for="dni">DNI</label>
+                                <input id="dni" class="form-control col-md-5" type="text" name="dni">
+                               
+                                <label class=" form-control-label " for="email">Email</label>
+                                <input id="email" class="form-control col-md-5" type="text" name="email">
+                               
                                 <label class=" form-control-label" for="clave">Clave</label>
                                 <input id="clave" class="form-control" type="password" name="clave">
-                                <br/>
-                                <button class="btn btn-primary btn-sm" type="submit" name="btnSolicitar">Solicitar</button>';
+                              
+                                <button class="btn btn-primary btn-sm margin-top-20" type="submit" name="btnSolicitar">Solicitar</button>';
                     echo '</form>';
 
                         echo '
@@ -61,7 +57,7 @@
     function comprobarNuevaCuenta(){
         $resultado = False;
         
-        if(isset($_POST['btnInsertar'])){
+        if(isset($_POST['btnSolicitar'])){
             $ok = comprobarDatosNuevaCuenta();
             
             if($ok){
@@ -98,8 +94,11 @@
             $errores[] = "Elija el tipo de cuenta. <br/>";
         }
 
-        if ($_FILES['nomina']['error'] != 4 && ($_FILES['anexo']['type'] != 'application/pdf' || $_FILES['anexo']['size'] > (1024 * 1024 * 10))) {
-            $errores[] = "El fichero no debe de pasar los 10 mb de tamaño y debe ser pdf.<br/>";
+        if(isset($_POST['select']) && $_POST['select'] == 'cuenta_nomina'){
+            /*$_FILES['nomina']['type'] != 'application/pdf'*/
+            if ($_FILES['nomina']['error'] != 4 &&  $_FILES['nomina']['size'] > (1024 * 1024 *10)) {
+                $errores[] = "El fichero no debe de pasar los 10 mb de tamaño y debe ser pdf.<br/>";
+            }
         }
 
         if(!isset($errores)){
@@ -119,7 +118,7 @@
         $email = $_POST['email'];
         $clave = $_POST['clave'];
         $tipo = $_POST['select'];
-        $saldo = 0;
+        $saldo = 5000;
         $iban = "ES";
         
         for($i = 0; $i < 22; $i++){
@@ -129,11 +128,15 @@
         if($tipo == "cuenta_ahorros"){
             $tae = 2.5;
         }elseif($tipo == "cuenta_nomina"){
-            $nomina = $_FILES['nomina']['name'];
-            $nomina = time() . $nomina;
+            $ruta = "../nominas/" . $cliente;
+            mkdir($ruta);
+            
+            $ruta = $_FILES['nomina']['name'];
+            $ruta = time() . $ruta;
+            move_uploaded_file($_FILES['nomina']['tmp_name'], "../nominas/". $cliente ."/". $ruta);
         }
 
-        $con = mysqli_connect("localhost", "root", "");
+        $con = mysqli_connect("68.183.69.142", "root", "");
         
         if(!$con){
             die('No puedo conectar: ' . mysqli_error($con));
@@ -157,7 +160,7 @@
                     $row = mysqli_fetch_array($resQuery);
                     
                     if(password_verify($clave, $row['clave'])){
-                        $resQuery2 = mysqli_query($con, "INSERT INTO cuenta_ahorros(iban, saldo, tae, cliente) VALUES ('$iban', '$saldo', '$tae', $cliente)");
+                        $resQuery2 = mysqli_query($con, "INSERT INTO cuenta_ahorros(iban, saldo, tae, cliente) VALUES ('$iban', '$saldo', '$tae', '$cliente')");
 
                         if(!$resQuery2){
                             mysqli_close($con);
@@ -170,7 +173,7 @@
                     $row = mysqli_fetch_array($resQuery);
                     
                     if(password_verify($clave, $row['clave'])){
-                        $resQuery2 = mysqli_query($con, "INSERT INTO cuenta_nomina(iban, saldo, nomina, cliente) VALUES ('$iban', '$saldo', '$nomina', $cliente)");
+                        $resQuery2 = mysqli_query($con, "INSERT INTO cuenta_nomina(iban, saldo, nomina, cliente) VALUES ('$iban', '$saldo', '$ruta', '$cliente')");
 
                         if(!$resQuery2){
                             mysqli_close($con);
@@ -183,12 +186,13 @@
                     $row = mysqli_fetch_array($resQuery);
                     
                     if(password_verify($clave, $row['clave'])){
-                        $resQuery2 = mysqli_query($con, "INSERT INTO cuenta(iban, saldo, cliente) VALUES ('$iban', '$saldo', '$cliente)");
+                        $resQuery2 = mysqli_query($con, "INSERT INTO cuenta(iban, saldo, cliente) VALUES ('$iban', '$saldo', '$cliente')");
 
                         if(!$resQuery2){
                             mysqli_close($con);
                             die('No puedo ejecutar la consulta: ' . mysqli_error($con));
                         }else{
+                            
                             $resultado = True;
                         }
                     }
@@ -213,7 +217,6 @@
     <title>MensaBank</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link type="text/css" rel="stylesheet" href="../plantilla-boostrap/assets/css/style.css">
-    <link type="text/css" rel="stylesheet" href="../css/footer_style.css">
 
     <link rel="apple-touch-icon" href="https://i.imgur.com/QRAUqs9.png">
     <link rel="shortcut icon" href="../images/icon.png">
@@ -292,6 +295,8 @@
     ?>
 
     <!-- Scripts -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
     <script src="https://cdn.jsdelivr.net/npm/jquery@2.2.4/dist/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.4/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/js/bootstrap.min.js"></script>
@@ -317,9 +322,30 @@
     <script src="../plantilla-boostrap/assets/js/init/fullcalendar-init.js"></script>
 
     <!--Local Stuff-->
+<script>
+    $(document).ready(function(){
+
+        if($("#select option:selected").html() == "Cuenta nómina"){
+                    $("#div_nomina").css("display", "");
+        } //Si para cuando carga está puesta ya la opción de cuenta nómina, salga el div de la nómina
+        
+        $("#select").change(function(){
+                if($("#select option:selected").html() == "Cuenta nómina"){
+                    $("#div_nomina").css("display", "");
+                }else{
+                    $("#div_nomina").css("display", "none");
+                }
+            });
+    });
+
+</script>
+
     <script>
         jQuery(document).ready(function($) {
             "use strict";
+
+            
+            
 
             // Pie chart flotPie1
             var piedata = [
@@ -507,13 +533,6 @@
             });
             // Bar Chart #flotBarChart End
 
-            $("#select").change(function(){
-                if($("select[id=select]").val() == "cuenta_nomina"){*/
-                    $("#div_nomina").css("display", "");
-                }else{
-                    $("#div_nomina").css("display", "none");
-                }
-            });
         });
     </script>
     <script src="https://cdn.jsdelivr.net/npm/jquery@2.2.4/dist/jquery.min.js"></script>

@@ -1,5 +1,6 @@
 <?php
 session_start();
+require_once("cookie_alert.php");
 ?>
 
 
@@ -9,13 +10,13 @@ function mostrarFormulario(){
     <div class="container">
         <div class="login-content">
             <div class="login-logo">
-                <a href="index.html">
+                <a href="index.php">
                     <img class="align-content" src="../images/logo.png" alt="">
                 </a>
             </div>
             <div class="login-form">
                 <form method="POST">
-                    <div class="form-group">
+                    <div class="form-group col-lg-6">
                         <label>Nombre</label>
                         <input type="text" name="nombre"'; 
                         
@@ -23,9 +24,10 @@ function mostrarFormulario(){
                             echo 'value="' . $_POST['nombre'] .'"';
                         }
                         
-                        echo 'class="form-control" required>
+                        echo 'class="form-control" required />
                     </div>
-                    <div class="form-group">
+
+                    <div class="form-group col-lg-6">
                         <label>Apellidos</label>
                         <input type="text" name="apellidos"'; 
                         
@@ -33,9 +35,9 @@ function mostrarFormulario(){
                             echo 'value="' . $_POST['apellidos'] .'"';
                         }
 
-                        echo 'class="form-control" required>
+                        echo 'class="form-control" required />
                     </div>
-                    <div class="form-group">
+                    <div class="form-group col-lg-6">
                         <label>DNI</label>
                         <input type="text" name="dni"';
                         
@@ -43,9 +45,9 @@ function mostrarFormulario(){
                             echo 'value="' . $_POST['dni'] .'"';
                         }
 
-                        echo 'class="form-control" required>
+                        echo 'class="form-control" required />
                     </div>
-                    <div class="form-group">
+                    <div class="form-group col-lg-6">
                         <label>Fecha de nacimiento</label>
                         <input type="date" name="fecha_nacimiento"';
                         
@@ -53,49 +55,11 @@ function mostrarFormulario(){
                             echo 'value="' . $_POST['fecha_nacimiento'] .'"';
                         }
                         
-                        echo 'class="form-control" required>
+                        echo 'class="form-control" required />
                     </div>
-                    <div class="form-group">
-                        <label>Dirección</label>
-                        <input type="text" name="direccion"'; 
-                        
-                        if(isset($_POST['direccion'])){
-                            echo 'value="' . $_POST['direccion'] .'"';
-                        }
 
-                        echo 'class="form-control" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Ciudad</label>
-                        <input type="text" name="ciudad"'; 
-                        
-                        if(isset($_POST['ciudad'])){
-                            echo 'value="' . $_POST['ciudad'] .'"';
-                        }
-                        
-                        echo'class="form-control" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Provincia</label>
-                        <input type="text" name="provincia"'; 
-                        
-                        if(isset($_POST['provincia'])){
-                            echo 'value="' . $_POST['provincia'] .'"';
-                        }
-                        
-                        echo 'class="form-control" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Código Postal</label>
-                        <input type="text" name="cp"'; 
-                        
-                        if(isset($_POST['cp'])){
-                            echo 'value="' . $_POST['cp'] .'"';
-                        }
-                        
-                        echo 'class="form-control" required>
-                    </div>
-                    <div class="form-group">
+                    
+                    <div class="form-group col-lg-12">
                         <label>Correo electrónico</label>
                         <input type="email" name="email"'; 
                         
@@ -105,7 +69,7 @@ function mostrarFormulario(){
                         
                         echo 'class="form-control" required>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group col-lg-12">
                         <label>Teléfono</label>
                         <input type="text" name="telefono"'; 
                         
@@ -115,12 +79,57 @@ function mostrarFormulario(){
 
                         echo 'class="form-control" required>
                     </div>
-                    <div class="checkbox">
+                    <div class="form-group col-lg-12">
+                    <label>Dirección</label>
+                    <input type="text" name="direccion"'; 
+                    
+                    if(isset($_POST['direccion'])){
+                        echo 'value="' . $_POST['direccion'] .'"';
+                    }
+
+                    echo 'class="form-control" required />
+                </div>
+
+                <div class="form-group col-lg-4">
+                    <label>Ciudad</label>
+                    <input type="text" name="ciudad"'; 
+                    
+                    if(isset($_POST['ciudad'])){
+                        echo 'value="' . $_POST['ciudad'] .'"';
+                    }
+                    
+                    echo'class="form-control" required>
+                </div>
+                <div class="form-group col-lg-4">
+                    <label>Provincia</label>
+                    <input type="text" name="provincia"'; 
+                    
+                    if(isset($_POST['provincia'])){
+                        echo 'value="' . $_POST['provincia'] .'"';
+                    }
+                    
+                    echo 'class="form-control" required>
+                </div>
+                <div class="form-group col-lg-4">
+                    <label>Código Postal</label>
+                    <input type="text" name="cp"'; 
+                    
+                    if(isset($_POST['cp'])){
+                        echo 'value="' . $_POST['cp'] .'"';
+                    }
+                    
+                    echo 'class="form-control" required>
+                </div>
+
+                    <div class="checkbox col-lg-12">
                         <label>
                             <input type="checkbox" name="terminos"> Acepto los <a href="policy.php" target="_blank">términos y condiciones</a>
                         </label>
                     </div>
-                    <button type="submit" name="submit" class="btn btn-main btn-flat m-b-30 m-t-30">Registrarme</button>                        
+                    <div class="col-lg-12"> 
+                        <button type="submit" name="submit" class="btn btn-main btn-flat m-b-30 m-t-30">Registrarme</button> 
+                    </div>
+                                           
                     <div class="register-link m-t-15 text-center">
                         <p>¿Ya eres de MensaBank?<a href="login.php"> Accede aquí</a></p>
                     </div>
@@ -298,11 +307,22 @@ function altaCliente(){
     return $resultado;
 }
 function enviarEmail($password){
-    //ENVIAR EMAIL
+    ini_set( 'display_errors', 1 );
+    error_reporting( E_ALL );
+    $from = "infomensabank@gmail.com";
+    $to = $_POST['email'];
+    $subject = "[noreply] Verifica tu cuenta";
+    $message = "<div><h3>Hola, " . $_POST['nombre'] . ", bienvenido a MensaBank:</h3>
+                <p>La clave de acceso con la que deberá loguearse es: " . $password . "<br/>
+                Ya puede disfrutar de todos nuestros servicios con total libertad. Un saludo,
+                El equipo de soporte de MensaBank.</p></div>";
+    $headers = "From:" . $from;
+    mail($to,$subject,$message, $headers);
+    echo "The email message was sent.";
 }
 function redireccionar(){
-    $_SESSION["register"] = "Se ha registrado correctamente. La contraseña será enviada a su correo en breves momentos.";
-    header("Location: login.php");
+    $_SESSION["register"] = "Se ha registrado correctamente. La clave de acceso será enviada a su correo en breves momentos.";
+    header("Location: index.php");
 }
 
 ?>

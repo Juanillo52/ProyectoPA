@@ -1,5 +1,5 @@
 <?php
-    session_start();
+    require_once("test_log.php");
 ?>
 
 <?php
@@ -20,19 +20,19 @@
                             <table class="table table-bordered">
                                 <thead>
                                     <tr>
-                                        <td>Importe</td>
-                                        <td>Tipo</td>
-                                        <td>Entrada</td>
-                                        <td>Cuenta</td>
-                                        <td>Cuota</td>
-                                        <td>Interés</td>
-                                        <td>Pagado</td>
-                                        <td>Fecha límite</td>
+                                        <th>Importe</th>
+                                        <th>Tipo</th>
+                                        <th>Entrada</th>
+                                        <th>Cuenta</th>
+                                        <th>Cuota</th>
+                                        <th>Interés</th>
+                                        <th>Pagado</th>
+                                        <th>Fecha límite</th>
                                     </tr>
                                 </thead>
                                 <tbody>';
 
-                                $con = mysqli_connect("localhost","root","");
+                                $con = mysqli_connect("68.183.69.142","root","");
 
                                 if (!$con){
                                     die(' No puedo conectar: ' . mysqli_error($con));
@@ -65,12 +65,12 @@
                                                         <td>'+ $row['fecha_limite'] +'</td>
                                                     </tr>';
                                         }
-
-                                        echo '</tbody>
-                                        </table>';
                                     }
 
                                 }
+
+                                echo '</tbody>
+                                </table>';
                                 
                                 mysqli_close($con);
 
@@ -98,7 +98,6 @@
     <title>MensaBank</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link type="text/css" rel="stylesheet" href="../plantilla-boostrap/assets/css/style.css">
-    <link type="text/css" rel="stylesheet" href="../css/footer_style.css">
 
     <link rel="apple-touch-icon" href="https://i.imgur.com/QRAUqs9.png">
     <link rel="shortcut icon" href="../images/icon.png">

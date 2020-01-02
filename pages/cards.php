@@ -13,7 +13,6 @@
     <title>MensaBank</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link type="text/css" rel="stylesheet" href="../plantilla-boostrap/assets/css/style.css">
-    <link type="text/css" rel="stylesheet" href="../css/footer_style.css">
 
     <link rel="apple-touch-icon" href="https://i.imgur.com/QRAUqs9.png">
     <link rel="shortcut icon" href="../images/icon.png">
@@ -81,9 +80,6 @@
         <?php require_once("header.php"); ?>
         <!-- /#header -->
         <!-- Content -->
-        <div class="content">
-            
-        </div>
         <!-- /.content -->
         <div class="content">
         <div class="row card">
@@ -104,7 +100,7 @@
                             </thead>
                             <tbody>
                                <?php 
-                                $con = mysqli_connect("localhost","root","");
+                                $con = mysqli_connect("68.183.69.142","root","");
 
                                 if (!$con){
                                     die(' No puedo conectar: ' . mysqli_error($con));

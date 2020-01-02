@@ -70,13 +70,12 @@ function comprobarDatosFormulario(){
 function enviarEmail(){
     ini_set( 'display_errors', 1 );
     error_reporting( E_ALL );
-    $from = $_POST['email'];
-    $to = "jagalgom@alu.upo.es";
+    $from = "infomensabank@gmail.com";
+    $to = "infomensabank@gmail.com";
     $subject = $_POST['subject'];
     $message = $_POST['help'];
-    $headers = "From:" . $from;
+    $headers = "From:" . $_POST['email'];
     mail($to,$subject,$message, $headers);
-    echo "The email message was sent.";
 }
 ?>
 

@@ -1,6 +1,6 @@
 <?php
     session_start();    
-    
+    require_once("cookie_alert.php");
 
     function comprobarFormulario(){
         $resultado = False; ## le damos este valor para que muestre el login
@@ -51,7 +51,7 @@
         $dni = $_POST['dni'];
         $password = $_POST['password'];
     
-        $con = mysqli_connect("68.183.69.142","root","Pistacho99!");
+        $con = mysqli_connect("68.183.69.142:3306","root","Pistacho99!");
     
         if (!$con){
             die(' No puedo conectar: ' . mysqli_error($con));
@@ -84,7 +84,7 @@
     function getUser($dni){
         $nombre = null;
         $dni = $_POST['dni'];
-        $con = mysqli_connect("68.183.69.142","root","Pistacho99!");
+        $con = mysqli_connect("68.183.69.142:3306","root","Pistacho99!");
     
         if (!$con){
             die(' No puedo conectar: ' . mysqli_error($con));
@@ -117,7 +117,7 @@
     }
 
     function enviarClave($email){
-        $con = mysqli_connect("68.183.69.142","root","Pistacho99!");
+        $con = mysqli_connect("68.183.69.142:3306","root","Pistacho99!");
         $email = $_POST['email'];
     
         if (!$con){
@@ -278,7 +278,7 @@ and open the template in the editor.
             </div>
         </header>
     </div>
-    
+
     <div id="divlogin">
         <div class="login-content">
             <div class="login-form">
@@ -675,7 +675,7 @@ and open the template in the editor.
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.4/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jquery-match-height@0.7.2/dist/jquery.matchHeight.min.js"></script>
-    <script src="assets/js/main.js"></script>
+    <script src="../plantilla-boostrap/assets/js/main.js"></script>
     <?php      
         require_once("footer.php"); 
     ?>

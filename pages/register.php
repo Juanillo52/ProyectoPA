@@ -208,7 +208,7 @@ function buscarCliente(){
     $dni = $_POST['dni'];
     $email = $_POST['email'];
 
-    $con = mysqli_connect("localhost","root","Pistacho99!");
+    $con = mysqli_connect("68.183.69.142:3306","root","Pistacho99!");
 
     if (!$con){
         die(' No puedo conectar: ' . mysqli_error($con));
@@ -256,11 +256,6 @@ function crearPassword(){
     }
     enviarEmail($password);
 
-
-    $_SESSION['pass'] = $password;
-    $_SESSION['cliente'] = $_POST['dni'];
-
-
     $password = password_hash($password, PASSWORD_DEFAULT);
     return $password;
 }
@@ -279,7 +274,7 @@ function altaCliente(){
     $cp =  $_POST['cp'];
     $clave = crearPassword();
 
-    $con = mysqli_connect("localhost","root","Pistacho99!");
+    $con = mysqli_connect("68.183.69.142:3306","root","Pistacho99!");
 
     if (!$con){
         die(' No puedo conectar: ' . mysqli_error($con));
@@ -314,7 +309,8 @@ function enviarEmail($password){
     $subject = "[noreply] Verifica tu cuenta";
     $message = "<div><h3>Hola, " . $_POST['nombre'] . ", bienvenido a MensaBank:</h3>
                 <p>La clave de acceso con la que deberá loguearse es: " . $password . "<br/>
-                Ya puede disfrutar de todos nuestros servicios con total libertad. Un saludo,
+                Ya puede disfrutar de todos nuestros servicios con total libertad.<br/> 
+                Un saludo,<br/>
                 El equipo de soporte de MensaBank.</p></div>";
     $headers = "From:" . $from;
     mail($to,$subject,$message, $headers);

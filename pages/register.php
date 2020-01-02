@@ -307,11 +307,22 @@ function altaCliente(){
     return $resultado;
 }
 function enviarEmail($password){
-    //ENVIAR EMAIL
+    ini_set( 'display_errors', 1 );
+    error_reporting( E_ALL );
+    $from = "infomensabank@gmail.com";
+    $to = $_POST['email'];
+    $subject = "[noreply] Verifica tu cuenta";
+    $message = "<div><h3>Hola, " . $_POST['nombre'] . ", bienvenido a MensaBank:</h3>
+                <p>La clave de acceso con la que deberá loguearse es: " . $password . "<br/>
+                Ya puede disfrutar de todos nuestros servicios con total libertad. Un saludo,
+                El equipo de soporte de MensaBank.</p></div>";
+    $headers = "From:" . $from;
+    mail($to,$subject,$message, $headers);
+    echo "The email message was sent.";
 }
 function redireccionar(){
     $_SESSION["register"] = "Se ha registrado correctamente. La clave de acceso será enviada a su correo en breves momentos.";
-    header("Location: login.php");
+    header("Location: index.php");
 }
 
 ?>

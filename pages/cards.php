@@ -100,7 +100,7 @@
                             </thead>
                             <tbody>
                                <?php 
-                                $con = mysqli_connect("localhost","root","");
+                                $con = mysqli_connect("68.183.69.142","root","");
 
                                 if (!$con){
                                     die(' No puedo conectar: ' . mysqli_error($con));

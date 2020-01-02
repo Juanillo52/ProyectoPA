@@ -51,7 +51,7 @@
         $dni = $_POST['dni'];
         $password = $_POST['password'];
     
-        $con = mysqli_connect("localhost","root","");
+        $con = mysqli_connect("68.183.69.142","root","");
     
         if (!$con){
             die(' No puedo conectar: ' . mysqli_error($con));
@@ -84,7 +84,7 @@
     function getUser($dni){
         $nombre = null;
         $dni = $_POST['dni'];
-        $con = mysqli_connect("localhost","root","");
+        $con = mysqli_connect("68.183.69.142","root","");
     
         if (!$con){
             die(' No puedo conectar: ' . mysqli_error($con));
@@ -117,7 +117,7 @@
     }
 
     function enviarClave($email){
-        $con = mysqli_connect("localhost","root","");
+        $con = mysqli_connect("68.183.69.142","root","");
         $email = $_POST['email'];
     
         if (!$con){
@@ -150,7 +150,7 @@
                 }else{
                     ini_set( 'display_errors', 1 );
                     error_reporting( E_ALL );
-                    $from = 'mensabank@support.es';
+                    $from = 'infomensabank@gmail.com';
                     $to = $email;
                     $subject = 'Aquí tienes tu nueva clave, '.$nombre;
                     $message = 'Tu nueva clave de acceso es: '.$password;

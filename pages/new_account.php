@@ -136,7 +136,7 @@
             move_uploaded_file($_FILES['nomina']['tmp_name'], "../nominas/". $cliente ."/". $ruta);
         }
 
-        $con = mysqli_connect("localhost", "root", "");
+        $con = mysqli_connect("68.183.69.142", "root", "");
         
         if(!$con){
             die('No puedo conectar: ' . mysqli_error($con));

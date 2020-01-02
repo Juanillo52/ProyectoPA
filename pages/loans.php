@@ -11,66 +11,74 @@
         <div id="right-panel" class="right-panel">';
             //Header
             require_once("header.php");
-            //#header
+            //#header            
             echo '<!-- Content -->
             <div class="content">
                 <div class="row card">
                     <h1 class="card-header">Préstamos</h1>
                         <div class="card-body">
-                            <table class="table table-bordered">
-                                <thead>
-                                    <tr>
-                                        <th>Importe</th>
-                                        <th>Tipo</th>
-                                        <th>Entrada</th>
-                                        <th>Cuenta</th>
-                                        <th>Cuota</th>
-                                        <th>Interés</th>
-                                        <th>Pagado</th>
-                                        <th>Fecha límite</th>
-                                    </tr>
-                                </thead>
-                                <tbody>';
+                            <form action="#" method="POST">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Importe</th>
+                                            <th>Tipo</th>
+                                            <th>Cuenta</th>
+                                            <th>Cuota</th>
+                                            <th>Interés</th>
+                                            <th>Pagado</th>
+                                            <th>Fecha límite</th>
+                                            <th>Estado</th>
+                                            <th>Pagar cuota</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>';
 
-                                $con = mysqli_connect("68.183.69.142","root","Pistacho99!");
+                                    $con = mysqli_connect("68.183.69.142", "root", "Pistacho99!");
 
-                                if (!$con){
-                                    die(' No puedo conectar: ' . mysqli_error($con));
-                                }
-                            
-                                $db_selected = mysqli_select_db($con, "mensabank");
-                            
-                                if (!$db_selected){
-                                    die ('No puedo usar la base de datos: ' . mysqli_error($con));
-                                }
-                            
-                                $dni = $_SESSION['dni'];
-
-                                $resQuery = mysqli_query($con, "SELECT * from prestamo WHERE cliente = '$dni'");
+                                    if (!$con){
+                                        die(' No puedo conectar: ' . mysqli_error($con));
+                                    }
                                 
-                                if (!$resQuery) {
-                                    die ("Error al ejecutar la consulta: " . mysqli_error($con));
-                                }else{
-                                    if(mysqli_num_rows($resQuery) != 0){
+                                    $db_selected = mysqli_select_db($con, "mensabank");
+                                
+                                    if (!$db_selected){
+                                        die ('No puedo usar la base de datos: ' . mysqli_error($con));
+                                    }
+                                
+                                    $dni = $_SESSION['dni'];
 
-                                        while($row = mysqli_fetch_array($resQuery)){
-                                            echo '<tr>
-                                                        <td>'+ $row['credito'] +' euros</td>
-                                                        <td>'+ $row['tipo'] +'</td>
-                                                        <td>'+ $row['entrada'] +'</td>
-                                                        <td>'+ $row['cuenta'] +'</td>
-                                                        <td>'+ $row['cuota'] +' euros</td>
-                                                        <td>'+ $row['intereses'] +'</td>
-                                                        <td>'+ $row['pagado'] +'</td>
-                                                        <td>'+ $row['fecha_limite'] +'</td>
-                                                    </tr>';
+                                    $resQuery = mysqli_query($con, "SELECT * from prestamo WHERE cliente = '$dni'");
+                                    
+                                    if (!$resQuery) {
+                                        die ("Error al ejecutar la consulta: " . mysqli_error($con));
+                                    }else{
+                                        if(mysqli_num_rows($resQuery) != 0){
+
+                                            while($row = mysqli_fetch_array($resQuery)){
+                                                echo '<tr>
+                                                            <td>'. $row['credito'] .' euros</td>
+                                                            <td>'. $row['tipo'] .'</td>
+                                                            <td>'. $row['cuenta'] .'</td>
+                                                            <td>'. $row['cuota'] .' euros</td>
+                                                            <td>'. $row['intereses'] .'</td>
+                                                            <td>'. $row['pagado'] .'</td>
+                                                            <td>'. $row['fecha_limite'] .'</td>
+                                                            <td>'. $row['estado'] .'</td>';
+                                                            if($row['estado']=='En proceso'){
+                                                                echo '<td><input class="btn btn-main" type="submit" name="'. $row['id'] .'" value="Pagar"></input></td>';
+                                                            }else{
+                                                                echo '<td><input class="btn btn-main" type="submit" name="'. $row['id'] .'" value="Pagar" disabled></input></td>';
+                                                            }
+                                                        echo '</tr>';
+                                            }
                                         }
+
                                     }
 
-                                }
-
-                                echo '</tbody>
-                                </table>';
+                                    echo '</tbody>
+                                    </table>
+                                </form>';
                                 
                                 mysqli_close($con);
 
@@ -84,6 +92,183 @@
             //.site-footer
         
         echo'</div>';
+    }
+
+    function comprobarBoton(){
+        $con = mysqli_connect("68.183.69.142", "root", "Pistacho99!");
+
+        if (!$con){
+            die(' No puedo conectar: ' . mysqli_error($con));
+        }
+    
+        $db_selected = mysqli_select_db($con, "mensabank");
+    
+        if (!$db_selected){
+            die ('No puedo usar la base de datos: ' . mysqli_error($con));
+        }
+    
+        $dni = $_SESSION['dni'];
+
+        $resQuery = mysqli_query($con, "SELECT * from prestamo WHERE cliente = '$dni'");
+        
+        if (!$resQuery) {
+            die ("Error al ejecutar la consulta: " . mysqli_error($con));
+        }else{
+            while($row = mysqli_fetch_array($resQuery)){
+                $id = $row['id'];
+
+                if(isset($_POST[$id])){
+                    $estado = $row['estado'];
+                    $fechaActual = date("Y-m-d");
+
+                    if($estado == "En proceso" && $fechaActual < $row['fecha_limite']){
+                        $cuenta = $row['cuenta'];
+                        $enc = False;
+
+                        $resQuery2 = mysqli_query($con, "SELECT * from cuenta WHERE cliente = '$dni' and iban='$cuenta'");
+
+                        if (!$resQuery2) {
+                            die ("Error al ejecutar la consulta: " . mysqli_error($con));
+                        }else{
+                            if($row2 = mysqli_fetch_array($resQuery2)){
+                                $enc = True;
+                                $credito = $row['credito'];
+                                $cuota = $row['cuota'];
+                                $pagado = $row['pagado'];
+                                $saldo = $row2['saldo'];
+                                
+                                if($saldo > $cuota){
+                                    if(($cuota + $pagado) >= $credito){
+                                        $resQuery3 = mysqli_query($con, "UPDATE prestamo SET pagado=pagado+'$cuota', estado='Pagado' WHERE id='$id'");
+                                        
+                                        if (!$resQuery3) {
+                                            die ("Error al ejecutar la consulta: " . mysqli_error($con));
+                                        }
+                                    }else{
+                                        $resQuery3 = mysqli_query($con, "UPDATE prestamo SET pagado=pagado+'$cuota' WHERE id='$id'");
+                                        
+                                        if (!$resQuery3) {
+                                            die ("Error al ejecutar la consulta: " . mysqli_error($con));
+                                        } 
+                                    }
+                                    
+                                    $resQuery4 = mysqli_query($con, "UPDATE cuenta SET saldo=saldo-'$cuota' WHERE iban='$cuenta'");
+
+                                    if (!$resQuery4) {
+                                        die ("Error al ejecutar la consulta: " . mysqli_error($con));
+                                    }
+                                }else{                                    
+                                    echo '<div class="sufee-alert alert with-close alert-danger alert-dismissible fade show alert">
+                                    <span> No hay saldo suficiente en la cuenta asociada al préstamo para pagar una cuota.
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Entendido">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                    </div>';                                    
+                                }                               
+                            }
+                        }
+                        
+                        if(!$enc){
+                            $resQuery2 = mysqli_query($con, "SELECT * from cuenta_ahorros WHERE cliente = '$dni' and iban='$cuenta'");
+
+                            if (!$resQuery2) {
+                                die ("Error al ejecutar la consulta: " . mysqli_error($con));
+                            }else{
+                                if($row2 = mysqli_fetch_array($resQuery2)){
+                                    $enc = True;
+                                    $credito = $row['credito'];
+                                    $cuota = $row['cuota'];
+                                    $pagado = $row['pagado'];
+                                    $saldo = $row2['saldo'];
+                                    
+                                    if($saldo > $cuota){
+                                        if(($cuota + $pagado) >= $credito){
+                                            $resQuery3 = mysqli_query($con, "UPDATE prestamo SET pagado=pagado+'$cuota', estado='Pagado' WHERE id='$id'");
+                                            
+                                            if (!$resQuery3) {
+                                                die ("Error al ejecutar la consulta: " . mysqli_error($con));
+                                            }
+                                        }else{
+                                            $resQuery3 = mysqli_query($con, "UPDATE prestamo SET pagado=pagado+'$cuota' WHERE id='$id'");
+                                            
+                                            if (!$resQuery3) {
+                                                die ("Error al ejecutar la consulta: " . mysqli_error($con));
+                                            } 
+                                        }
+                                        
+                                        $resQuery4 = mysqli_query($con, "UPDATE cuenta_ahorros SET saldo=saldo-'$cuota' WHERE iban='$cuenta'");
+
+                                        if (!$resQuery4) {
+                                            die ("Error al ejecutar la consulta: " . mysqli_error($con));
+                                        }
+                                    }else{                                    
+                                        echo '<div class="sufee-alert alert with-close alert-danger alert-dismissible fade show alert">
+                                        <span> No hay saldo suficiente en la cuenta asociada al préstamo para pagar una cuota.
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Entendido">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                        </div>';                                    
+                                    } 
+                                }
+                            }
+                        }
+                        
+                        if(!$enc){
+                            $resQuery2 = mysqli_query($con, "SELECT * from cuenta_nomina WHERE cliente = '$dni' and iban='$cuenta'");
+
+                            if (!$resQuery2) {
+                                die ("Error al ejecutar la consulta: " . mysqli_error($con));
+                            }else{
+                                if($row2 = mysqli_fetch_array($resQuery2)){
+                                    $enc = True;
+                                    $credito = $row['credito'];
+                                    $cuota = $row['cuota'];
+                                    $pagado = $row['pagado'];
+                                    $saldo = $row2['saldo'];
+                                    
+                                    if($saldo > $cuota){
+                                        if(($cuota + $pagado) >= $credito){
+                                            $resQuery3 = mysqli_query($con, "UPDATE prestamo SET pagado=pagado+'$cuota', estado='Pagado' WHERE id='$id'");
+                                            
+                                            if (!$resQuery3) {
+                                                die ("Error al ejecutar la consulta: " . mysqli_error($con));
+                                            }
+                                        }else{
+                                            $resQuery3 = mysqli_query($con, "UPDATE prestamo SET pagado=pagado+'$cuota' WHERE id='$id'");
+                                            
+                                            if (!$resQuery3) {
+                                                die ("Error al ejecutar la consulta: " . mysqli_error($con));
+                                            } 
+                                        }
+                                        
+                                        $resQuery4 = mysqli_query($con, "UPDATE cuenta_nomina SET saldo=saldo-'$cuota' WHERE iban='$cuenta'");
+
+                                        if (!$resQuery4) {
+                                            die ("Error al ejecutar la consulta: " . mysqli_error($con));
+                                        }
+                                    }else{                                    
+                                        echo '<div class="sufee-alert alert with-close alert-danger alert-dismissible fade show alert">
+                                        <span> No hay saldo suficiente en la cuenta asociada al préstamo para pagar una cuota.
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Entendido">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                        </div>';                                    
+                                    } 
+                                }
+                            }
+                        }         
+                    }elseif($estado == 'En proceso' && $fechaActual > $row['fecha_limite']){
+                        $resQuery3 = mysqli_query($con, "UPDATE prestamo SET estado='Fuera de plazo' WHERE id='$id'");
+                                        
+                        if (!$resQuery3) {
+                            die ("Error al ejecutar la consulta: " . mysqli_error($con));
+                        } 
+                    }           
+                }
+            }
+        }
+
+        mysqli_close($con);
     }
 ?>
 
@@ -168,7 +353,10 @@
 
 <body class="bg-color">
     <?php
-        mostrarPrestamos()
+        comprobarBoton();
+
+
+        mostrarPrestamos();
     ?>
 
     <!-- Scripts -->

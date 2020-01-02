@@ -312,14 +312,14 @@ and open the template in the editor.
     </div>
 
     <?php 
-    if(isset($_SESSION['nologin']) && $_SESSION['nologin']){
-        echo '<div class="sufee-alert alert with-close alert-danger alert-dismissible fade show alert">
-        <span> Usted no está logueado, por lo que no podrá acceder a nuestros servicios hasta que lo haga. Gracias.
-        <button type="button" class="close" data-dismiss="alert" aria-label="Entendido">
-            <span aria-hidden="true">&times;</span>
-        </button>
-        </div>';
-    }
+        if(isset($_SESSION['nologin']) && $_SESSION['nologin']){
+            echo '<div class="sufee-alert alert with-close alert-danger alert-dismissible fade show alert">
+            <span> Usted no está logueado, por lo que no podrá acceder a nuestros servicios hasta que lo haga. Gracias.
+            <button type="button" class="close" data-dismiss="alert" aria-label="Entendido">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            </div>';
+        }
     ?>
         
     <section class="content">

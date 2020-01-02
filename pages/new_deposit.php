@@ -15,22 +15,19 @@
             echo '<!-- Content -->
             <div class="content">
                 <div class="row card">
-                <h1 class="card-header">Adquirir nueva tarjeta</h1>
+                <h1 class="card-header">Realizar nuevo depósito</h1>
                     <div class="card-body">
-                    <p>Para verificar su identidad al adquirir la nueva tarjeta, por favor rellene el siguiente formulario:</p>
+                    <p>Para verificar su identidad al realizar la transferencia, por favor rellene el siguiente formulario:</p>
                     <form method="POST" enctype="multipart/form-data" onsubmit="return validar()">
-                        <label id="labelDNI" class=" form-control-label" for="dni">DNI    </label>
+                        <label id="labelDNI" class=" form-control-label" for="dni">DNI  </label>
                         <input id="dni" class="form-control" type="text" name="dni">
-                        <br/>
-                        <label id="labelEmail" class=" form-control-label" for="email">Email    </label>
-                        <input id="email" class="form-control" type="text" name="email">
-                        <br/>
+                        <br/>                        
                         <label id="labelClave" class=" form-control-label" for="clave">Clave    </label>
                         <input id="clave" class="form-control" type="password" name="clave">
                         <br/>
-                        <label class=" form-control-label" for="cuenta">Cuenta</label>';
+                        <label class=" form-control-label" for="origen">Cuenta de origen</label>';
 
-                        echo '<select class="form-control" name="cuenta" id="cuenta">';
+                        echo '<select class="form-control" name="origen" id="origen">';
                         foreach (obtenerCuentas() as $cuenta) {
                             echo "<option value='$cuenta'>$cuenta</option>";
                         }
@@ -38,15 +35,15 @@
 
                         echo'
                         <br/>
-                        Tipo de tarjeta
-                        <select id="select" class="form-control" name="select">
-                            <option value="credito">Crédito</option>
-                            <option value="debito">Débito</option>
-                        </select>
-
-                        <br/>
-                        <button class="btn btn-primary btn-sm" type="submit" name="btnSolicitar">Solicitar</button>
-                    </form>';
+                        <label id="labelCantidad" class=" form-control-label" for="cantidad">Cantidad  </label>
+                        <input id="cantidad" class="form-control" type="text" name="cantidad">
+                        <br/>';
+                        if(comprobarEstadoPlan()){
+                            echo '<button class="btn btn-main btn-sm" type="submit" name="btnRealizar">Realizar</button>';
+                        }else{
+                            echo '<button class="btn btn-main btn-sm" type="submit" name="btnRealizar" disabled>Realizar</button><p>No puede realizar un depósito porque su plan ya no sigue activo o no tiene plan.';
+                        }
+                    echo '</form>';
 
                         echo '
                     </div>
@@ -59,17 +56,17 @@
         echo '</div>';
     }
 
-    function comprobarNuevaTarjeta(){
+    function comprobarNuevoDeposito(){
         $resultado = False;
         
-        if(isset($_POST['btnSolicitar'])){
-            $ok = comprobarDatosNuevaTarjeta();
+        if(isset($_POST['btnRealizar'])){
+            $ok = comprobarDatosNuevoDeposito();
             
             if($ok){
-                $resultado = nuevaTarjeta();
+                $resultado = nuevoDeposito();
 
                 if($resultado){
-                    header('Location: cards.php');
+                    header('Location: pensionplans.php');
                 }
             }
         }
@@ -77,7 +74,7 @@
         return $resultado;
     }
 
-    function comprobarDatosNuevaTarjeta(){
+    function comprobarDatosNuevoDeposito(){ 
         $resultado = False;
 
         $_POST['dni'] = filter_input(INPUT_POST, "dni", FILTER_SANITIZE_STRING);
@@ -85,22 +82,19 @@
             $errores[] = "Introduzca un dni válido. <br/>";
         }
 
-        $_POST['email'] = filter_input(INPUT_POST, "email", FILTER_SANITIZE_EMAIL);
-        if(!isset($_POST['email']) || $_POST['email'] == '' || !filter_input(INPUT_POST, "email", FILTER_VALIDATE_EMAIL)){
-            $errores[] = "Introduzca un email válido. <br/>";
-        }
-
         $_POST['clave'] = filter_input(INPUT_POST, "clave", FILTER_SANITIZE_STRING);
         if(!isset($_POST['clave']) || $_POST['clave'] == ''){
             $errores[] = "Introduzca una clave válida. <br/>";
         }
 
-        if(!isset($_POST['cuenta'])){
-            $errores[] = "Elija la cuenta. <br/>";
+        $_POST['origen'] = filter_input(INPUT_POST, "origen", FILTER_SANITIZE_STRING);
+        if(!isset($_POST['origen']) || $_POST['origen'] == '' || !preg_match('/^([A-Z]{2})\s*\t*(\d\d)\s*\t*(\d\d\d\d)\s*\t*(\d\d\d\d)\s*\t*(\d\d)\s*\t*(\d\d\d\d\d\d\d\d\d\d)/', $_POST['origen'])){
+            $errores[] = "Introduzca una cuenta de origen válida. <br/>";
         }
 
-        if(!isset($_POST['select'])){
-            $errores[] = "Elija el tipo de tarjeta. <br/>";
+        $_POST['cantidad'] = filter_input(INPUT_POST, "cantidad", FILTER_SANITIZE_STRING);
+        if(!isset($_POST['cantidad']) || $_POST['cantidad'] == '' || !preg_match('/^\d+([.]\d{1,2})?$/', $_POST['cantidad'])){
+            $errores[] = "Introduzca una cantidad válida, como 100 ó 37.5. <br/>";
         }
 
         if(!isset($errores)){
@@ -110,36 +104,15 @@
         return $resultado;
     }
 
-    function nuevaTarjeta(){
+    function nuevoDeposito(){
         $resultado = False;
         $cliente = $_POST['dni'];
-        $email = $_POST['email'];
         $clave = $_POST['clave'];
-        $cuenta = $_POST['cuenta'];
-        $tipo = $_POST['select'];
-        $fecha_actual = date("d-m-Y");
-        $fecha_caducidad = date("Y-m-d", strtotime($fecha_actual."+ 4 year"));
-        $num_tarjeta = "";
-        $cvv = "";
-        $pin = "";
-        
-        for($i =0 ; $i < 16; $i++){
-            $num_tarjeta .= rand(0,9);
-        }
+        $origen = $_POST['origen'];
+        $cantidad = $_POST['cantidad'];
+        $fecha = date('Y-m-d h:m:i');
 
-        for($i =0 ; $i < 4; $i++){
-            $cvv .= rand(0,9);
-        }
-
-        for($i =0 ; $i < 4; $i++){
-            $pin .= rand(0,9);
-        }
-
-        $num_tarjeta = intval($num_tarjeta);
-        $cvv = intval($cvv);
-        $pin = intval($pin);
-
-        $con = mysqli_connect("68.183.69.142", "root", "Pistacho99!");
+        $con = mysqli_connect("localhost", "root", "");
         
         if(!$con){
             die('No puedo conectar: ' . mysqli_error($con));
@@ -151,26 +124,116 @@
             die('No puedo usar la base de datos: ' . mysqli_error($con));
         }
 
-        $resQuery = mysqli_query($con, "SELECT clave, dni, email from cliente WHERE dni='$cliente' AND email='$email'");
+        $resQueryp = mysqli_query($con, "SELECT * from plan_pensiones WHERE cliente='$cliente'");
+
+        if(!$resQueryp){
+            mysqli_close($con);
+            die('No puedo ejecutar la consulta: ' . mysqli_error($con));
+        }else{
+            if($rowp = mysqli_fetch_array($resQueryp)){
+                $plan = $rowp['id'];
+            }else{
+                echo '<div class="sufee-alert alert with-close alert-danger alert-dismissible fade show alert">
+                    <span> No tiene contratado ningún plan de pensiones.
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Entendido">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    </div>'; 
+            }
+        }
+
+        $cuentaYsaldo = false;
+        $resQuery = mysqli_query($con, "SELECT saldo from cuenta WHERE cliente='$cliente' and iban='$origen'");
 
         if(!$resQuery){
             mysqli_close($con);
             die('No puedo ejecutar la consulta: ' . mysqli_error($con));
         }else{
-            if(mysqli_num_rows($resQuery) != 0){
-                $row = mysqli_fetch_array($resQuery);
-                
-                if(password_verify($clave, $row['clave'])){
-                    $resQuery2 = mysqli_query($con, "INSERT INTO tarjeta(numero_tarjeta, cvv, tipo, fecha_caducidad, pin, cliente, cuenta) VALUES ('$num_tarjeta', '$cvv', '$tipo', '$fecha_caducidad', '$pin', '$cliente', '$cuenta')");
+            if($row=mysqli_fetch_array($resQuery)){
+                $saldo=$row['saldo'];
+                if($saldo>$cantidad){
+                    $cuentaYsaldo = true;
+                    $tabla = 'cuenta';
+                }
+            }
+        }
+        
+        $resQuery = mysqli_query($con, "SELECT saldo from cuenta_nomina WHERE cliente='$cliente' and iban='$origen'");
+        if(!$resQuery){
+            mysqli_close($con);
+            die('No puedo ejecutar la consulta: ' . mysqli_error($con));
+        }else{
+            if($row=mysqli_fetch_array($resQuery)){
+                $saldo=$row['saldo'];
+                if($saldo>$cantidad){
+                    $cuentaYsaldo = true;
+                    $tabla = 'cuenta_nomina';
+                }
+            }
+        }
+        $resQuery = mysqli_query($con, "SELECT saldo from cuenta_ahorros WHERE cliente='$cliente' and iban='$origen'");
+        if(!$resQuery){
+            mysqli_close($con);
+            die('No puedo ejecutar la consulta: ' . mysqli_error($con));
+        }else{
+            if($row=mysqli_fetch_array($resQuery)){
+                $saldo=$row['saldo'];
+                if($saldo>$cantidad){
+                    $cuentaYsaldo = true;
+                    $tabla = 'cuenta_ahorros';
+                }
+            }
+        }
 
-                    if(!$resQuery2){
-                        mysqli_close($con);
-                        die('No puedo ejecutar la consulta: ' . mysqli_error($con));
-                    }else{
-                        $resultado = True;
+        if($cuentaYsaldo){
+            $resQuery = mysqli_query($con, "SELECT clave, dni from cliente WHERE dni='$cliente'");
+            if(!$resQuery){
+                mysqli_close($con);
+                die('No puedo ejecutar la consulta: ' . mysqli_error($con));
+            }else{
+                if(mysqli_num_rows($resQuery) != 0){
+                    $row = mysqli_fetch_array($resQuery);
+                    
+                    if(password_verify($clave, $row['clave'])){
+                        $resQuery2 = mysqli_query($con, "INSERT INTO deposito (fecha, importe, plan, cuenta) VALUES ('$fecha', '$cantidad', '$plan', '$origen')");
+                        $saldo = $saldo - $cantidad;
+
+                        $resQuery3 = mysqli_query($con, "UPDATE plan_pensiones set cantidad=cantidad+'$cantidad' where id='$plan'");
+
+                        if(!$resQuery3){
+                            mysqli_close($con);
+                            die('No puedo ejecutar la consulta: ' . mysqli_error($con));
+                        }else{
+                            switch ($tabla) {
+                                case 'cuenta':
+                                    $resQuery2 = mysqli_query($con, "UPDATE cuenta set saldo='$saldo' where iban='$origen'");                                
+                                break;
+                                case 'cuenta_ahorros':
+                                    $resQuery2 = mysqli_query($con, "UPDATE cuenta_ahorros set saldo='$saldo' where iban='$origen'");
+                                break;
+                                case 'cuenta_nomina':
+                                    $resQuery2 = mysqli_query($con, "UPDATE cuenta_nomina set saldo='$saldo' where iban='$origen'");
+                                break;
+                            }
+                            
+                            
+                            if(!$resQuery2){
+                                mysqli_close($con);
+                                die('No puedo ejecutar la consulta: ' . mysqli_error($con));
+                            }else{
+                                $resultado = True;
+                            }
+                        }
                     }
                 }
             }
+        }else{
+            echo '<div class="sufee-alert alert with-close alert-danger alert-dismissible fade show alert">
+            <span> Saldo insuficiente, no se pudo realizar la transferencia.
+            <button type="button" class="close" data-dismiss="alert" aria-label="Entendido">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            </div>'; 
         }
 
         mysqli_close($con);
@@ -178,12 +241,11 @@
         return $resultado;
     }
 
-     
+         
     function obtenerCuentas(){
         $cliente = $_SESSION['dni'];
         $cuentas = [];
-
-        $con = mysqli_connect("68.183.69.142", "root", "Pistacho99!");
+        $con = mysqli_connect("localhost","root","");
 
         if (!$con){
             die(' No puedo conectar: ' . mysqli_error($con));
@@ -223,6 +285,40 @@
 
         return $cuentas;
     }
+
+    function comprobarEstadoPlan(){
+        $resultado = False;
+        $dni = $_SESSION['dni'];       
+
+        $con = mysqli_connect("localhost", "root", "");
+        
+        if(!$con){
+            die('No puedo conectar: ' . mysqli_error($con));
+        }
+        
+        $db_selected = mysqli_select_db($con, "mensabank");
+        
+        if(!$db_selected){
+            die('No puedo usar la base de datos: ' . mysqli_error($con));
+        }
+
+        $resQuery = mysqli_query($con, "SELECT * from plan_pensiones WHERE cliente='$dni'");
+
+        if(!$resQuery){
+            mysqli_close($con);
+            die('No puedo ejecutar la consulta: ' . mysqli_error($con));
+        }else{
+            if($row = mysqli_fetch_array($resQuery)){
+                if($row['estado'] == 'Activo'){
+                    $resultado = True;
+                }
+            }
+        }
+
+        mysqli_close($con);
+        
+        return $resultado;
+    }
 ?>
 
 <!doctype html>
@@ -239,6 +335,10 @@
 
     <link rel="apple-touch-icon" href="https://i.imgur.com/QRAUqs9.png">
     <link rel="shortcut icon" href="../images/icon.png">
+
+    
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css"/>
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/normalize.css@8.0.0/normalize.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/css/bootstrap.min.css">
@@ -312,14 +412,14 @@
 
 <body class="bg-color">
     <?php
-        $ok = comprobarNuevaTarjeta();
+        $ok = comprobarNuevoDeposito();
             
         if(!$ok){
             mostrarFormulario();
         }
     ?>
 
-<script>
+    <script>
         function validar(){
             var salida = true;
 
@@ -346,29 +446,6 @@
                 }
             }
 
-            if(!validarEmail()){
-                var spanEmail = document.createElement('span');
-                spanEmail.setAttribute("id", "spanEmail");
-
-                if(document.getElementById("spanEmail")){
-                    var padre = document.getElementById("spanEmail").parentNode;
-                    padre.removeChild(document.getElementById("spanEmail"));
-                }
-
-                var txt1 = document.createTextNode('(Email no válido)');
-                spanEmail.style.color = "red";
-                spanEmail.appendChild(txt1);
-                document.getElementById("labelEmail").appendChild(spanEmail);
-                document.getElementById("email").style.borderColor = "red";
-                salida = false;
-            }else{
-                if(document.getElementById("spanEmail")){
-                    var padre = document.getElementById("spanEmail").parentNode;
-                    padre.removeChild(document.getElementById("spanEmail"));
-                    document.getElementById("email").style.borderColor = "";
-                }
-            }
-
             if(!validarClave()){
                 var spanClave = document.createElement('span');
                 spanClave.setAttribute("id", "spanClave");
@@ -377,7 +454,7 @@
                     var padre = document.getElementById("spanClave").parentNode;
                     padre.removeChild(document.getElementById("spanClave"));
                 }
-
+                
                 var txt1 = document.createTextNode('(Clave no válida)');
                 spanClave.style.color = "red";
                 spanClave.appendChild(txt1);
@@ -392,6 +469,30 @@
                 }
             }
 
+            if(!validarCantidad()){
+                var spanCantidad = document.createElement('span');
+                spanCantidad.setAttribute("id", "spanCantidad");
+                var cantidad = document.getElementById("cantidad").value;
+
+                if(document.getElementById("spanCantidad")){
+                    var padre = document.getElementById("spanCantidad").parentNode;
+                    padre.removeChild(document.getElementById("spanCantidad"));
+                }
+
+                var txt1 = document.createTextNode('(Cantidad no válida)');
+                spanCantidad.style.color = "red";
+                spanCantidad.appendChild(txt1);
+                document.getElementById("labelCantidad").appendChild(spanCantidad);
+                document.getElementById("cantidad").style.borderColor = "red";
+                salida = false;
+            }else{
+                if(document.getElementById("spanCantidad")){
+                    var padre = document.getElementById("spanCantidad").parentNode;
+                    padre.removeChild(document.getElementById("spanCantidad"));
+                    document.getElementById("cantidad").style.borderColor = "";
+                }
+            }
+
             return salida;
         }
 
@@ -401,16 +502,18 @@
             return dni !== undefined && expr.test(dni);
         }
 
-        function validarEmail(){
-            var expr = /^[^@]+@[^@]+\.[a-zA-Z]{2,}$/;
-            var email = document.getElementById("email").value;
-            return email !== undefined && expr.test(email);
-        }
-
         function validarClave(){
             var expr = /^([0-9]{8})$/;
             var clave = document.getElementById("clave").value;
             return clave !== undefined && expr.test(clave);
+        }
+
+        function validarCantidad(){
+            var expr = /^\d+([.]\d{1,2})?$/;
+            var ok = true;
+            var cantidad = document.getElementById("cantidad").value;
+
+            return cantidad !== undefined && expr.test(cantidad) && cantidad > 0;
         }
     </script>
     <!-- Scripts -->
@@ -628,10 +731,6 @@
                 }
             });
             // Bar Chart #flotBarChart End
-
-            $("select").change(function(){
-                alert("The text has been changed.");
-            });
         });
     </script>
     <script src="https://cdn.jsdelivr.net/npm/jquery@2.2.4/dist/jquery.min.js"></script>

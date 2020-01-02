@@ -20,6 +20,7 @@
                 <li><a href="new_transfer.php">Nueva transferencia</a></li>
                 <li><a href="new_loan.php">Nuevo préstamo</a></li>
                 <li><a href="new_pensionplan.php">Nuevo plan de pensiones</a></li>
+                <li><a href="new_deposit.php">Nuevo deposito</a></li>
             </ul>
         </div><!-- /.navbar-collapse -->
     </nav>

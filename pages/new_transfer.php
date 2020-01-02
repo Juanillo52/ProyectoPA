@@ -103,10 +103,6 @@
 
         if(!isset($errores)){
             $resultado = True;
-        }else{
-            foreach($errores as $e){
-                echo $e;
-            }
         }
 
         return $resultado;
@@ -135,6 +131,7 @@
 
         $cuentaYsaldo = false;
         $resQuery = mysqli_query($con, "SELECT saldo from cuenta WHERE cliente='$cliente' and iban='$origen'");
+
         if(!$resQuery){
             mysqli_close($con);
             die('No puedo ejecutar la consulta: ' . mysqli_error($con));
@@ -147,6 +144,7 @@
                 }
             }
         }
+        
         $resQuery = mysqli_query($con, "SELECT saldo from cuenta_nomina WHERE cliente='$cliente' and iban='$origen'");
         if(!$resQuery){
             mysqli_close($con);
@@ -258,6 +256,13 @@
                     }
                 }
             }
+        }else{
+            echo '<div class="sufee-alert alert with-close alert-danger alert-dismissible fade show alert">
+            <span> Saldo insuficiente, no se pudo realizar la transferencia.
+            <button type="button" class="close" data-dismiss="alert" aria-label="Entendido">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            </div>'; 
         }
 
         mysqli_close($con);

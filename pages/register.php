@@ -1,6 +1,6 @@
 <?php
-session_start();
-require_once("cookie_alert.php");
+    session_start();
+    require_once("cookie_alert.php");
 ?>
 
 

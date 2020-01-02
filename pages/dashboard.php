@@ -1,9 +1,9 @@
 <?php
-    //require_once("test_log.php");
+    require_once("test_log.php");
 ?>
 
 <?php
-    function mostrarPensiones(){
+    function mostrarDashboard(){
         //Left Panel
         require_once("nav.php");
         //#left-panel
@@ -331,9 +331,7 @@
 
 <body class="bg-color">
     <?php
-        
-            mostrarPensiones();
-
+        mostrarDashboard()
     ?>
 
     <!-- Scripts -->

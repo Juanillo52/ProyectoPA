@@ -18,11 +18,11 @@
                 <h1 class="card-header">Realizar nueva transferencia</h1>
                     <div class="card-body">
                     <p>Para verificar su identidad al realizar la transferencia, por favor rellene el siguiente formulario:</p>
-                    <form method="POST" enctype="multipart/form-data">
-                        <label class=" form-control-label" for="dni">DNI</label>
+                    <form method="POST" enctype="multipart/form-data" onsubmit="return validar()">
+                        <label id="labelDNI" class=" form-control-label" for="dni">DNI  </label>
                         <input id="dni" class="form-control" type="text" name="dni">
                         <br/>                        
-                        <label class=" form-control-label" for="clave">Clave</label>
+                        <label id="labelClave" class=" form-control-label" for="clave">Clave    </label>
                         <input id="clave" class="form-control" type="password" name="clave">
                         <br/>
                         <label class=" form-control-label" for="origen">Cuenta de origen</label>';
@@ -35,10 +35,10 @@
 
                         echo'
                         <br/>
-                        <label class=" form-control-label" for="destino">Cuenta de destino</label>
+                        <label id="labelDestino"class=" form-control-label" for="destino">Cuenta de destino  </label>
                         <input id="destino" class="form-control" type="text" name="destino">
                         <br/>
-                        <label class=" form-control-label" for="cantidad">Cantidad</label>
+                        <label id="labelCantidad" class=" form-control-label" for="cantidad">Cantidad  </label>
                         <input id="cantidad" class="form-control" type="text" name="cantidad">
                         <br/>
                         <button class="btn btn-primary btn-sm" type="submit" name="btnRealizar">Realizar</button>
@@ -120,7 +120,6 @@
         $destino = $_POST['destino'];
         $cantidad = $_POST['cantidad'];
         $fecha = date('Y-m-d');
-        
 
         $con = mysqli_connect("68.183.69.142", "root", "Pistacho99!");
         
@@ -410,6 +409,135 @@
         }
     ?>
 
+    <script>
+        function validar(){
+            var salida = true;
+
+            if(!validarDNI()){
+                var spanDNI = document.createElement('span');
+                spanDNI.setAttribute("id", "spanDNI");
+
+                if(document.getElementById("spanDNI")){
+                    var padre = document.getElementById("spanDNI").parentNode;
+                    padre.removeChild(document.getElementById("spanDNI"));
+                }
+
+                var txt1 = document.createTextNode('(DNI no válido)');
+                spanDNI.style.color = "red";
+                spanDNI.appendChild(txt1);
+                document.getElementById("labelDNI").appendChild(spanDNI);
+                document.getElementById("dni").style.borderColor = "red";
+                salida = false;
+            }else{
+                if(document.getElementById("spanDNI")){
+                    var padre = document.getElementById("spanDNI").parentNode;
+                    padre.removeChild(document.getElementById("spanDNI"));
+                    document.getElementById("dni").style.borderColor = "";
+                }
+            }
+
+            if(!validarClave()){
+                var spanClave = document.createElement('span');
+                spanClave.setAttribute("id", "spanClave");
+
+                if(document.getElementById("spanClave")){
+                    var padre = document.getElementById("spanClave").parentNode;
+                    padre.removeChild(document.getElementById("spanClave"));
+                }
+                
+                var txt1 = document.createTextNode('(Clave no válida)');
+                spanClave.style.color = "red";
+                spanClave.appendChild(txt1);
+                document.getElementById("labelClave").appendChild(spanClave);
+                document.getElementById("clave").style.borderColor = "red";
+                salida = false;
+            }else{
+                if(document.getElementById("spanClave")){
+                    var padre = document.getElementById("spanClave").parentNode;
+                    padre.removeChild(document.getElementById("spanClave"));
+                    document.getElementById("clave").style.borderColor = "";
+                }
+            }
+
+            if(!validarCantidad()){
+                var spanCantidad = document.createElement('span');
+                spanCantidad.setAttribute("id", "spanCantidad");
+                var cantidad = document.getElementById("cantidad").value;
+
+                if(document.getElementById("spanCantidad")){
+                    var padre = document.getElementById("spanCantidad").parentNode;
+                    padre.removeChild(document.getElementById("spanCantidad"));
+                }
+
+                var txt1 = document.createTextNode('(Cantidad no válida)');
+                spanCantidad.style.color = "red";
+                spanCantidad.appendChild(txt1);
+                document.getElementById("labelCantidad").appendChild(spanCantidad);
+                document.getElementById("cantidad").style.borderColor = "red";
+                salida = false;
+            }else{
+                if(document.getElementById("spanCantidad")){
+                    var padre = document.getElementById("spanCantidad").parentNode;
+                    padre.removeChild(document.getElementById("spanCantidad"));
+                    document.getElementById("cantidad").style.borderColor = "";
+                }
+            }
+
+            if(!validarCuentaDestino()){
+                var spanDestino = document.createElement('span');
+                spanDestino.setAttribute("id", "spanDestino");
+                var destino = document.getElementById("destino").value;
+
+                if(document.getElementById("spanDestino")){
+                    var padre = document.getElementById("spanDestino").parentNode;
+                    padre.removeChild(document.getElementById("spanDestino"));
+                }
+
+                var txt1 = document.createTextNode('(Cuenta destino no válida)');
+                spanDestino.style.color = "red";
+                spanDestino.appendChild(txt1);
+                document.getElementById("labelDestino").appendChild(spanDestino);
+                document.getElementById("destino").style.borderColor = "red";
+                salida = false;
+            }else{
+                if(document.getElementById("spanDestino")){
+                    var padre = document.getElementById("spanDestino").parentNode;
+                    padre.removeChild(document.getElementById("spanDestino"));
+                    document.getElementById("destino").style.borderColor = "";
+                }
+            }
+
+            return salida;
+        }
+
+        function validarDNI(){
+            var expr = /^([0-9]{8})([A-Z])$/;
+            var dni = document.getElementById("dni").value;
+            return dni !== undefined && expr.test(dni);
+        }
+
+        function validarClave(){
+            var expr = /^([0-9]{8})$/;
+            var clave = document.getElementById("clave").value;
+            return clave !== undefined && expr.test(clave);
+        }
+
+        function validarCantidad(){
+            var expr = /^\d+([.]\d{1,2})?$/;
+            var ok = true;
+            var cantidad = document.getElementById("cantidad").value;
+
+            return cantidad !== undefined && expr.test(cantidad) && cantidad > 0;
+        }
+
+        function validarCuentaDestino(){
+            var expr = /^([A-Z]{2})\s*\t*(\d\d)\s*\t*(\d\d\d\d)\s*\t*(\d\d\d\d)\s*\t*(\d\d)\s*\t*(\d\d\d\d\d\d\d\d\d\d)/;
+            var ok = true;
+            var cuentaDestino = document.getElementById("destino").value;
+
+            return cuentaDestino !== undefined && expr.test(cuentaDestino);
+        }
+    </script>
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/jquery@2.2.4/dist/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.4/dist/umd/popper.min.js"></script>

@@ -18,17 +18,17 @@
                 <div class="row card">
                 <h1 class="card-header">Pedir préstamo</h1>
                     <div class="card-body">
-                    <form action="#" method="POST" enctype="multipart/form-data">
+                    <form method="POST" enctype="multipart/form-data" onsubmit="return validar()">
                         Tipo de préstamo
                         <select id="select" class="form-control" name="select">
                             <option value="personal">Personal</option>
                             <option value="hipotecario">Hipotecario</option>
                         </select>
                         <br/>
-                        <label class=" form-control-label" for="credito">Cantidad del credito a pedir</label>
+                        <label id="labelCantidad" class=" form-control-label" for="credito">Cantidad del credito a pedir    </label>
                         <input id="credito" class="form-control" type="number" step="1" name="credito">
                         <br/>
-                        <label class=" form-control-label" for="entrada">Entrada para el crédito</label>
+                        <label id="labelEntrada" class=" form-control-label" for="entrada">Entrada para el crédito  </label>
                         <input id="entrada" class="form-control" type="number" step="1" name="entrada">
                         <br/>
                         <label class=" form-control-label" for="cuenta">Cuenta</label>';
@@ -99,17 +99,12 @@
             $errores[] = "Introduzca una entrada mayor a 500 euros. <br/>";
         }
 
-        $_POST['cuenta'] = filter_input(INPUT_POST, "cuenta", FILTER_SANITIZE_STRING);
-        if(!isset($_POST['cuenta']) || $_POST['cuenta'] == '' || !preg_match('/^([A-Z]{2})\s*\t*(\d\d)\s*\t*(\d\d\d\d)\s*\t*(\d\d\d\d)\s*\t*(\d\d)\s*\t*(\d\d\d\d\d\d\d\d\d\d)/', $_POST['cuenta'])){
-            $errores[] = "Introduzca una cuenta válida. <br/>";
+        if(!isset($_POST['cuenta'])){
+            $errores[] = "Elija la cuenta. <br/>";
         }
 
         if(!isset($errores)){
             $resultado = True;
-        }else{
-            foreach($errores as $e){
-                echo $e;
-            }
         }
 
         return $resultado;
@@ -274,6 +269,22 @@
         }else{
             die ("Error al ejecutar la consulta: " . mysqli_error($con));
         }
+
+        $result = mysqli_query($con, "SELECT iban from cuenta_ahorros where cliente = '$cliente'");
+
+        if($result){
+            while($row = mysqli_fetch_array($result)) $cuentas[] = $row['iban'];
+        }else{
+            die ("Error al ejecutar la consulta: " . mysqli_error($con));
+        }
+
+        $result = mysqli_query($con, "SELECT iban from cuenta_nomina where cliente = '$cliente'");
+
+        if($result){
+            while($row = mysqli_fetch_array($result)) $cuentas[] = $row['iban'];
+        }else{
+            die ("Error al ejecutar la consulta: " . mysqli_error($con));
+        }
     
         mysqli_close($con);
 
@@ -374,6 +385,106 @@
             mostrarFormulario();
         }
     ?>
+
+<script>
+        function validar(){
+            var salida = true;
+            
+
+            if(!validarCantidad()){
+                var tipo = document.getElementById("select").value;
+                var spanCantidad = document.createElement('span');
+                spanCantidad.setAttribute("id", "spanCantidad");
+                var cantidad = document.getElementById("credito").value;
+
+                if(document.getElementById("spanCantidad")){
+                    var padre = document.getElementById("spanCantidad").parentNode;
+                    padre.removeChild(document.getElementById("spanCantidad"));
+                }
+
+                if(tipo == "personal"){
+                    if(cantidad < 1000){
+                        var txt1 = document.createTextNode('(Credito no válido, cantidad menor a 1000 euros)');
+                    }
+
+                    if(cantidad > 100000){
+                        var txt1 = document.createTextNode('(Credito no válido, cantidad mayor a 100000 euros)');
+                    }
+                }else{
+                    if(cantidad < 40000){
+                        var txt1 = document.createTextNode('(Credito no válido, cantidad menor a 40000 euros)');
+                    }
+
+                    if(cantidad > 1000000){
+                        var txt1 = document.createTextNode('(Credito no válido, cantidad mayor a 1000000 euros)');
+                    }
+                }
+
+                spanCantidad.style.color = "red";
+                spanCantidad.appendChild(txt1);
+                document.getElementById("labelCantidad").appendChild(spanCantidad);
+                document.getElementById("credito").style.borderColor = "red";
+                salida = false;
+            }else{
+                if(document.getElementById("spanCantidad")){
+                    var padre = document.getElementById("spanCantidad").parentNode;
+                    padre.removeChild(document.getElementById("spanCantidad"));
+                    document.getElementById("credito").style.borderColor = "";
+                }
+            }
+
+            if(!validarEntrada()){
+                var spanEntrada = document.createElement('span');
+                spanEntrada.setAttribute("id", "spanEntrada");
+
+                if(document.getElementById("spanEntrada")){
+                    var padre = document.getElementById("spanEntrada").parentNode;
+                    padre.removeChild(document.getElementById("spanEntrada"));
+                }
+
+                var txt1 = document.createTextNode('(Entrada no válida o cantidad menor a 500 euros)');
+                spanEntrada.style.color = "red";
+                spanEntrada.appendChild(txt1);
+                document.getElementById("labelEntrada").appendChild(spanEntrada);
+                document.getElementById("entrada").style.borderColor = "red";
+                salida = false;
+            }else{
+                if(document.getElementById("spanEntrada")){
+                    var padre = document.getElementById("spanEntrada").parentNode;
+                    padre.removeChild(document.getElementById("spanEntrada"));
+                    document.getElementById("entrada").style.borderColor = "";
+                }
+            }
+
+            return salida;
+        }
+
+        function validarCantidad(){
+            var ok = true;
+            var cantidad = document.getElementById("credito").value;
+            var tipo = document.getElementById("select").value;
+
+            if(cantidad == undefined){
+                ok = false;
+            }else if(tipo == "personal"){
+                if(cantidad < 1000 || cantidad > 100000){
+                    ok = false;
+                }
+            }else{
+                if(cantidad < 40000 || cantidad > 1000000){
+                    ok = false;
+                }
+            }
+
+            return ok;
+        }
+
+        function validarEntrada(){
+            var entrada = document.getElementById("entrada").value;
+
+            return entrada !== undefined && entrada >= 500;
+        }
+    </script>
 
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/jquery@2.2.4/dist/jquery.min.js"></script>

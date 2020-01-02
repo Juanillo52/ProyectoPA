@@ -18,7 +18,7 @@
                 <div class="row card">
                 <h1 class="card-header">Crear nueva Cuenta</h1>
                     <div class="card-body">
-                    <form method="POST" enctype="multipart/form-data">
+                    <form method="POST" enctype="multipart/form-data" onsubmit="return validar()">
                         <label class=" form-control-label" for="select" onchange="Select()">Seleccione el tipo de cuenta</label>
                         <select id="select" class="form-control" name="select">
                             <option value="cuenta" selected="true">Cuenta corriente</option>
@@ -27,17 +27,17 @@
                         </select><br/>';
 
                             echo '<div id="div_nomina" style="display:none">
-                                    <label class=" form-control-label" for="nomina">Adjunte su nómina en formato PDF:</label><br/>
-                                    <input class="upload-files-btn" type="file" name="nomina">
+                                    <label id="labelArchivo" class=" form-control-label" for="nomina">Adjunte su nómina en formato PDF:     </label><br/>
+                                    <input id="nomina" class="upload-files-btn" type="file" name="nomina" onchange="return validarArchivo()">
                             </div><br/>';
                                 
-                        echo '  <label class=" form-control-label" for="dni">DNI</label>
-                                <input id="dni" class="form-control" type="text" name="dni">
+                        echo '  <label id="labelDNI" class=" form-control-label" for="dni">DNI  </label>
+                                <input id="dni" class="form-control" type="text" name="dni" >
                                 <br/>
-                                <label class=" form-control-label" for="email">Email</label>
+                                <label id="labelEmail" class=" form-control-label" for="email">Email    </label>
                                 <input id="email" class="form-control" type="text" name="email">
                                 <br/>
-                                <label class=" form-control-label" for="clave">Clave</label>
+                                <label id="labelClave" class=" form-control-label" for="clave">Clave    </label>
                                 <input id="clave" class="form-control" type="password" name="clave">
                                 <br/>
                                 <button class="btn btn-primary btn-sm" type="submit" name="btnSolicitar">Solicitar</button>';
@@ -95,17 +95,13 @@
         }
 
         if(isset($_POST['select']) && $_POST['select'] == 'cuenta_nomina'){
-            if ($_FILES['nomina']['error'] != 4 && /*$_FILES['nomina']['type'] != 'application/pdf'*/ $_FILES['nomina']['size'] > (1024 * 1024 *10)) {
+            if ($_FILES['nomina']['error'] != 4 && ($_FILES['nomina']['type'] != 'application/pdf' || $_FILES['nomina']['size'] > (1024 * 1024 *10))) {
                 $errores[] = "El fichero no debe de pasar los 10 mb de tamaño y debe ser pdf.<br/>";
             }
         }
 
         if(!isset($errores)){
             $resultado = True;
-        }else{
-            foreach($errores as $e){
-                echo $e;
-            }
         }
 
         return $resultado;
@@ -282,6 +278,11 @@
         .card {
             border: 1px solid rgba(0,0,0,.125)
         }
+
+        .btn-primary{
+            background-color: #6b4996;
+            border-color: #6b4996;
+        }
     </style>
 </head>
 
@@ -330,22 +331,136 @@
         } //Si para cuando carga está puesta ya la opción de cuenta nómina, salga el div de la nómina
         
         $("#select").change(function(){
-                if($("#select option:selected").html() == "Cuenta nómina"){
-                    $("#div_nomina").css("display", "");
-                }else{
-                    $("#div_nomina").css("display", "none");
-                }
-            });
+            if($("#select option:selected").html() == "Cuenta nómina"){
+                $("#div_nomina").css("display", "");
+            }else{
+                $("#div_nomina").css("display", "none");
+            }
+        });
     });
 
 </script>
 
+<script>
+        function validar(){
+            var salida = true;
+
+            if(!validarDNI()){
+                var spanDNI = document.createElement('span');
+                spanDNI.setAttribute("id", "spanDNI");
+
+                if(document.getElementById("spanDNI")){
+                    var padre = document.getElementById("spanDNI").parentNode;
+                    padre.removeChild(document.getElementById("spanDNI"));
+                }
+
+                var txt1 = document.createTextNode('(DNI no válido)');
+                spanDNI.style.color = "red";
+                spanDNI.appendChild(txt1);
+                document.getElementById("labelDNI").appendChild(spanDNI);
+                document.getElementById("dni").style.borderColor = "red";
+                salida = false;
+            }else{
+                if(document.getElementById("spanDNI")){
+                    var padre = document.getElementById("spanDNI").parentNode;
+                    padre.removeChild(document.getElementById("spanDNI"));
+                    document.getElementById("dni").style.borderColor = "";
+                }
+            }
+
+            if(!validarEmail()){
+                var spanEmail = document.createElement('span');
+                spanEmail.setAttribute("id", "spanEmail");
+
+                if(document.getElementById("spanEmail")){
+                    var padre = document.getElementById("spanEmail").parentNode;
+                    padre.removeChild(document.getElementById("spanEmail"));
+                }
+
+                var txt1 = document.createTextNode('(Email no válido)');
+                spanEmail.style.color = "red";
+                spanEmail.appendChild(txt1);
+                document.getElementById("labelEmail").appendChild(spanEmail);
+                document.getElementById("email").style.borderColor = "red";
+                salida = false;
+            }else{
+                if(document.getElementById("spanEmail")){
+                    var padre = document.getElementById("spanEmail").parentNode;
+                    padre.removeChild(document.getElementById("spanEmail"));
+                    document.getElementById("email").style.borderColor = "";
+                }
+            }
+
+            if(!validarClave()){
+                var spanClave = document.createElement('span');
+                spanClave.setAttribute("id", "spanClave");
+
+                if(document.getElementById("spanClave")){
+                    var padre = document.getElementById("spanClave").parentNode;
+                    padre.removeChild(document.getElementById("spanClave"));
+                }
+                
+                var txt1 = document.createTextNode('(Clave no válida)');
+                spanClave.style.color = "red";
+                spanClave.appendChild(txt1);
+                document.getElementById("labelClave").appendChild(spanClave);
+                document.getElementById("clave").style.borderColor = "red";
+                salida = false;
+            }else{
+                if(document.getElementById("spanClave")){
+                    var padre = document.getElementById("spanClave").parentNode;
+                    padre.removeChild(document.getElementById("spanClave"));
+                    document.getElementById("clave").style.borderColor = "";
+                }
+            }
+
+            return salida;
+        }
+
+        function validarDNI(){
+            var expr = /^([0-9]{8})([A-Z])$/;
+            var dni = document.getElementById("dni").value;
+            return dni !== undefined && expr.test(dni);
+        }
+
+        function validarEmail(){
+            var expr = /^[^@]+@[^@]+\.[a-zA-Z]{2,}$/;
+            var email = document.getElementById("email").value;
+            return email !== undefined && expr.test(email);
+        }
+
+        function validarClave(){
+            var expr = /^([0-9]{8})$/;
+            var clave = document.getElementById("clave").value;
+            return clave !== undefined && expr.test(clave);
+        }
+
+        function validarArchivo(){
+            var archivo = document.getElementById("nomina");
+            var rutaArchivo = archivo.value;
+            var extension = /(.pdf)$/i;
+            
+            if(!extension.exec(rutaArchivo) || archivo.size > (1024 * 1024 *10)){
+                var spanArchivo = document.createElement('span');
+                spanArchivo.setAttribute("id", "spanArchivo");
+                var txt1 = document.createTextNode('(Archivo con tamaño o extensión no válida)');
+                spanArchivo.style.color = "red";
+                spanArchivo.appendChild(txt1);
+                document.getElementById("labelArchivo").appendChild(spanArchivo);
+                archivo.style.borderColor = "red";
+            }else{
+                if(document.getElementById("spanArchivo")){
+                    var padre = document.getElementById("spanArchivo").parentNode;
+                    padre.removeChild(document.getElementById("spanArchivo"));
+                    document.getElementById("nomina").style.borderColor = "";
+                }
+            }
+        }
+    </script>
+    
     <script>
         jQuery(document).ready(function($) {
             "use strict";
-
-            
-            
 
             // Pie chart flotPie1
             var piedata = [

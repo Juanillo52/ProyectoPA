@@ -2589,6 +2589,12 @@ footer{
   cursor: pointer;
 }
 
+.btn-primary:hover{
+  background-color: #58369c;
+  border-color: #58369c;
+  cursor: pointer;
+}
+
 .logout{
   display: inline-block;
 }

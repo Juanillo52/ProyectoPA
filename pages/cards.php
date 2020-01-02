@@ -81,9 +81,6 @@
         <?php require_once("header.php"); ?>
         <!-- /#header -->
         <!-- Content -->
-        <div class="content">
-            
-        </div>
         <!-- /.content -->
         <div class="content">
         <div class="row card">

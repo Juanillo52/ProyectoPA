@@ -18,11 +18,11 @@
                 <h1 class="card-header">Realizar nueva transferencia</h1>
                     <div class="card-body">
                     <p>Para verificar su identidad al realizar la transferencia, por favor rellene el siguiente formulario:</p>
-                    <form method="POST" enctype="multipart/form-data">
-                        <label class=" form-control-label" for="dni">DNI</label>
+                    <form method="POST" enctype="multipart/form-data" onsubmit="return validar()">
+                        <label id="labelDNI" class=" form-control-label" for="dni">DNI  </label>
                         <input id="dni" class="form-control" type="text" name="dni">
                         <br/>                        
-                        <label class=" form-control-label" for="clave">Clave</label>
+                        <label id="labelClave" class=" form-control-label" for="clave">Clave    </label>
                         <input id="clave" class="form-control" type="password" name="clave">
                         <br/>
                         <label class=" form-control-label" for="origen">Cuenta de origen</label>';
@@ -35,10 +35,10 @@
 
                         echo'
                         <br/>
-                        <label class=" form-control-label" for="destino">Cuenta de destino</label>
+                        <label id="labelDestino"class=" form-control-label" for="destino">Cuenta de destino  </label>
                         <input id="destino" class="form-control" type="text" name="destino">
                         <br/>
-                        <label class=" form-control-label" for="cantidad">Cantidad</label>
+                        <label id="labelCantidad" class=" form-control-label" for="cantidad">Cantidad  </label>
                         <input id="cantidad" class="form-control" type="text" name="cantidad">
                         <br/>
                         <button class="btn btn-primary btn-sm" type="submit" name="btnRealizar">Realizar</button>
@@ -112,14 +112,15 @@
         return $resultado;
     }
 
-    function nuevaTransferncia(){
+    function nuevaTransferencia(){
         $resultado = False;
         $cliente = $_POST['dni'];
         $clave = $_POST['clave'];
         $origen = $_POST['origen'];
         $destino = $_POST['destino'];
-        $cantidad = floatval($_POST['cantidad']);
-        $fecha = date("d-m-Y");
+        $cantidad = $_POST['cantidad'];
+        $fecha = date('Y-m-d');
+        
         
 
         $con = mysqli_connect("localhost", "root", "");
@@ -135,7 +136,7 @@
         }
 
         $cuentaYsaldo = false;
-        $resQuery = mysqli_query($con, "SELECT saldo from cuenta WHERE cliente='$cliente'");
+        $resQuery = mysqli_query($con, "SELECT saldo from cuenta WHERE cliente='$cliente' and iban='$origen'");
         if(!$resQuery){
             mysqli_close($con);
             die('No puedo ejecutar la consulta: ' . mysqli_error($con));
@@ -148,7 +149,7 @@
                 }
             }
         }
-        $resQuery = mysqli_query($con, "SELECT saldo from cuenta_nomina WHERE cliente='$cliente'");
+        $resQuery = mysqli_query($con, "SELECT saldo from cuenta_nomina WHERE cliente='$cliente' and iban='$origen'");
         if(!$resQuery){
             mysqli_close($con);
             die('No puedo ejecutar la consulta: ' . mysqli_error($con));
@@ -161,7 +162,7 @@
                 }
             }
         }
-        $resQuery = mysqli_query($con, "SELECT saldo from cuenta_ahorros WHERE cliente='$cliente'");
+        $resQuery = mysqli_query($con, "SELECT saldo from cuenta_ahorros WHERE cliente='$cliente' and iban='$origen'");
         if(!$resQuery){
             mysqli_close($con);
             die('No puedo ejecutar la consulta: ' . mysqli_error($con));
@@ -176,7 +177,7 @@
         }
 
         if($cuentaYsaldo){
-            $resQuery = mysqli_query($con, "SELECT clave, dni from cliente WHERE dni='$dni'");
+            $resQuery = mysqli_query($con, "SELECT clave, dni from cliente WHERE dni='$cliente'");
             if(!$resQuery){
                 mysqli_close($con);
                 die('No puedo ejecutar la consulta: ' . mysqli_error($con));
@@ -185,15 +186,77 @@
                     $row = mysqli_fetch_array($resQuery);
                     
                     if(password_verify($clave, $row['clave'])){
-                        $resQuery2 = mysqli_query($con, "INSERT INTO transferencia(fecha, importe, receptor, emisor) VALUES ('$fecha', '$cantidad', '$destino', '$origen')");
+                        $resQuery2 = mysqli_query($con, "INSERT INTO transferencia (fecha, importe, receptor, emisor) VALUES ('$fecha', '$cantidad', '$destino', '$origen')");
                         $saldo = $saldo - $cantidad;
-                        $resQuery2 = mysqli_query($con, "UPDATE $tabla set saldo='$saldo");
+
+                        switch ($tabla) {
+                            case 'cuenta':
+                                $resQuery2 = mysqli_query($con, "UPDATE cuenta set saldo='$saldo' where iban='$origen'");                                
+                            break;
+                            case 'cuenta_ahorros':
+                                $resQuery2 = mysqli_query($con, "UPDATE cuenta_ahorros set saldo='$saldo' where iban='$origen'");
+                            break;
+                            case 'cuenta_nomina':
+                                $resQuery2 = mysqli_query($con, "UPDATE cuenta_nomina set saldo='$saldo' where iban='$origen'");
+                            break;
+                        }
+                        
+                        
                         if(!$resQuery2){
                             mysqli_close($con);
                             die('No puedo ejecutar la consulta: ' . mysqli_error($con));
                         }else{
                             $resultado = True;
                         }
+                    }
+                    $tabla = '';
+                    $resQuery = mysqli_query($con, "SELECT * from cuenta WHERE iban='$destino'");
+                    if(!$resQuery){
+                        mysqli_close($con);
+                        die('No puedo ejecutar la consulta: ' . mysqli_error($con));
+                    }else{
+                        if($row=mysqli_fetch_array($resQuery)){
+                            $tabla = 'cuenta';
+                            
+                        }
+                    }
+                    $resQuery = mysqli_query($con, "SELECT * from cuenta_ahorros WHERE iban='$destino'");
+                    if(!$resQuery){
+                        mysqli_close($con);
+                        die('No puedo ejecutar la consulta: ' . mysqli_error($con));
+                    }else{
+                        if($row=mysqli_fetch_array($resQuery)){
+                            $tabla = 'cuenta_ahorros';
+                            
+                        }
+                    }
+                    $resQuery = mysqli_query($con, "SELECT * from cuenta_nomina WHERE iban='$destino'");
+                    if(!$resQuery){
+                        mysqli_close($con);
+                        die('No puedo ejecutar la consulta: ' . mysqli_error($con));
+                    }else{
+                        if($row=mysqli_fetch_array($resQuery)){
+                            $tabla = 'cuenta_nomina';
+                        }
+                    }
+                    
+                    switch ($tabla) {
+                        case 'cuenta':
+                            $resQuery2 = mysqli_query($con, "UPDATE cuenta set saldo=saldo+'$cantidad' where iban='$destino'");                                
+                        break;
+                        case 'cuenta_ahorros':
+                            $resQuery2 = mysqli_query($con, "UPDATE cuenta_ahorros set saldo=saldo+'$cantidad' where iban='$destino'");
+                        break;
+                        case 'cuenta_nomina':
+                            $resQuery2 = mysqli_query($con, "UPDATE cuenta_nomina set saldo=saldo+'$cantidad'where iban='$destino'");
+                        break;
+                    }
+                                        
+                    if(!$resQuery2){
+                        mysqli_close($con);
+                        die('No puedo ejecutar la consulta: ' . mysqli_error($con));
+                    }else{
+                        $resultado = True;
                     }
                 }
             }
@@ -227,6 +290,22 @@
         }else{
             die ("Error al ejecutar la consulta: " . mysqli_error($con));
         }
+
+        $result = mysqli_query($con, "SELECT iban from cuenta_ahorros where cliente = '$cliente'");
+
+        if($result){
+            while($row = mysqli_fetch_array($result)) $cuentas[] = $row['iban'];
+        }else{
+            die ("Error al ejecutar la consulta: " . mysqli_error($con));
+        }
+
+        $result = mysqli_query($con, "SELECT iban from cuenta_nomina where cliente = '$cliente'");
+
+        if($result){
+            while($row = mysqli_fetch_array($result)) $cuentas[] = $row['iban'];
+        }else{
+            die ("Error al ejecutar la consulta: " . mysqli_error($con));
+        }
     
         mysqli_close($con);
 
@@ -249,6 +328,10 @@
 
     <link rel="apple-touch-icon" href="https://i.imgur.com/QRAUqs9.png">
     <link rel="shortcut icon" href="../images/icon.png">
+
+    
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css"/>
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/normalize.css@8.0.0/normalize.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/css/bootstrap.min.css">
@@ -329,6 +412,135 @@
         }
     ?>
 
+    <script>
+        function validar(){
+            var salida = true;
+
+            if(!validarDNI()){
+                var spanDNI = document.createElement('span');
+                spanDNI.setAttribute("id", "spanDNI");
+
+                if(document.getElementById("spanDNI")){
+                    var padre = document.getElementById("spanDNI").parentNode;
+                    padre.removeChild(document.getElementById("spanDNI"));
+                }
+
+                var txt1 = document.createTextNode('(DNI no válido)');
+                spanDNI.style.color = "red";
+                spanDNI.appendChild(txt1);
+                document.getElementById("labelDNI").appendChild(spanDNI);
+                document.getElementById("dni").style.borderColor = "red";
+                salida = false;
+            }else{
+                if(document.getElementById("spanDNI")){
+                    var padre = document.getElementById("spanDNI").parentNode;
+                    padre.removeChild(document.getElementById("spanDNI"));
+                    document.getElementById("dni").style.borderColor = "";
+                }
+            }
+
+            if(!validarClave()){
+                var spanClave = document.createElement('span');
+                spanClave.setAttribute("id", "spanClave");
+
+                if(document.getElementById("spanClave")){
+                    var padre = document.getElementById("spanClave").parentNode;
+                    padre.removeChild(document.getElementById("spanClave"));
+                }
+                
+                var txt1 = document.createTextNode('(Clave no válida)');
+                spanClave.style.color = "red";
+                spanClave.appendChild(txt1);
+                document.getElementById("labelClave").appendChild(spanClave);
+                document.getElementById("clave").style.borderColor = "red";
+                salida = false;
+            }else{
+                if(document.getElementById("spanClave")){
+                    var padre = document.getElementById("spanClave").parentNode;
+                    padre.removeChild(document.getElementById("spanClave"));
+                    document.getElementById("clave").style.borderColor = "";
+                }
+            }
+
+            if(!validarCantidad()){
+                var spanCantidad = document.createElement('span');
+                spanCantidad.setAttribute("id", "spanCantidad");
+                var cantidad = document.getElementById("cantidad").value;
+
+                if(document.getElementById("spanCantidad")){
+                    var padre = document.getElementById("spanCantidad").parentNode;
+                    padre.removeChild(document.getElementById("spanCantidad"));
+                }
+
+                var txt1 = document.createTextNode('(Cantidad no válida)');
+                spanCantidad.style.color = "red";
+                spanCantidad.appendChild(txt1);
+                document.getElementById("labelCantidad").appendChild(spanCantidad);
+                document.getElementById("cantidad").style.borderColor = "red";
+                salida = false;
+            }else{
+                if(document.getElementById("spanCantidad")){
+                    var padre = document.getElementById("spanCantidad").parentNode;
+                    padre.removeChild(document.getElementById("spanCantidad"));
+                    document.getElementById("cantidad").style.borderColor = "";
+                }
+            }
+
+            if(!validarCuentaDestino()){
+                var spanDestino = document.createElement('span');
+                spanDestino.setAttribute("id", "spanDestino");
+                var destino = document.getElementById("destino").value;
+
+                if(document.getElementById("spanDestino")){
+                    var padre = document.getElementById("spanDestino").parentNode;
+                    padre.removeChild(document.getElementById("spanDestino"));
+                }
+
+                var txt1 = document.createTextNode('(Cuenta destino no válida)');
+                spanDestino.style.color = "red";
+                spanDestino.appendChild(txt1);
+                document.getElementById("labelDestino").appendChild(spanDestino);
+                document.getElementById("destino").style.borderColor = "red";
+                salida = false;
+            }else{
+                if(document.getElementById("spanDestino")){
+                    var padre = document.getElementById("spanDestino").parentNode;
+                    padre.removeChild(document.getElementById("spanDestino"));
+                    document.getElementById("destino").style.borderColor = "";
+                }
+            }
+
+            return salida;
+        }
+
+        function validarDNI(){
+            var expr = /^([0-9]{8})([A-Z])$/;
+            var dni = document.getElementById("dni").value;
+            return dni !== undefined && expr.test(dni);
+        }
+
+        function validarClave(){
+            var expr = /^([0-9]{8})$/;
+            var clave = document.getElementById("clave").value;
+            return clave !== undefined && expr.test(clave);
+        }
+
+        function validarCantidad(){
+            var expr = /^\d+([.]\d{1,2})?$/;
+            var ok = true;
+            var cantidad = document.getElementById("cantidad").value;
+
+            return cantidad !== undefined && expr.test(cantidad) && cantidad > 0;
+        }
+
+        function validarCuentaDestino(){
+            var expr = /^([A-Z]{2})\s*\t*(\d\d)\s*\t*(\d\d\d\d)\s*\t*(\d\d\d\d)\s*\t*(\d\d)\s*\t*(\d\d\d\d\d\d\d\d\d\d)/;
+            var ok = true;
+            var cuentaDestino = document.getElementById("destino").value;
+
+            return cuentaDestino !== undefined && expr.test(cuentaDestino);
+        }
+    </script>
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/jquery@2.2.4/dist/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.4/dist/umd/popper.min.js"></script>

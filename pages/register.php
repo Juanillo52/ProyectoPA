@@ -208,7 +208,7 @@ function buscarCliente(){
     $dni = $_POST['dni'];
     $email = $_POST['email'];
 
-    $con = mysqli_connect("localhost","root","");
+    $con = mysqli_connect("localhost","root","Pistacho99!");
 
     if (!$con){
         die(' No puedo conectar: ' . mysqli_error($con));
@@ -279,7 +279,7 @@ function altaCliente(){
     $cp =  $_POST['cp'];
     $clave = crearPassword();
 
-    $con = mysqli_connect("localhost","root","");
+    $con = mysqli_connect("localhost","root","Pistacho99!");
 
     if (!$con){
         die(' No puedo conectar: ' . mysqli_error($con));

@@ -2,17 +2,6 @@
     session_start();    
     require_once("cookie_alert.php");
 
-    if(isset($_SESSION["register"])){
-        echo '<div class="sufee-alert alert with-close alert-success alert-dismissible fade show cookie-alert">
-        <span>'. $_SESSION["register"] .'</span>
-        <button type="button" class="close" data-dismiss="alert" aria-label="Entendido">
-            <span aria-hidden="true">&times;</span>
-        </button>
-        </div>';
-        unset($_SESSION["register"]);
-    }
-
-
     function comprobarFormulario(){
         $resultado = False; ## le damos este valor para que muestre el login
     
@@ -62,7 +51,7 @@
         $dni = $_POST['dni'];
         $password = $_POST['password'];
     
-        $con = mysqli_connect("68.183.69.142","root","Pistacho99!");
+        $con = mysqli_connect("68.183.69.142:3306","root","Pistacho99!");
     
         if (!$con){
             die(' No puedo conectar: ' . mysqli_error($con));
@@ -95,7 +84,7 @@
     function getUser($dni){
         $nombre = null;
         $dni = $_POST['dni'];
-        $con = mysqli_connect("68.183.69.142","root","Pistacho99!");
+        $con = mysqli_connect("68.183.69.142:3306","root","Pistacho99!");
     
         if (!$con){
             die(' No puedo conectar: ' . mysqli_error($con));
@@ -128,7 +117,7 @@
     }
 
     function enviarClave($email){
-        $con = mysqli_connect("68.183.69.142","root","Pistacho99!");
+        $con = mysqli_connect("68.183.69.142:3306","root","Pistacho99!");
         $email = $_POST['email'];
     
         if (!$con){
@@ -289,7 +278,7 @@ and open the template in the editor.
             </div>
         </header>
     </div>
-    
+
     <div id="divlogin">
         <div class="login-content">
             <div class="login-form">

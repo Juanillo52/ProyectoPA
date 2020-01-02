@@ -1203,7 +1203,8 @@ header .form-inline {
   display: block; }
 
 .content {
-  float: left;
+  margin-left: auto;
+  margin-right: auto;
   padding: 1.875em;
   width: 100%; }
 
@@ -2544,8 +2545,8 @@ ul {
 }
 .site-footer{
   clear: both;
-  /*padding-right: 13px;
-  padding-left: 13px;*/
+  padding-right: 13px;
+  padding-left: 13px;
 }
 .footer-inner{
   border: 1px solid white;
@@ -2553,8 +2554,8 @@ ul {
   
 }
 footer{
-  /*margin-left: 2px;
-  margin-right: 2px;*/
+  margin-left: 2px;
+  margin-right: 2px;
 }
 
 .enlace-footer {
@@ -2607,4 +2608,19 @@ footer{
   width: 100%;
   z-index: 999999;
   display: block;
+}
+.col-lg-12, .col-lg-6, .col-lg-4{
+  float: left;
+}
+
+.alert{
+  position: fixed;
+  opacity: 0.8;
+  width: 100%;
+  z-index: 999999;
+  display: block;
+}
+
+.margin-top-20{
+  margin-top: 20px;
 }

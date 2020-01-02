@@ -1,5 +1,5 @@
 <?php
-    require_once("test_log.php");
+    //require_once("test_log.php");
 ?>
 
 <?php
@@ -16,7 +16,7 @@
             echo '<!-- Content -->
             <div class="content">
                 <div class="row card">
-                <h1 class="card-header">Crear nueva Cuenta</h1>
+                <h1 class="card-header">Crear nueva cuenta</h1>
                     <div class="card-body">
                     <form method="POST" enctype="multipart/form-data" onsubmit="return validar()">
                         <label class=" form-control-label" for="select" onchange="Select()">Seleccione el tipo de cuenta</label>
@@ -24,9 +24,9 @@
                             <option value="cuenta" selected="true">Cuenta corriente</option>
                             <option value="cuenta_nomina">Cuenta nómina</option>
                             <option value="cuenta_ahorros">Cuenta de ahorros</option>
-                        </select><br/>';
+                        </select>';
 
-                            echo '<div id="div_nomina" style="display:none">
+                            echo '<br/><div id="div_nomina" style="display:none">
                                     <label id="labelArchivo" class=" form-control-label" for="nomina">Adjunte su nómina en formato PDF:     </label><br/>
                                     <input id="nomina" class="upload-files-btn" type="file" name="nomina" onchange="return validarArchivo()">
                             </div><br/>';
@@ -39,8 +39,8 @@
                                 <br/>
                                 <label id="labelClave" class=" form-control-label" for="clave">Clave    </label>
                                 <input id="clave" class="form-control" type="password" name="clave">
-                                <br/>
-                                <button class="btn btn-primary btn-sm" type="submit" name="btnSolicitar">Solicitar</button>';
+                              
+                                <button class="btn btn-primary btn-sm margin-top-20" type="submit" name="btnSolicitar">Solicitar</button>';
                     echo '</form>';
 
                         echo '
@@ -131,7 +131,7 @@
             move_uploaded_file($_FILES['nomina']['tmp_name'], "../nominas/". $cliente ."/". $ruta);
         }
 
-        $con = mysqli_connect("localhost", "root", "");
+        $con = mysqli_connect("68.183.69.142", "root", "");
         
         if(!$con){
             die('No puedo conectar: ' . mysqli_error($con));
@@ -212,7 +212,6 @@
     <title>MensaBank</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link type="text/css" rel="stylesheet" href="../plantilla-boostrap/assets/css/style.css">
-    <link type="text/css" rel="stylesheet" href="../css/footer_style.css">
 
     <link rel="apple-touch-icon" href="https://i.imgur.com/QRAUqs9.png">
     <link rel="shortcut icon" href="../images/icon.png">

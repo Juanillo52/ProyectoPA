@@ -8,7 +8,7 @@
     <div class="top-right">
         <div class="header-menu">
             <div class="header-left">
-                <span class="alert">Te damos la bienvenida, <?php echo $_SESSION['user']; ?></span>
+                <span>Te damos la bienvenida, <?php echo $_SESSION['user']; ?></span>
                 <div class="logout"> 
                 <form method="POST">
                     <input type="submit" id="logout" name="logout" value="Salir">

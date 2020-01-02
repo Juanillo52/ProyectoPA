@@ -3,7 +3,7 @@
 ?>
 
 <?php
-    function mostrarPensiones(){
+    function mostrarDashboard(){
         //Left Panel
         require_once("nav.php");
         //#left-panel
@@ -272,7 +272,6 @@
 
 
     <link type="text/css" rel="stylesheet" href="../plantilla-boostrap/assets/css/style.css">
-    <link type="text/css" rel="stylesheet" href="../css/footer_style.css">
 
     <link rel="apple-touch-icon" href="https://i.imgur.com/QRAUqs9.png">
     <link rel="shortcut icon" href="../images/icon.png">
@@ -332,9 +331,7 @@
 
 <body class="bg-color">
     <?php
-        
-            mostrarPensiones();
-
+        mostrarDashboard()
     ?>
 
     <!-- Scripts -->

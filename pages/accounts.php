@@ -19,7 +19,7 @@
                 <h1 class="card-header">Cuentas</h1>
                     <div class="card-body">';
 
-                    $con = mysqli_connect("localhost","root","");
+                    $con = mysqli_connect("68.183.69.142","root","");
 
                     if (!$con){
                         die(' No puedo conectar: ' . mysqli_error($con));
@@ -357,7 +357,6 @@
     <title>MensaBank</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link type="text/css" rel="stylesheet" href="../plantilla-boostrap/assets/css/style.css">
-    <link type="text/css" rel="stylesheet" href="../css/footer_style.css">
 
     <link rel="apple-touch-icon" href="https://i.imgur.com/QRAUqs9.png">
     <link rel="shortcut icon" href="../images/icon.png">

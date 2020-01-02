@@ -277,7 +277,7 @@ function altaCliente(){
     $con = mysqli_connect("68.183.69.142","root","Pistacho99!");
 
     if (!$con){
-        die(' No puedo conectar: ' . mysqli_error($con));
+        die(' No puedo conectar: ' . mysqli_errno($con));
     }
 
     $db_selected = mysqli_select_db($con,"mensabank");
@@ -309,7 +309,8 @@ function enviarEmail($password){
     $subject = "[noreply] Verifica tu cuenta";
     $message = "<div><h3>Hola, " . $_POST['nombre'] . ", bienvenido a MensaBank:</h3>
                 <p>La clave de acceso con la que deberá loguearse es: " . $password . "<br/>
-                Ya puede disfrutar de todos nuestros servicios con total libertad. Un saludo,
+                Ya puede disfrutar de todos nuestros servicios con total libertad.<br/> 
+                Un saludo,<br/>
                 El equipo de soporte de MensaBank.</p></div>";
     $headers = "From:" . $from;
     mail($to,$subject,$message, $headers);

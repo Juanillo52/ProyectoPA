@@ -2,6 +2,17 @@
     session_start();    
     require_once("cookie_alert.php");
 
+    if(isset($_SESSION["register"])){
+        echo '<div class="sufee-alert alert with-close alert-success alert-dismissible fade show cookie-alert">
+        <span>'. $_SESSION["register"] .'</span>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Entendido">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        </div>';
+        unset($_SESSION["register"]);
+    }
+
+
     function comprobarFormulario(){
         $resultado = False; ## le damos este valor para que muestre el login
     
@@ -675,7 +686,7 @@ and open the template in the editor.
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.4/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jquery-match-height@0.7.2/dist/jquery.matchHeight.min.js"></script>
-    <script src="plantilla-boostrap/assets/js/main.js"></script>
+    <script src="../plantilla-boostrap/assets/js/main.js"></script>
     <?php      
         require_once("footer.php"); 
     ?>

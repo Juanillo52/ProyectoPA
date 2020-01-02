@@ -256,11 +256,6 @@ function crearPassword(){
     }
     enviarEmail($password);
 
-
-    $_SESSION['pass'] = $password;
-    $_SESSION['cliente'] = $_POST['dni'];
-
-
     $password = password_hash($password, PASSWORD_DEFAULT);
     return $password;
 }
@@ -279,7 +274,7 @@ function altaCliente(){
     $cp =  $_POST['cp'];
     $clave = crearPassword();
 
-    $con = mysqli_connect("localhost","root","Pistacho99!");
+    $con = mysqli_connect("68.183.69.142","root","Pistacho99!");
 
     if (!$con){
         die(' No puedo conectar: ' . mysqli_error($con));

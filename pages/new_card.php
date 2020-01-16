@@ -155,7 +155,7 @@
 
         if(!$resQuery){
             mysqli_close($con);
-            die('No puedo ejecutar la consulta: ' . mysqli_error($con));
+            die('No puedo seleccionar los datos: ' . mysqli_error($con));
         }else{
             if(mysqli_num_rows($resQuery) != 0){
                 $row = mysqli_fetch_array($resQuery);
@@ -165,7 +165,7 @@
 
                     if(!$resQuery2){
                         mysqli_close($con);
-                        die('No puedo ejecutar la consulta: ' . mysqli_error($con));
+                        die('No puedo introducir la tarjeta: ' . mysqli_error($con));
                     }else{
                         $resultado = True;
                     }

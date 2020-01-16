@@ -112,7 +112,7 @@
         $cantidad = $_POST['cantidad'];
         $fecha = date('Y-m-d h:m:i');
 
-        $con = mysqli_connect("localhost", "root", "");
+        $con = mysqli_connect("localhost", "root", "Pistacho99!");
         
         if(!$con){
             die('No puedo conectar: ' . mysqli_error($con));
@@ -245,7 +245,7 @@
     function obtenerCuentas(){
         $cliente = $_SESSION['dni'];
         $cuentas = [];
-        $con = mysqli_connect("localhost","root","");
+        $con = mysqli_connect("localhost","root","Pistacho99!");
 
         if (!$con){
             die(' No puedo conectar: ' . mysqli_error($con));
@@ -290,7 +290,7 @@
         $resultado = False;
         $dni = $_SESSION['dni'];       
 
-        $con = mysqli_connect("localhost", "root", "");
+        $con = mysqli_connect("localhost", "root", "Pistacho99!");
         
         if(!$con){
             die('No puedo conectar: ' . mysqli_error($con));

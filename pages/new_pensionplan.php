@@ -28,9 +28,14 @@
                         <label id="labelClave" class=" form-control-label" for="clave">Clave    </label>
                         <input id="clave" class="form-control" type="password" name="clave">
 
-                        <br/>
-                        <button class="btn btn-primary btn-sm" type="submit" name="btnSolicitar">Solicitar</button>
-                    </form>';
+                        <br/>';
+                        if(comprobarExistePlan()){
+                            echo '<button class="btn btn-main btn-sm" type="submit" name="btnSolicitar" disabled>Solicitar</button><p>No puede solicitar otro plan de pensiones.</p>';
+                        }else{
+                            echo '<button class="btn btn-main btn-sm" type="submit" name="btnSolicitar">Solicitar</button>';
+                        }
+                        
+                    echo '</form>';
 
                         echo '
                     </div>
@@ -96,7 +101,9 @@
         $email = $_POST['email'];
         $clave = $_POST['clave'];        
 
+
         $con = mysqli_connect("localhost", "root", "Pistacho99!");
+
         
         if(!$con){
             die('No puedo conectar: ' . mysqli_error($con));
@@ -118,8 +125,49 @@
                 $row = mysqli_fetch_array($resQuery);
                 
                 if(password_verify($clave, $row['clave'])){
+                    $estado = "Activo";
+                    $cantidad = 0;
+
+                    $resQuery2 = mysqli_query($con, "INSERT INTO plan_pensiones(estado, cantidad, cliente) VALUES ('$estado', 0, '$dni')");
+                    if(!$resQuery2){
+                        mysqli_close($con);
+                        die('No puedo ejecutar la consulta: ' . mysqli_error($con));
+                    }else{
                     $resultado = True;
+                    }
                 }
+            }
+        }
+
+        mysqli_close($con);
+        
+        return $resultado;
+    }
+
+    function comprobarExistePlan(){
+        $resultado = False;
+        $dni = $_SESSION['dni'];       
+
+        $con = mysqli_connect("localhost", "root", "");
+        
+        if(!$con){
+            die('No puedo conectar: ' . mysqli_error($con));
+        }
+        
+        $db_selected = mysqli_select_db($con, "mensabank");
+        
+        if(!$db_selected){
+            die('No puedo usar la base de datos: ' . mysqli_error($con));
+        }
+
+        $resQuery = mysqli_query($con, "SELECT * from plan_pensiones WHERE cliente='$dni'");
+
+        if(!$resQuery){
+            mysqli_close($con);
+            die('No puedo ejecutar la consulta: ' . mysqli_error($con));
+        }else{
+            if($row = mysqli_fetch_array($resQuery)){
+                $resultado = True;
             }
         }
 

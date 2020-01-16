@@ -102,6 +102,7 @@
                                <?php 
                                 $con = mysqli_connect("localhost","root","Pistacho99!");
 
+
                                 if (!$con){
                                     die(' No puedo conectar: ' . mysqli_error($con));
                                 }
@@ -126,12 +127,12 @@
                                         $pin = $row['pin'];
                                         $cuenta = $row['cuenta'];
 
-                                        echo '<td>'+ $cuenta +'</td>
-                                        <td>'+ $tipo +'</td>
-                                        <td>'+ $numero_tarjeta +'</td>
-                                        <td>'+ $cvv +'</td>
-                                        <td>'+ $fecha_caducidad +'</td>
-                                        <td>'+ $pin +'</td>';
+                                        echo '<td>'. $cuenta .'</td>
+                                        <td>'. $tipo .'</td>
+                                        <td>'. $numero_tarjeta .'</td>
+                                        <td>'. $cvv .'</td>
+                                        <td>'. $fecha_caducidad .'</td>
+                                        <td>'. $pin .'</td>';
                                     }
                                 }
                                                         

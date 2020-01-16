@@ -20,6 +20,7 @@
 
                         $con = mysqli_connect("localhost","root","Pistacho99!");
 
+
                         if (!$con){
                             die(' No puedo conectar: ' . mysqli_error($con));
                         }
@@ -39,7 +40,7 @@
                         }else{
                             if(mysqli_num_rows($resQuery) != 0){
                                 while($row = mysqli_fetch_array($resQuery)){
-                                    echo '<p>Cantidad total depositada: '+ $row['cantidad'] +' euros</p>
+                                    echo '<p>Cantidad total depositada: '. $row['cantidad'] .' euros</p>
                                     <br/>';
 
                                     $id = $row['id'];
@@ -62,10 +63,12 @@
                                                 <tbody>';
 
                                             while($row2 = mysqli_fetch_array($resQuery2)){
+                                                $fecha = date("Y-m-d", strtotime($row2['fecha']));
+                                                
                                                 echo '<tr>
-                                                        <td>'+ $row2['fecha'] +'</td>
-                                                        <td>'+ $row2['importe'] +'</td>
-                                                        <td>'+ $row2['cuenta'] +'</td>
+                                                        <td>'. $fecha .'</td>
+                                                        <td>'. $row2['importe'] .'</td>
+                                                        <td>'. $row2['cuenta'] .'</td>
                                                     </tr>';
                                             }
 
@@ -73,9 +76,24 @@
                                             </table>';
                                         }
                                     }
+
+                                    echo '<br/><form action="#" method="POST">
+                                    <h2>Retirar dinero</h2><br/>';
+                                    echo '<label class=" form-control-label">Elija la cuenta a la que desea retirar el dinero:  </label>
+                                    <select class="form-control" name="cuenta" id="cuenta">';
+                                    foreach (obtenerCuentas() as $cuenta) {
+                                        echo "<option value='$cuenta'>$cuenta</option>";
+                                    }
+                                    echo '</select><br/>';
+                                    if($row['estado'] == 'Activo'){
+                                        echo '<button class="btn btn-main btn-sm" type="submit" name="btnRetirar">Retirar</button>';
+                                    }else{
+                                        echo '<button class="btn btn-main btn-sm" type="submit" name="btnRetirar" disabled>Retirar</button><p>Su plan de pensiones ya no está activo</p>';
+                                    }
+                                    echo '</form>';
                                 }
                             }
-                        }
+                        }                      
                               
                         mysqli_close($con);
                         echo '</div>
@@ -87,6 +105,163 @@
             //.site-footer
         echo '</div>
         <!-- /#right-panel -->';
+    }
+
+    function obtenerCuentas(){
+        $cliente = $_SESSION['dni'];
+        $cuentas = [];
+        $con = mysqli_connect("localhost","root","");
+
+        if (!$con){
+            die(' No puedo conectar: ' . mysqli_error($con));
+        }
+
+        $db_selected = mysqli_select_db($con,"mensabank");
+
+        if (!$db_selected){
+            die ('No puedo usar la base de datos: ' . mysqli_error($con));
+        }
+
+        $resQuery = mysqli_query($con, "SELECT iban from cuenta where cliente = '$cliente'");
+
+        if($resQuery){
+            while($row = mysqli_fetch_array($resQuery)) $cuentas[] = $row['iban'];
+        }else{
+            die ("Error al ejecutar la consulta: " . mysqli_error($con));
+        }
+
+        $resQuery = mysqli_query($con, "SELECT iban from cuenta_ahorros where cliente = '$cliente'");
+
+        if($resQuery){
+            while($row = mysqli_fetch_array($resQuery)) $cuentas[] = $row['iban'];
+        }else{
+            die ("Error al ejecutar la consulta: " . mysqli_error($con));
+        }
+
+        $resQuery = mysqli_query($con, "SELECT iban from cuenta_nomina where cliente = '$cliente'");
+
+        if($resQuery){
+            while($row = mysqli_fetch_array($resQuery)) $cuentas[] = $row['iban'];
+        }else{
+            die ("Error al ejecutar la consulta: " . mysqli_error($con));
+        }
+    
+        mysqli_close($con);
+
+        return $cuentas;
+    }
+
+    function comprobarRetirada(){
+        $cuenta = $_POST['cuenta'];
+
+        $con = mysqli_connect("localhost","root","");
+
+        if (!$con){
+            die(' No puedo conectar: ' . mysqli_error($con));
+        }
+
+        $db_selected = mysqli_select_db($con,"mensabank");
+
+        if (!$db_selected){
+            die ('No puedo usar la base de datos: ' . mysqli_error($con));
+        }
+
+        $cliente = $_SESSION['dni'];
+        
+        $resQuery = mysqli_query($con, "SELECT * from cuenta where cliente = '$cliente' AND iban='$cuenta'");
+
+        if(!$resQuery){
+            die ("Error al ejecutar la consulta: " . mysqli_error($con));
+        }else{
+            if($row = mysqli_fetch_array($resQuery)){
+                $resQuery2 = mysqli_query($con, "SELECT * from plan_pensiones where cliente = '$cliente'");
+
+                if(!$resQuery2){
+                    die ("Error al ejecutar la consulta: " . mysqli_error($con));
+                }else{
+                    if($row2 = mysqli_fetch_array($resQuery2)){
+                        $cantidad = $row2['cantidad'];
+                        $plan = $row2['id'];
+                        
+                        $resQuery3 = mysqli_query($con, "UPDATE cuenta set saldo=saldo+'$cantidad' where iban='$cuenta'");
+
+                        if(!$resQuery3){
+                            die ("Error al ejecutar la consulta: " . mysqli_error($con));
+                        }
+
+                        $resQuery4 = mysqli_query($con, "UPDATE plan_pensiones set cantidad=0, estado='Inactivo' where id='$plan'");
+
+                        if(!$resQuery4){
+                            die ("Error al ejecutar la consulta: " . mysqli_error($con));
+                        }
+                    }
+                }
+            }
+        }
+
+        $resQuery = mysqli_query($con, "SELECT iban from cuenta_ahorros where cliente = '$cliente' AND iban='$cuenta'");
+
+        if(!$resQuery){
+            die ("Error al ejecutar la consulta: " . mysqli_error($con));
+        }else{
+            if($row = mysqli_fetch_array($resQuery)){
+                $resQuery2 = mysqli_query($con, "SELECT * from plan_pensiones where cliente = '$cliente'");
+
+                if(!$resQuery2){
+                    die ("Error al ejecutar la consulta: " . mysqli_error($con));
+                }else{
+                    if($row2 = mysqli_fetch_array($resQuery2)){
+                        $cantidad = $row2['cantidad'];
+                        $plan = $row2['id'];
+
+                        $resQuery3 = mysqli_query($con, "UPDATE cuenta_ahorros set saldo=saldo+'$cantidad' where iban='$cuenta'");
+
+                        if(!$resQuery3){
+                            die ("Error al ejecutar la consulta: " . mysqli_error($con));
+                        }
+
+                        $resQuery4 = mysqli_query($con, "UPDATE plan_pensiones set cantidad=0, estado='Inactivo' where id='$plan'");
+
+                        if(!$resQuery4){
+                            die ("Error al ejecutar la consulta: " . mysqli_error($con));
+                        }
+                    }
+                }
+            }
+        }
+
+        $resQuery = mysqli_query($con, "SELECT iban from cuenta_nomina where cliente = '$cliente' AND iban='$cuenta'");
+
+        if(!$resQuery){
+            die ("Error al ejecutar la consulta: " . mysqli_error($con));
+        }else{
+            if($row = mysqli_fetch_array($resQuery)){
+                $resQuery2 = mysqli_query($con, "SELECT * from plan_pensiones where cliente = '$cliente'");
+
+                if(!$resQuery2){
+                    die ("Error al ejecutar la consulta: " . mysqli_error($con));
+                }else{
+                    if($row2 = mysqli_fetch_array($resQuery2)){
+                        $cantidad = $row2['cantidad'];
+                        $plan = $row2['id'];
+                        
+                        $resQuery3 = mysqli_query($con, "UPDATE cuenta_nomina set saldo=saldo+'$cantidad' where iban='$cuenta'");
+
+                        if(!$resQuery3){
+                            die ("Error al ejecutar la consulta: " . mysqli_error($con));
+                        }
+
+                        $resQuery4 = mysqli_query($con, "UPDATE plan_pensiones set cantidad=0, estado='Inactivo' where id='$plan'");
+
+                        if(!$resQuery4){
+                            die ("Error al ejecutar la consulta: " . mysqli_error($con));
+                        }
+                    }
+                }
+            }
+        }
+    
+        mysqli_close($con);
     }
 ?>
 
@@ -167,11 +342,11 @@
 
 <body class="bg-color">
     <?php
-        if($_SESSION['login'] == True){
-            mostrarPensiones();
-        }else{
-            header('Location: login.php');
+        if(isset($_POST['btnRetirar'])){
+            comprobarRetirada();
         }
+
+        mostrarPensiones();
     ?>
 
     <!-- Scripts -->

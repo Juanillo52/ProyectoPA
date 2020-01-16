@@ -115,57 +115,64 @@
         $existe = False;
         $tipo = $_POST['select'];
         $credito = $_POST['credito'];
-        $entrada = 0;
+        $entrada = $_POST['entrada'];
         $cuenta = $_POST['cuenta'];
         $fecha_actual = date("d-m-Y");
-
+        
         if($tipo == "personal"){
             $intereses = 4.95;
+            $creditoConIntereses = ($credito * (1 + $intereses/100));
+            $pagar = $creditoConIntereses-$entrada;
 
             if($credito >= 1000 && $credito <= 10000){
-                $cuota = $credito/14;
+                $cuota = $pagar/14;
                 $fecha_limite = date("Y-m-d", strtotime($fecha_actual."+ 14 month"));
             }elseif($credito > 10000 && $credito <= 20000){
-                $cuota = $credito/20;
+                $cuota = $pagar/20;
                 $fecha_limite = date("Y-m-d", strtotime($fecha_actual."+ 20 month"));
             }elseif($credito > 20000 && $credito <= 30000){
-                $cuota = $credito/26;
+                $cuota = $pagar/26;
                 $fecha_limite = date("Y-m-d", strtotime($fecha_actual."+ 26 month"));
             }elseif($credito > 30000 && $credito <= 50000){
-                $cuota = $credito/34;
+                $cuota = $pagar/34;
                 $fecha_limite = date("Y-m-d", strtotime($fecha_actual."+ 34 month"));
             }elseif($credito > 50000 && $credito <= 70000){
-                $cuota = $credito/40;
+                $cuota = $pagar/40;
                 $fecha_limite = date("Y-m-d", strtotime($fecha_actual."+ 40 month"));
             }else{
-                $cuota = $credito/55;
+                $cuota = $pagar/55;
                 $fecha_limite = date("Y-m-d", strtotime($fecha_actual."+ 55 month"));
             }
         }else{
             $intereses = 1.95;
+            $creditoConIntereses = ($credito * (1 + $intereses/100));
+            $pagar = $creditoConIntereses-$entrada;
 
             if($credito >= 40000 && $credito <= 100000){
-                $cuota = $credito/34;
+                $cuota = $pagar/34;
                 $fecha_limite = date("Y-m-d", strtotime($fecha_actual."+ 34 month"));
             }elseif($credito > 100000 && $credito <= 200000){
-                $cuota = $credito/55;
+                $cuota = $pagar/55;
                 $fecha_limite = date("Y-m-d", strtotime($fecha_actual."+ 55 month"));
             }elseif($credito > 200000 && $credito <= 300000){
-                $cuota = $credito/69;
+                $cuota = $pagar/69;
                 $fecha_limite = date("Y-m-d", strtotime($fecha_actual."+ 69 month"));
             }elseif($credito > 300000 && $credito <= 500000){
-                $cuota = $credito/75;
+                $cuota = $pagar/75;
                 $fecha_limite = date("Y-m-d", strtotime($fecha_actual."+ 75 month"));
             }elseif($credito > 500000 && $credito <= 700000){
-                $cuota = $credito/85;
+                $cuota = $pagar/85;
                 $fecha_limite = date("Y-m-d", strtotime($fecha_actual."+ 85 month"));
             }elseif($credito > 700000 && $credito <= 1000000){
-                $cuota = $credito/110;
+                $cuota = $pagar/110;
                 $fecha_limite = date("Y-m-d", strtotime($fecha_actual."+ 110 month"));
             }
         }
 
+
         $con = mysqli_connect("localhost", "root", "Pistacho99!");
+        $cuota = number_format($cuota, 2);
+
         
         if(!$con){
             die('No puedo conectar: ' . mysqli_error($con));
@@ -179,7 +186,7 @@
         
         $cliente = $_SESSION['dni'];
 
-        $resQuery1 = mysqli_query($con, "SELECT * from cuenta WHERE cliente='$cliente' AND cuenta='$cuenta'");
+        $resQuery1 = mysqli_query($con, "SELECT * FROM cuenta WHERE cliente='$cliente' AND iban='$cuenta'");
 
         if(!$resQuery1){
             mysqli_close($con);
@@ -189,14 +196,19 @@
                 $row = mysqli_fetch_array($resQuery1);
                 
                 if($row['saldo'] < $entrada){
-
+                    echo '<div class="sufee-alert alert with-close alert-danger alert-dismissible fade show alert">
+                                    <span> No hay saldo suficiente en la cuenta para pagar la entrada.
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Entendido">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                    </div>'; 
                 }else{
                     $existe = True;
                 }
             }
         }
 
-        $resQuery2 = mysqli_query($con, "SELECT * from cuenta_ahorros WHERE cliente='$cliente' AND cuenta='$cuenta'");
+        $resQuery2 = mysqli_query($con, "SELECT * from cuenta_ahorros WHERE cliente='$cliente' AND iban='$cuenta'");
 
         if(!$resQuery2){
             mysqli_close($con);
@@ -206,14 +218,19 @@
                 $row = mysqli_fetch_array($resQuery2);
                 
                 if($row['saldo'] < $entrada){
-                    
+                    echo '<div class="sufee-alert alert with-close alert-danger alert-dismissible fade show alert">
+                                    <span> No hay saldo suficiente en la cuenta para pagar la entrada.
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Entendido">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                    </div>'; 
                 }else{
                     $existe = True;
                 }
             }
         }
 
-        $resQuery3 = mysqli_query($con, "SELECT * from cuenta_nomina WHERE cliente='$cliente' AND cuenta='$cuenta'");
+        $resQuery3 = mysqli_query($con, "SELECT * from cuenta_nomina WHERE cliente='$cliente' AND iban='$cuenta'");
 
         if(!$resQuery3){
             mysqli_close($con);
@@ -223,7 +240,12 @@
                 $row = mysqli_fetch_array($resQuery3);
                 
                 if($row['saldo'] < $entrada){
-                    
+                    echo '<div class="sufee-alert alert with-close alert-danger alert-dismissible fade show alert">
+                                    <span> No hay saldo suficiente en la cuenta para pagar la entrada.
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Entendido">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                    </div>'; 
                 }else{
                     $existe = True;
                 }
@@ -231,7 +253,9 @@
         }
 
         if($existe){
-            $resQuery4 = mysqli_query($con, "INSERT INTO mensabank(tipo, credito, cuota, entrada, intereses, fecha_limite, cliente, cuenta, pagado) VALUES ('$tipo', '$credito', '$cuota', '$entrada', '$intereses', '$fecha_limite', '$cliente', '$cuenta', '$entrada')");
+            $estado = "En proceso";
+
+            $resQuery4 = mysqli_query($con, "INSERT INTO prestamo(tipo, credito, cuota, entrada, intereses, fecha_limite, cliente, cuenta, pagado, estado) VALUES ('$tipo', '$creditoConIntereses', '$cuota', '$entrada', '$intereses', '$fecha_limite', '$cliente', '$cuenta', '$entrada', '$estado')");
             
             if(!$resQuery4){
                 mysqli_close($con);
@@ -250,7 +274,9 @@
     function obtenerCuentas(){
         $cliente = $_SESSION['dni'];
         $cuentas = [];
+        
         $con = mysqli_connect("localhost","root","Pistacho99!");
+
 
         if (!$con){
             die(' No puedo conectar: ' . mysqli_error($con));

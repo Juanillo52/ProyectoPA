@@ -51,10 +51,10 @@
         $dni = $_POST['dni'];
         $password = $_POST['password'];
     
-        $con = mysqli_connect("68.183.69.142:3306","root","Pistacho99!");
+        $con = mysqli_connect("68.183.69.142","root","Pistacho99!");
     
         if (!$con){
-            die(' No puedo conectar: ' . mysqli_error($con));
+            die(' No puedo conectar: ' . mysqli_errno($con));
         }
     
         $db_selected = mysqli_select_db($con,"mensabank");

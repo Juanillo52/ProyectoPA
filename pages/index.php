@@ -263,13 +263,16 @@ and open the template in the editor.
 
     <div id="right-panel" class="right-panel">
         <header id="header" class="header">
+        
             <div class="top-left">
                 <div class="navbar-header">
-                    <a class="navbar-brand" href="./"><img class="logo" src="../images/logo.png" alt="Logo"></a>
+                <a class="navbar-brand" href="index.php"><img class="logo" src="../images/logo.png" alt="Logo"></a>
                 </div>
             </div>
             <div class="top-right">
+            
                 <div class="header-menu">
+                
                     <div class="header-left">
                         <button class="btn btn-main btn-lg" type="button" id="login">Login</button>
                         <button class="btn btn-secondary btn-lg" type="button" id="signin">Registro</button>

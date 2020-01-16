@@ -131,7 +131,7 @@ function mostrarFormulario(){
                     </div>
                                            
                     <div class="register-link m-t-15 text-center">
-                        <p>¿Ya eres de MensaBank?<a href="login.php"> Accede aquí</a></p>
+                        <p>¿Ya eres de MensaBank?<a href="index.php"> Accede aquí</a></p>
                     </div>
                 </form>
             </div>
@@ -307,11 +307,11 @@ function enviarEmail($password){
     $from = "infomensabank@gmail.com";
     $to = $_POST['email'];
     $subject = "[noreply] Verifica tu cuenta";
-    $message = "<div><h3>Hola, " . $_POST['nombre'] . ", bienvenido a MensaBank:</h3>
-                <p>La clave de acceso con la que deberá loguearse es: " . $password . "<br/>
-                Ya puede disfrutar de todos nuestros servicios con total libertad.<br/> 
-                Un saludo,<br/>
-                El equipo de soporte de MensaBank.</p></div>";
+    $message = "Hola, " . $_POST['nombre'] . ", bienvenido a MensaBank:
+                La clave de acceso con la que deberá loguearse es: " . $password . "
+                Ya puede disfrutar de todos nuestros servicios con total libertad. 
+                Un saludo,
+                El equipo de soporte de MensaBank.";
     $headers = "From:" . $from;
     mail($to,$subject,$message, $headers);
     echo "The email message was sent.";

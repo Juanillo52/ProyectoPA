@@ -94,7 +94,7 @@
     }
 
     function comprobarBoton(){
-        $con = mysqli_connect("68.183.69.142", "root", "Pistacho99!");
+        $con = mysqli_connect("localhost", "root", "Pistacho99!");
 
         if (!$con){
             die(' No puedo conectar: ' . mysqli_error($con));

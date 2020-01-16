@@ -135,7 +135,7 @@
             $pin .= rand(0,9);
         }
 
-        $num_tarjeta = intval($num_tarjeta);
+        $num_tarjeta = (string) intval($num_tarjeta);
         $cvv = intval($cvv);
         $pin = intval($pin);
 
@@ -161,6 +161,13 @@
                 $row = mysqli_fetch_array($resQuery);
                 
                 if(password_verify($clave, $row['clave'])){
+                    var_dump($num_tarjeta);
+                    var_dump($cvv);
+                    var_dump($tipo);
+                    var_dump($fecha_caducidad);
+                    var_dump($pin);
+                    var_dump($cliente);
+                    var_dump($cuenta);
                     $resQuery2 = mysqli_query($con, "INSERT INTO tarjeta(numero_tarjeta, cvv, tipo, fecha_caducidad, pin, cliente, cuenta) VALUES ('$num_tarjeta', '$cvv', '$tipo', '$fecha_caducidad', '$pin', '$cliente', '$cuenta')");
 
                     if(!$resQuery2){

@@ -17,36 +17,35 @@
                 <div class="row card">
                     <h1 class="card-header">Préstamos</h1>
                         <div class="card-body">
-                            <form action="#" method="POST">
-                                <table class="table table-bordered">
-                                    <thead>
-                                        <tr>
-                                            <th>Importe</th>
-                                            <th>Tipo</th>
-                                            <th>Cuenta</th>
-                                            <th>Cuota</th>
-                                            <th>Interés</th>
-                                            <th>Pagado</th>
-                                            <th>Fecha límite</th>
-                                            <th>Estado</th>
-                                            <th>Pagar cuota</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>';
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Importe</th>
+                                        <th>Tipo</th>
+                                        <th>Entrada</th>
+                                        <th>Cuenta</th>
+                                        <th>Cuota</th>
+                                        <th>Interés</th>
+                                        <th>Pagado</th>
+                                        <th>Fecha límite</th>
+                                    </tr>
+                                </thead>
+                                <tbody>';
 
-                                    $con = mysqli_connect("68.183.69.142", "root", "Pistacho99!");
+                                $con = mysqli_connect("localhost","root","Pistacho99!");
 
-                                    if (!$con){
-                                        die(' No puedo conectar: ' . mysqli_error($con));
-                                    }
-                                
-                                    $db_selected = mysqli_select_db($con, "mensabank");
-                                
-                                    if (!$db_selected){
-                                        die ('No puedo usar la base de datos: ' . mysqli_error($con));
-                                    }
-                                
-                                    $dni = $_SESSION['dni'];
+                                if (!$con){
+                                    die(' No puedo conectar: ' . mysqli_error($con));
+                                }
+                            
+                                $db_selected = mysqli_select_db($con, "mensabank");
+                            
+                                if (!$db_selected){
+                                    die ('No puedo usar la base de datos: ' . mysqli_error($con));
+                                }
+                            
+                                $dni = $_SESSION['dni'];
+
 
                                     $resQuery = mysqli_query($con, "SELECT * from prestamo WHERE cliente = '$dni'");
                                     

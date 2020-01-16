@@ -18,7 +18,8 @@
                     <h1 class="card-header">Plan de pensiones</h1>
                         <div class="card-body">';
 
-                        $con = mysqli_connect("localhost","root","");
+                        $con = mysqli_connect("localhost","root","Pistacho99!");
+
 
                         if (!$con){
                             die(' No puedo conectar: ' . mysqli_error($con));

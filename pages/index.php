@@ -51,7 +51,7 @@
         $dni = $_POST['dni'];
         $password = $_POST['password'];
     
-        $con = mysqli_connect("68.183.69.142","root","Pistacho99!");
+        $con = mysqli_connect("localhost","root","Pistacho99!");
     
         if (!$con){
             die(' No puedo conectar: ' . mysqli_errno($con));
@@ -84,7 +84,7 @@
     function getUser($dni){
         $nombre = null;
         $dni = $_POST['dni'];
-        $con = mysqli_connect("68.183.69.142:3306","root","Pistacho99!");
+        $con = mysqli_connect("localhost","root","Pistacho99!");
     
         if (!$con){
             die(' No puedo conectar: ' . mysqli_error($con));
@@ -117,7 +117,7 @@
     }
 
     function enviarClave($email){
-        $con = mysqli_connect("68.183.69.142:3306","root","Pistacho99!");
+        $con = mysqli_connect("localhost","root","Pistacho99!");
         $email = $_POST['email'];
     
         if (!$con){

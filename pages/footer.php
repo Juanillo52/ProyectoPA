@@ -4,7 +4,7 @@
             <div class="col-sm-6">
                 <a href="policy.php" class="enlace-footer">Política de MensaBank</a>
                 <a href="https://www.bde.es/bde/es/secciones/normativas/Medidas_extraord/Entidades-de-credito/Plan_de_accion__8839dc3bfa0ae21.html" class="enlace-footer">Marco legal</a>             
-           
+                <a href="help.php" class="enlace-footer">¿Necesitas ayuda?</a>
             </div>
             
             <div class="col-sm-6 text-right">

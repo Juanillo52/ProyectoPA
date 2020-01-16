@@ -86,7 +86,6 @@
             <div class="top-right">
                 <div class="header-menu">
                     <div class="header-left">
-                        <button class="btn btn-main btn-lg" type="button" id="login">Login</button>
                         <button class="btn btn-secondary btn-lg" type="button" id="signin">Registro</button>
                     </div>
                 </div>
@@ -177,6 +176,15 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jquery-match-height@0.7.2/dist/jquery.matchHeight.min.js"></script>
     <script src="assets/js/main.js"></script>
+    <script>
+        $(document).ready(function () {
+                        
+            $("#signup").click(function(){
+                window.location.href = "register.php";
+
+            });
+        });
+    </script>
     <?php require_once("footer.php"); ?>
 </body>
 </html>

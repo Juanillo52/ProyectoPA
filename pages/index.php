@@ -275,7 +275,7 @@ and open the template in the editor.
                 
                     <div class="header-left">
                         <button class="btn btn-main btn-lg" type="button" id="login">Login</button>
-                        <button class="btn btn-secondary btn-lg" type="button" id="signin">Registro</button>
+                        <button class="btn btn-secondary btn-lg" type="button" id="signup">Registro</button>
                     </div>
                 </div>
             </div>
@@ -658,7 +658,7 @@ and open the template in the editor.
             $("#divlogin").hide();
             $("#divforgotpass").hide();
                         
-            $("#signin").click(function(){
+            $("#signup").click(function(){
                 window.location.href = "register.php";
 
             });

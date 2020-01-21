@@ -41,7 +41,6 @@
         if(!isset($errores)){
             return True;
         }else {
-            foreach($errores as $e) echo $e;
             return False;
         }
     }
@@ -51,7 +50,7 @@
         $dni = $_POST['dni'];
         $password = $_POST['password'];
     
-        $con = mysqli_connect("68.183.69.142:3306","root","Pistacho99!");
+        $con = mysqli_connect("localhost","root","Pistacho99!");
     
         if (!$con){
             die(' No puedo conectar: ' . mysqli_error($con));
@@ -84,7 +83,7 @@
     function getUser($dni){
         $nombre = null;
         $dni = $_POST['dni'];
-        $con = mysqli_connect("68.183.69.142:3306","root","Pistacho99!");
+        $con = mysqli_connect("localhost","root","Pistacho99!");
     
         if (!$con){
             die(' No puedo conectar: ' . mysqli_error($con));
@@ -117,7 +116,7 @@
     }
 
     function enviarClave($email){
-        $con = mysqli_connect("68.183.69.142:3306","root","Pistacho99!");
+        $con = mysqli_connect("localhost","root","Pistacho99!");
         $email = $_POST['email'];
     
         if (!$con){
@@ -263,16 +262,19 @@ and open the template in the editor.
 
     <div id="right-panel" class="right-panel">
         <header id="header" class="header">
+        
             <div class="top-left">
                 <div class="navbar-header">
-                    <a class="navbar-brand" href="./"><img class="logo" src="../images/logo.png" alt="Logo"></a>
+                <a class="navbar-brand" href="index.php"><img class="logo" src="../images/logo.png" alt="Logo"></a>
                 </div>
             </div>
             <div class="top-right">
+            
                 <div class="header-menu">
+                
                     <div class="header-left">
                         <button class="btn btn-main btn-lg" type="button" id="login">Login</button>
-                        <button class="btn btn-secondary btn-lg" type="button" id="signin">Registro</button>
+                        <button class="btn btn-secondary btn-lg" type="button" id="signup">Registro</button>
                     </div>
                 </div>
             </div>
@@ -282,13 +284,13 @@ and open the template in the editor.
     <div id="divlogin">
         <div class="login-content">
             <div class="login-form">
-                <form method="POST">
+                <form method="POST" onsubmit="return validar()">
                     <div class="form-group">
-                    <label>DNI</label>
-                    <input type="text" name="dni" class="form-control"></div>
+                    <label id="labelDNI">DNI    </label>
+                    <input type="text" name="dni" id="dni" class="form-control"></div>
                     <div class="form-group">
-                        <label>Clave de acceso</label>
-                        <input type="password" name="password" class="form-control">
+                        <label id="labelClave">Clave de acceso  </label>
+                        <input type="password" name="password" id="clave" class="form-control">
                     </div>
                     <div class="checkbox">
                         <label class="pull-right">
@@ -655,7 +657,7 @@ and open the template in the editor.
             $("#divlogin").hide();
             $("#divforgotpass").hide();
                         
-            $("#signin").click(function(){
+            $("#signup").click(function(){
                 window.location.href = "register.php";
 
             });
@@ -671,6 +673,73 @@ and open the template in the editor.
 
         });
     </script>
+
+    <script>
+        function validar(){
+            var salida = true;
+
+            if(!validarDNI()){
+                var spanDNI = document.createElement('span');
+                spanDNI.setAttribute("id", "spanDNI");
+
+                if(document.getElementById("spanDNI")){
+                    var padre = document.getElementById("spanDNI").parentNode;
+                    padre.removeChild(document.getElementById("spanDNI"));
+                }
+
+                var txt1 = document.createTextNode('(DNI no válido)');
+                spanDNI.style.color = "red";
+                spanDNI.appendChild(txt1);
+                document.getElementById("labelDNI").appendChild(spanDNI);
+                document.getElementById("dni").style.borderColor = "red";
+                salida = false;
+            }else{
+                if(document.getElementById("spanDNI")){
+                    var padre = document.getElementById("spanDNI").parentNode;
+                    padre.removeChild(document.getElementById("spanDNI"));
+                    document.getElementById("dni").style.borderColor = "";
+                }
+            }
+
+            if(!validarClave()){
+                var spanClave = document.createElement('span');
+                spanClave.setAttribute("id", "spanClave");
+
+                if(document.getElementById("spanClave")){
+                    var padre = document.getElementById("spanClave").parentNode;
+                    padre.removeChild(document.getElementById("spanClave"));
+                }
+                
+                var txt1 = document.createTextNode('(Clave no válida)');
+                spanClave.style.color = "red";
+                spanClave.appendChild(txt1);
+                document.getElementById("labelClave").appendChild(spanClave);
+                document.getElementById("clave").style.borderColor = "red";
+                salida = false;
+            }else{
+                if(document.getElementById("spanClave")){
+                    var padre = document.getElementById("spanClave").parentNode;
+                    padre.removeChild(document.getElementById("spanClave"));
+                    document.getElementById("clave").style.borderColor = "";
+                }
+            }
+
+            return salida;
+        }
+
+        function validarDNI(){
+            var expr = /^([0-9]{8})([A-Z])$/;
+            var dni = document.getElementById("dni").value;
+            return dni !== undefined && expr.test(dni);
+        }
+
+        function validarClave(){
+            var expr = /^([0-9]{8})$/;
+            var clave = document.getElementById("clave").value;
+            return clave !== undefined && expr.test(clave);
+        }
+    </script>
+
     <script src="https://cdn.jsdelivr.net/npm/jquery@2.2.4/dist/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.4/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/js/bootstrap.min.js"></script>

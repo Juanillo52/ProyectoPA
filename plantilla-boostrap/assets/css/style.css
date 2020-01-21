@@ -2459,7 +2459,7 @@ header .form-inline {
       padding: 0 30px;
       z-index: 999;
       border-bottom: 1px solid #dcdcdc; }
-    .right-panel header.header .top-right {
+    .right-panel .top-right {
       padding: 0 30px; }
 
   .small-device .right-panel {
@@ -2623,4 +2623,13 @@ footer{
 
 .margin-top-20{
   margin-top: 20px;
+}
+
+
+.logo-div{
+  max-width: 145px;
+    height: 50px;
+    vertical-align: middle;
+    border-style: none;
+    /* white-space: nowrap; */
 }

@@ -101,7 +101,9 @@
         $email = $_POST['email'];
         $clave = $_POST['clave'];        
 
-        $con = mysqli_connect("localhost", "root", "");
+
+        $con = mysqli_connect("localhost", "root", "Pistacho99!");
+
         
         if(!$con){
             die('No puedo conectar: ' . mysqli_error($con));
@@ -146,7 +148,7 @@
         $resultado = False;
         $dni = $_SESSION['dni'];       
 
-        $con = mysqli_connect("localhost", "root", "");
+        $con = mysqli_connect("localhost", "root", "Pistacho99!");
         
         if(!$con){
             die('No puedo conectar: ' . mysqli_error($con));

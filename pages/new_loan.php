@@ -197,7 +197,7 @@
                 
                 if($row['saldo'] < $entrada){
                     echo '<div class="sufee-alert alert with-close alert-danger alert-dismissible fade show alert">
-                                    <span> No hay saldo suficiente en la cuenta para pagar la entrada.
+                                    <span> No hay saldo suficiente en la cuenta para pagar la entrada. </span>
                                     <button type="button" class="close" data-dismiss="alert" aria-label="Entendido">
                                         <span aria-hidden="true">&times;</span>
                                     </button>
@@ -219,7 +219,7 @@
                 
                 if($row['saldo'] < $entrada){
                     echo '<div class="sufee-alert alert with-close alert-danger alert-dismissible fade show alert">
-                                    <span> No hay saldo suficiente en la cuenta para pagar la entrada.
+                                    <span> No hay saldo suficiente en la cuenta para pagar la entrada.</span>
                                     <button type="button" class="close" data-dismiss="alert" aria-label="Entendido">
                                         <span aria-hidden="true">&times;</span>
                                     </button>

@@ -12,18 +12,24 @@
                 $resultado = verificarLogin();
 
                 if(!$resultado){
-                    echo "Clave incorrecta.<br>";
+                    echo '<div class="sufee-alert alert with-close alert-danger alert-dismissible fade show alert">
+                            <span> Clave incorrecta. </span>
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Entendido">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                           </div>';
                 }
             }         
         }
 
         if(isset($_POST['forgotpass'])){
             $enviar = true;
+
             $_POST['email'] = filter_input(INPUT_POST, "email", FILTER_SANITIZE_EMAIL);
             if(!isset($_POST['email']) || $_POST['email'] == '' || !filter_input(INPUT_POST, "email", FILTER_VALIDATE_EMAIL)){
-                $errores[] = "Introduzca un email válido.<br/>";
                 $enviar = false;
             }
+
             if($enviar){
                 enviarClave($_POST['email']);
             }
@@ -130,6 +136,7 @@
         }
     
         $resQuery = mysqli_query($con, "SELECT * from cliente WHERE email='$email'");
+
         if (!$resQuery) {
             die ("Error al ejecutar la consulta: " . mysqli_error($con));
         }else{
@@ -158,7 +165,12 @@
                     mail($to,$subject,$message, $headers);
                 }              
             }else{
-                echo 'No se han encontrado coincidencias con el email introducido</br>';
+                echo '<div class="sufee-alert alert with-close alert-danger alert-dismissible fade show alert">
+                            <span> No se han encontrado coincidencias con el email introducido. </span>
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Entendido">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                           </div>';
             }
         }
         mysqli_close($con);
@@ -320,7 +332,7 @@ and open the template in the editor.
     <?php 
         if(isset($_SESSION['nologin']) && $_SESSION['nologin']){
             echo '<div class="sufee-alert alert with-close alert-danger alert-dismissible fade show alert">
-            <span> Usted no está logueado, por lo que no podrá acceder a nuestros servicios hasta que lo haga. Gracias.
+            <span> Usted no está logueado, por lo que no podrá acceder a nuestros servicios hasta que lo haga. Gracias.</span>
             <button type="button" class="close" data-dismiss="alert" aria-label="Entendido">
                 <span aria-hidden="true">&times;</span>
             </button>

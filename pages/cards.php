@@ -72,7 +72,7 @@
                                             <td>'. $fecha_caducidad .'</td>
                                             <td>'. $pin .'</td>';
                                             echo '<td><input class="btn btn-main" type="submit" name="'. $numero_tarjeta .'" value="Cambiar Pin"></input></td>';
-                                            echo '<td><input class="btn btn-main" type="submit" name="'. $numero_tarjeta .'" value="Eliminar"></input></td>';
+                                            echo '<td><input class="btn btn-main" type="submit" name="'. $numero_tarjeta .'e" value="Eliminar"></input></td>';
                                             echo '</tr>';
                                         }
                                     }
@@ -120,44 +120,42 @@
             while($row = mysqli_fetch_array($resQuery) && !$enc){
                 $numero_tarjeta = $row['numero_tarjeta'];
 
+                if(isset($_POST[$numero_tarjeta.'e'])){
+                    $enc = True;
+                    $resQuery2 = mysqli_query($con, "DELETE FROM tarjeta WHERE numero_tarjeta = '$numero_tarjeta'");
+
+                    if (!$resQuery2) {
+                        die ("Error al ejecutar la consulta: " . mysqli_error($con));
+                    }else{
+                        echo '<div class="sufee-alert alert with-close alert-danger alert-dismissible fade show alert">
+                                <span> Tarjeta con numero '. $numero_tarjeta .' eliminada</span>
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Entendido">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                                </div>';  
+                    }
+                }
+
                 if(isset($_POST[$numero_tarjeta])){
                     $enc = True;
-                    $opcion = $_POST[$numero_tarjeta];
+                    $pin = "";
 
-                    //if($opcion == "Eliminar"){
-                        $resQuery2 = mysqli_query($con, "DELETE FROM tarjeta WHERE numero_tarjeta = '$numero_tarjeta'");
+                    for($i =0 ; $i < 4; $i++){
+                        $pin .= rand(0,9);
+                    }
 
-                        if (!$resQuery2) {
-                            die ("Error al ejecutar la consulta: " . mysqli_error($con));
-                        }else{
-                            echo '<div class="sufee-alert alert with-close alert-danger alert-dismissible fade show alert">
-                                    <span> Tarjeta con numero '. $numero_tarjeta .' eliminada</span>
-                                    <button type="button" class="close" data-dismiss="alert" aria-label="Entendido">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                    </div>';  
-                        }
-                    //}/*else{
-                        $enc = True;
-                        $pin = "";
+                    $resQuery2 = mysqli_query($con, "UPDATE tarjeta SET pin='$pin' WHERE numero_tarjeta='$numero_tarjeta'");
 
-                        for($i =0 ; $i < 4; $i++){
-                            $pin .= rand(0,9);
-                        }
-
-                        $resQuery2 = mysqli_query($con, "UPDATE tarjeta SET pin='$pin' WHERE numero_tarjeta='$numero_tarjeta'");
-
-                        if (!$resQuery2) {
-                            die ("Error al ejecutar la consulta: " . mysqli_error($con));
-                        }else{
-                            echo '<div class="sufee-alert alert with-close alert-danger alert-dismissible fade show alert">
-                                    <span> El pin de la tarjeta con numero '. $numero_tarjeta .' ha sido cambiado</span>
-                                    <button type="button" class="close" data-dismiss="alert" aria-label="Entendido">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                    </div>';   
-                        }
-                    }*/
+                    if (!$resQuery2) {
+                        die ("Error al ejecutar la consulta: " . mysqli_error($con));
+                    }else{
+                        echo '<div class="sufee-alert alert with-close alert-danger alert-dismissible fade show alert">
+                                <span> El pin de la tarjeta con numero '. $numero_tarjeta .' ha sido cambiado</span>
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Entendido">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                                </div>';   
+                    }
                 }
             }
         }

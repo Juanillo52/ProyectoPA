@@ -424,7 +424,7 @@ function redireccionar(){
                 if(document.getElementById("spanApellidos")){
                     var padre = document.getElementById("spanApellidos").parentNode;
                     padre.removeChild(document.getElementById("spanApellidos"));
-                    document.getElementById("nombre").style.borderColor = "";
+                    document.getElementById("apellidos").style.borderColor = "";
                 }
             }
 
@@ -639,13 +639,13 @@ function redireccionar(){
         }
 
         function validarNombre(){
-            var expr = /^([A-Z]+)$/;
+            var expr = /^([A-Za-zñ\s]+)$/;
             var nombre = document.getElementById("nombre").value;
             return nombre !== undefined && expr.test(nombre);
         }
 
         function validarApellidos(){
-            var expr = /^([A-Z]+)$/;
+            var expr = /^([A-Za-zñ]+)$/;
             var apellidos = document.getElementById("apellidos").value;
             return apellidos !== undefined && expr.test(apellidos);
         }
@@ -674,19 +674,19 @@ function redireccionar(){
         }
 
         function validarDireccion(){
-            var expr = /^([A-Z]+)$/;
+            var expr = /^([A-Za-zñ]+)$/;
             var direccion = document.getElementById("direccion").value;
             return direccion !== undefined && expr.test(direccion);
         }
 
         function validarCiudad(){
-            var expr = /^([A-Z]+)$/;
+            var expr = /^([A-Za-zñ]+)$/;
             var ciudad = document.getElementById("ciudad").value;
             return ciudad !== undefined && expr.test(ciudad);
         }
 
         function validarProvincia(){
-            var expr = /^([A-Z]+)$/;
+            var expr = /^([A-Za-zñ]+)$/;
             var provincia = document.getElementById("provincia").value;
             return provincia !== undefined && expr.test(provincia);
         }

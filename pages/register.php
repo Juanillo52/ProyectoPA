@@ -645,7 +645,7 @@ function redireccionar(){
         }
 
         function validarApellidos(){
-            var expr = /^([A-Za-zñ]+)$/;
+            var expr = /^([A-Za-zñ\s]+)$/;
             var apellidos = document.getElementById("apellidos").value;
             return apellidos !== undefined && expr.test(apellidos);
         }
@@ -674,19 +674,19 @@ function redireccionar(){
         }
 
         function validarDireccion(){
-            var expr = /^([A-Za-zñ]+)$/;
+            var expr = /^([A-Za-zñ\s0-9]+)$/;
             var direccion = document.getElementById("direccion").value;
             return direccion !== undefined && expr.test(direccion);
         }
 
         function validarCiudad(){
-            var expr = /^([A-Za-zñ]+)$/;
+            var expr = /^([A-Za-zñ\s]+)$/;
             var ciudad = document.getElementById("ciudad").value;
             return ciudad !== undefined && expr.test(ciudad);
         }
 
         function validarProvincia(){
-            var expr = /^([A-Za-zñ]+)$/;
+            var expr = /^([A-Za-zñ\s]+)$/;
             var provincia = document.getElementById("provincia").value;
             return provincia !== undefined && expr.test(provincia);
         }

@@ -81,7 +81,7 @@
 
                                     echo '</tbody>
                                 </table>
-                                </form>
+                            </form>
                             </div>
                         </div>
                     </div>
@@ -109,7 +109,7 @@
         }
     
         $dni = $_SESSION['dni'];
-
+                
         $resQuery = mysqli_query($con, "SELECT * from tarjeta WHERE cliente = '$dni'");
         
         if (!$resQuery) {
@@ -124,7 +124,7 @@
                     $enc = True;
                     $opcion = $_POST[$numero_tarjeta];
 
-                    if($opcion == "Eliminar"){
+                    //if($opcion == "Eliminar"){
                         $resQuery2 = mysqli_query($con, "DELETE FROM tarjeta WHERE numero_tarjeta = '$numero_tarjeta'");
 
                         if (!$resQuery2) {
@@ -137,7 +137,7 @@
                                     </button>
                                     </div>';  
                         }
-                    }else{
+                    //}/*else{
                         $enc = True;
                         $pin = "";
 
@@ -157,7 +157,7 @@
                                     </button>
                                     </div>';   
                         }
-                    }
+                    }*/
                 }
             }
         }

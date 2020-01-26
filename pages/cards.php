@@ -117,7 +117,7 @@
         }else{
             $enc = False;
 
-            while($row = mysqli_fetch_array($resQuery) && !$enc){
+            while(($row = mysqli_fetch_array($resQuery)) && !$enc){
                 $numero_tarjeta = $row['numero_tarjeta'];
 
                 if(isset($_POST[$numero_tarjeta.'e'])){
@@ -139,7 +139,7 @@
                 if(isset($_POST[$numero_tarjeta])){
                     $enc = True;
                     $pin = "";
-
+                    
                     for($i =0 ; $i < 4; $i++){
                         $pin .= rand(0,9);
                     }

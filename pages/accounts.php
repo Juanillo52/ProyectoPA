@@ -93,38 +93,6 @@
                                     }
                                 }
 
-                                $resQuery4 = mysqli_query($con, "SELECT tipo, credito, pagado, cuenta from prestamo WHERE cuenta = '$cuenta'");
-
-                                if(!$resQuery4){
-                                    die('Error al ejecutar la consulta: ' . mysqli_error($con));
-                                }else{
-
-                                    if(mysqli_num_rows($resQuery4) != 0){
-                                        echo '<br/>
-                                        <table class="table">
-                                            <thead>
-                                                <tr>
-                                                    <th>Préstamos</th>
-                                                    <th>Tipo</th>
-                                                    <th>Crédito</th>
-                                                    <th>Cantidad pagada</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>';
-                                        while($row4 = mysqli_fetch_array($resQuery2)){
-                                            echo '<tr>
-                                                        <td></td>
-                                                        <td>'. $row4['tipo'] .'</td>
-                                                        <td>'. $row4['credito'] .'</td>
-                                                        <td>'. $row4['pagado'] .'</td>
-                                                    </tr>';
-                                        }
-
-                                        echo '</tbody>
-                                        </table>';
-                                    }
-                                }
-
                                 echo '</div>
                                 </div>';
                             }

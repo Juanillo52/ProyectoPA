@@ -22,7 +22,6 @@
                                     <tr>
                                         <th>Importe</th>
                                         <th>Tipo</th>
-                                        <th>Entrada</th>
                                         <th>Cuenta</th>
                                         <th>Cuota</th>
                                         <th>Interés</th>
@@ -72,7 +71,6 @@
                                                         echo '</tr>';
                                             }
                                         }
-
                                     }
 
                                     echo '</tbody>
@@ -158,7 +156,7 @@
                                     }
                                 }else{                                    
                                     echo '<div class="sufee-alert alert with-close alert-danger alert-dismissible fade show alert">
-                                    <span> No hay saldo suficiente en la cuenta asociada al préstamo para pagar una cuota.
+                                    <span> No hay saldo suficiente en la cuenta asociada al préstamo para pagar una cuota. </span>
                                     <button type="button" class="close" data-dismiss="alert" aria-label="Entendido">
                                         <span aria-hidden="true">&times;</span>
                                     </button>
@@ -202,7 +200,7 @@
                                         }
                                     }else{                                    
                                         echo '<div class="sufee-alert alert with-close alert-danger alert-dismissible fade show alert">
-                                        <span> No hay saldo suficiente en la cuenta asociada al préstamo para pagar una cuota.
+                                        <span> No hay saldo suficiente en la cuenta asociada al préstamo para pagar una cuota. </span>
                                         <button type="button" class="close" data-dismiss="alert" aria-label="Entendido">
                                             <span aria-hidden="true">&times;</span>
                                         </button>
@@ -247,7 +245,7 @@
                                         }
                                     }else{                                    
                                         echo '<div class="sufee-alert alert with-close alert-danger alert-dismissible fade show alert">
-                                        <span> No hay saldo suficiente en la cuenta asociada al préstamo para pagar una cuota.
+                                        <span> No hay saldo suficiente en la cuenta asociada al préstamo para pagar una cuota. </span>
                                         <button type="button" class="close" data-dismiss="alert" aria-label="Entendido">
                                             <span aria-hidden="true">&times;</span>
                                         </button>

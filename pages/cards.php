@@ -1,5 +1,160 @@
 <?php
     require_once("test_log.php");
+
+    function mostrarTarjetas(){
+            //Left Panel
+            require_once("nav.php");
+            //#left-panel
+            //Right Panel
+            
+            echo '<div id="right-panel" class="right-panel">';
+                //Header
+                require_once("header.php");
+                //#header
+                //Content
+                //.content
+                
+                echo '<div class="content">
+                <div class="row card">
+                <h1 class="card-header">Tarjetas</h1>
+                    <div class="card-body">
+                        <div class="card">
+                            <div class="card-body">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Cuenta asociada</th>
+                                            <th>Tipo de tarjeta</th>
+                                            <th>Número de tarjeta</th>
+                                            <th>CVV</th>
+                                            <th>Fecha de Caducidad</th>
+                                            <th>Pin</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>';
+
+                                    $con = mysqli_connect("localhost","root","Pistacho99!");
+
+
+                                    if (!$con){
+                                        die(' No puedo conectar: ' . mysqli_error($con));
+                                    }
+                                
+                                    $db_selected = mysqli_select_db($con, "mensabank");
+                                
+                                    if (!$db_selected){
+                                        die ('No puedo usar la base de datos: ' . mysqli_error($con));
+                                    }
+                                
+                                    $dni = $_SESSION['dni'];
+                
+                                    $resQuery = mysqli_query($con, "SELECT * from tarjeta WHERE cliente = '$dni'");
+
+                                    if (!$resQuery) {
+                                        die ("Error al ejecutar la consulta: " . mysqli_error($con));
+                                    }else{
+                                        while($row = mysqli_fetch_array($resQuery)){
+                                            $numero_tarjeta = $row['numero_tarjeta'];
+                                            $cvv = $row['cvv'];
+                                            $tipo = $row['tipo'];
+                                            $fecha_caducidad = $row['fecha_caducidad'];
+                                            $pin = $row['pin'];
+                                            $cuenta = $row['cuenta'];
+
+                                            echo '<td>'. $cuenta .'</td>
+                                            <td>'. $tipo .'</td>
+                                            <td>'. $numero_tarjeta .'</td>
+                                            <td>'. $cvv .'</td>
+                                            <td>'. $fecha_caducidad .'</td>
+                                            <td>'. $pin .'</td>';
+                                            echo '<td><input class="btn btn-main" type="submit" name="'. $numero_tarjeta .'" value="Cambiar Pin"></input></td>';
+                                            echo '<td><input class="btn btn-main" type="submit" name="'. $numero_tarjeta .'" value="Eliminar"></input></td>';
+                                        }
+                                    }
+                                                            
+                                    mysqli_close($con);
+
+                                    echo '</tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>';
+
+                //Footer
+                require_once("footer.php");
+                //.site-footer
+            echo '</div>';
+            //#right-panel
+    }
+
+    function comprobarBoton(){
+        $con = mysqli_connect("localhost", "root", "Pistacho99!");
+
+        if (!$con){
+            die(' No puedo conectar: ' . mysqli_error($con));
+        }
+    
+        $db_selected = mysqli_select_db($con, "mensabank");
+    
+        if (!$db_selected){
+            die ('No puedo usar la base de datos: ' . mysqli_error($con));
+        }
+    
+        $dni = $_SESSION['dni'];
+
+        $resQuery = mysqli_query($con, "SELECT * from tarjeta WHERE cliente = '$dni'");
+        
+        if (!$resQuery) {
+            die ("Error al ejecutar la consulta: " . mysqli_error($con));
+        }else{
+            $enc = false;
+            while($row = mysqli_fetch_array($resQuery)){
+                $numero_tarjeta = $row['numero_tarjeta'];
+
+                if(isset($_POST[$numero_tarjeta])){
+                    $opcion = $_POST[$numero_tarjeta];
+
+                    if($opcion == "Eliminar"){
+                        $resQuery2 = mysqli_query($con, "DELETE FROM tarjeta WHERE numero_tarjeta = '$numero_tarjeta'");
+
+                        if (!$resQuery2) {
+                            die ("Error al ejecutar la consulta: " . mysqli_error($con));
+                        }else{
+                            echo '<div class="sufee-alert alert with-close alert-danger alert-dismissible fade show alert">
+                                    <span> Tarjeta con numero '. $numero_tarjeta .' eliminada</span>
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Entendido">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                    </div>';   
+                        }
+                    }else{
+                        $pin = "";
+
+                        for($i =0 ; $i < 4; $i++){
+                            $pin .= rand(0,9);
+                        }
+
+                        $resQuery2 = mysqli_query($con, "UPDATE tarjeta SET pin='$pin' WHERE numero_tarjeta='$numero_tarjeta'");
+
+                        if (!$resQuery2) {
+                            die ("Error al ejecutar la consulta: " . mysqli_error($con));
+                        }else{
+                            echo '<div class="sufee-alert alert with-close alert-danger alert-dismissible fade show alert">
+                                    <span> El pin de la tarjeta con numero '. $numero_tarjeta .' ha sido cambiado</span>
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Entendido">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                    </div>';   
+                        }
+                    }
+                }
+            }
+        }
+
+        mysqli_close($con);
+    }
 ?>
 
 <!doctype html>
@@ -71,87 +226,12 @@
 </head>
 
 <body class="bg-color">
-    <!-- Left Panel -->
-    <?php require_once("nav.php"); ?>
-    <!-- /#left-panel -->
-    <!-- Right Panel -->
-    <div id="right-panel" class="right-panel">
-        <!-- Header-->
-        <?php require_once("header.php"); ?>
-        <!-- /#header -->
-        <!-- Content -->
-        <!-- /.content -->
-        <div class="content">
-        <div class="row card">
-        <h1 class="card-header">Tarjetas</h1>
-            <div class="card-body">
-                <div class="card">
-                    <div class="card-body">
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>Cuenta asociada</th>
-                                    <th>Tipo de tarjeta</th>
-                                    <th>Número de tarjeta</th>
-                                    <th>CVV</th>
-                                    <th>Fecha de Caducidad</th>
-                                    <th>Pin</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                               <?php 
-                                $con = mysqli_connect("localhost","root","Pistacho99!");
+    <?php
+        comprobarBoton();
 
 
-                                if (!$con){
-                                    die(' No puedo conectar: ' . mysqli_error($con));
-                                }
-                            
-                                $db_selected = mysqli_select_db($con, "mensabank");
-                            
-                                if (!$db_selected){
-                                    die ('No puedo usar la base de datos: ' . mysqli_error($con));
-                                }
-                            
-                                $dni = $_SESSION['dni'];
-            
-                                $resQuery = mysqli_query($con, "SELECT * from tarjeta WHERE cliente = '$dni'");
-                                if (!$resQuery) {
-                                    die ("Error al ejecutar la consulta: " . mysqli_error($con));
-                                }else{
-                                    while($row = mysqli_fetch_array($resQuery)){
-                                        $numero_tarjeta = $row['numero_tarjeta'];
-                                        $cvv = $row['cvv'];
-                                        $tipo = $row['tipo'];
-                                        $fecha_caducidad = $row['fecha_caducidad'];
-                                        $pin = $row['pin'];
-                                        $cuenta = $row['cuenta'];
-
-                                        echo '<td>'. $cuenta .'</td>
-                                        <td>'. $tipo .'</td>
-                                        <td>'. $numero_tarjeta .'</td>
-                                        <td>'. $cvv .'</td>
-                                        <td>'. $fecha_caducidad .'</td>
-                                        <td>'. $pin .'</td>';
-                                    }
-                                }
-                                                        
-                                mysqli_close($con);
-                               
-                               ?>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-        <!-- Footer -->
-        <?php require_once("footer.php"); ?>
-        <!-- /.site-footer -->
-    </div>
-    <!-- /#right-panel -->
+        mostrarTarjetas();
+    ?>
 
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/jquery@2.2.4/dist/jquery.min.js"></script>

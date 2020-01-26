@@ -17,6 +17,7 @@
                 <div class="row card">
                     <h1 class="card-header">Préstamos</h1>
                         <div class="card-body">
+                        <form method="POST">
                             <table class="table table-bordered">
                                 <thead>
                                     <tr>

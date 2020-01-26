@@ -409,7 +409,7 @@ function redireccionar(){
                 spanApellidos.style.color = "red";
                 spanApellidos.appendChild(txt1);
                 document.getElementById("labelApellidos").appendChild(spanApellidos);
-                document.getElementById("nombre").style.borderColor = "red";
+                document.getElementById("apellidos").style.borderColor = "red";
                 salida = false;
             }else{
                 if(document.getElementById("spanApellidos")){

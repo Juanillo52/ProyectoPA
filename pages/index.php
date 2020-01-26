@@ -41,7 +41,6 @@
         if(!isset($errores)){
             return True;
         }else {
-            foreach($errores as $e) echo $e;
             return False;
         }
     }
@@ -142,9 +141,10 @@
                 for($i =0 ; $i < 8 ; $i++){
                     $password.= rand(0,9);
                 }
-                var_dump($password);
+                
                 $clave = password_hash($password, PASSWORD_DEFAULT);
                 $resQuery = mysqli_query($con, "UPDATE cliente SET clave='$clave' WHERE email='$email'");
+
                 if (!$resQuery) {
                     die ("Error al ejecutar la consulta: " . mysqli_error($con));
                 }else{
@@ -285,13 +285,13 @@ and open the template in the editor.
     <div id="divlogin">
         <div class="login-content">
             <div class="login-form">
-                <form method="POST">
+                <form method="POST" onsubmit="return validar()">
                     <div class="form-group">
-                    <label>DNI</label>
-                    <input type="text" name="dni" class="form-control"></div>
+                    <label id="labelDNI">DNI    </label>
+                    <input type="text" name="dni" id="dni" class="form-control"></div>
                     <div class="form-group">
-                        <label>Clave de acceso</label>
-                        <input type="password" name="password" class="form-control">
+                        <label id="labelClave">Clave de acceso  </label>
+                        <input type="password" name="password" id="clave" class="form-control">
                     </div>
                     <div class="checkbox">
                         <label class="pull-right">
@@ -302,6 +302,9 @@ and open the template in the editor.
                     <div class="register-link m-t-15 text-center">
                         <p>¿Todavía no eres cliente de MensaBank? <a href="register.php"> Regístrate aquí</a></p>
                     </div>
+                </form>
+
+                <form method="POST">
                     <div id="divforgotpass">
                         <div class="form-group">
                             <label>Email</label>
@@ -674,6 +677,73 @@ and open the template in the editor.
 
         });
     </script>
+
+    <script>
+        function validar(){
+            var salida = true;
+
+            if(!validarDNI()){
+                var spanDNI = document.createElement('span');
+                spanDNI.setAttribute("id", "spanDNI");
+
+                if(document.getElementById("spanDNI")){
+                    var padre = document.getElementById("spanDNI").parentNode;
+                    padre.removeChild(document.getElementById("spanDNI"));
+                }
+
+                var txt1 = document.createTextNode('(DNI no válido)');
+                spanDNI.style.color = "red";
+                spanDNI.appendChild(txt1);
+                document.getElementById("labelDNI").appendChild(spanDNI);
+                document.getElementById("dni").style.borderColor = "red";
+                salida = false;
+            }else{
+                if(document.getElementById("spanDNI")){
+                    var padre = document.getElementById("spanDNI").parentNode;
+                    padre.removeChild(document.getElementById("spanDNI"));
+                    document.getElementById("dni").style.borderColor = "";
+                }
+            }
+
+            if(!validarClave()){
+                var spanClave = document.createElement('span');
+                spanClave.setAttribute("id", "spanClave");
+
+                if(document.getElementById("spanClave")){
+                    var padre = document.getElementById("spanClave").parentNode;
+                    padre.removeChild(document.getElementById("spanClave"));
+                }
+                
+                var txt1 = document.createTextNode('(Clave no válida)');
+                spanClave.style.color = "red";
+                spanClave.appendChild(txt1);
+                document.getElementById("labelClave").appendChild(spanClave);
+                document.getElementById("clave").style.borderColor = "red";
+                salida = false;
+            }else{
+                if(document.getElementById("spanClave")){
+                    var padre = document.getElementById("spanClave").parentNode;
+                    padre.removeChild(document.getElementById("spanClave"));
+                    document.getElementById("clave").style.borderColor = "";
+                }
+            }
+
+            return salida;
+        }
+
+        function validarDNI(){
+            var expr = /^([0-9]{8})([A-Z])$/;
+            var dni = document.getElementById("dni").value;
+            return dni !== undefined && expr.test(dni);
+        }
+
+        function validarClave(){
+            var expr = /^([0-9]{8})$/;
+            var clave = document.getElementById("clave").value;
+            return clave !== undefined && expr.test(clave);
+        }
+    </script>
+
     <script src="https://cdn.jsdelivr.net/npm/jquery@2.2.4/dist/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.4/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/js/bootstrap.min.js"></script>

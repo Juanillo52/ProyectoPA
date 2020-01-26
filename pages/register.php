@@ -15,10 +15,10 @@ function mostrarFormulario(){
                 </a>
             </div>
             <div class="login-form">
-                <form method="POST">
+                <form method="POST" onsubmit="return validar()">
                     <div class="form-group col-lg-6">
-                        <label>Nombre</label>
-                        <input type="text" name="nombre"'; 
+                        <label id="labelNombre">Nombre  </label>
+                        <input type="text" name="nombre" id="nombre"'; 
                         
                         if(isset($_POST['nombre'])){
                             echo 'value="' . $_POST['nombre'] .'"';
@@ -28,8 +28,8 @@ function mostrarFormulario(){
                     </div>
 
                     <div class="form-group col-lg-6">
-                        <label>Apellidos</label>
-                        <input type="text" name="apellidos"'; 
+                        <label id="labelApellidos">Apellidos    </label>
+                        <input type="text" name="apellidos" id="apellidos"'; 
                         
                         if(isset($_POST['apellidos'])){
                             echo 'value="' . $_POST['apellidos'] .'"';
@@ -38,8 +38,8 @@ function mostrarFormulario(){
                         echo 'class="form-control" required />
                     </div>
                     <div class="form-group col-lg-6">
-                        <label>DNI</label>
-                        <input type="text" name="dni"';
+                        <label id="labelDNI">DNI    </label>
+                        <input type="text" name="dni" id="dni"';
                         
                         if(isset($_POST['dni'])){
                             echo 'value="' . $_POST['dni'] .'"';
@@ -48,8 +48,8 @@ function mostrarFormulario(){
                         echo 'class="form-control" required />
                     </div>
                     <div class="form-group col-lg-6">
-                        <label>Fecha de nacimiento</label>
-                        <input type="date" name="fecha_nacimiento"';
+                        <label id="labelFecha">Fecha de nacimiento  </label>
+                        <input type="date" name="fecha_nacimiento" id="fecha"';
                         
                         if(isset($_POST['fecha_nacimiento'])){
                             echo 'value="' . $_POST['fecha_nacimiento'] .'"';
@@ -60,8 +60,8 @@ function mostrarFormulario(){
 
                     
                     <div class="form-group col-lg-12">
-                        <label>Correo electrónico</label>
-                        <input type="email" name="email"'; 
+                        <label id="labelEmail">Correo electrónico   </label>
+                        <input type="email" name="email" id="email"'; 
                         
                         if(isset($_POST['email'])){
                             echo 'value="' . $_POST['email'] .'"';
@@ -70,8 +70,8 @@ function mostrarFormulario(){
                         echo 'class="form-control" required>
                     </div>
                     <div class="form-group col-lg-12">
-                        <label>Teléfono</label>
-                        <input type="text" name="telefono"'; 
+                        <label id="labelTelefono">Teléfono  </label>
+                        <input type="text" name="telefono" id="telefono"'; 
                         
                         if(isset($_POST['telefono'])){
                             echo 'value="' . $_POST['telefono'] .'"';
@@ -80,8 +80,8 @@ function mostrarFormulario(){
                         echo 'class="form-control" required>
                     </div>
                     <div class="form-group col-lg-12">
-                    <label>Dirección</label>
-                    <input type="text" name="direccion"'; 
+                    <label id="labelDireccion">Dirección    </label>
+                    <input type="text" name="direccion" id="direccion"'; 
                     
                     if(isset($_POST['direccion'])){
                         echo 'value="' . $_POST['direccion'] .'"';
@@ -91,8 +91,8 @@ function mostrarFormulario(){
                 </div>
 
                 <div class="form-group col-lg-4">
-                    <label>Ciudad</label>
-                    <input type="text" name="ciudad"'; 
+                    <label id="labelCiudad">Ciudad  </label>
+                    <input type="text" name="ciudad" id="ciudad"'; 
                     
                     if(isset($_POST['ciudad'])){
                         echo 'value="' . $_POST['ciudad'] .'"';
@@ -101,8 +101,8 @@ function mostrarFormulario(){
                     echo'class="form-control" required>
                 </div>
                 <div class="form-group col-lg-4">
-                    <label>Provincia</label>
-                    <input type="text" name="provincia"'; 
+                    <label id="labelProvincia">Provincia    </label>
+                    <input type="text" name="provincia" id="provincia"'; 
                     
                     if(isset($_POST['provincia'])){
                         echo 'value="' . $_POST['provincia'] .'"';
@@ -111,8 +111,8 @@ function mostrarFormulario(){
                     echo 'class="form-control" required>
                 </div>
                 <div class="form-group col-lg-4">
-                    <label>Código Postal</label>
-                    <input type="text" name="cp"'; 
+                    <label id="labelPostal">Código Postal   </label>
+                    <input type="text" name="cp" id="postal"'; 
                     
                     if(isset($_POST['cp'])){
                         echo 'value="' . $_POST['cp'] .'"';
@@ -122,8 +122,8 @@ function mostrarFormulario(){
                 </div>
 
                     <div class="checkbox col-lg-12">
-                        <label>
-                            <input type="checkbox" name="terminos"> Acepto los <a href="policy.php" target="_blank">términos y condiciones</a>
+                        <label id="labelTerminos">  
+                            <input type="checkbox" name="terminos" id="terminos"> Acepto los <a href="policy.php" target="_blank">términos y condiciones</a>
                         </label>
                     </div>
                     <div class="col-lg-12"> 
@@ -154,7 +154,8 @@ function comprobarFormulario(){
 }
 
 function comprobarDatosFormulario(){
-    
+    $resultado = False;
+
     if(!isset($_POST['nombre']) || $_POST['nombre'] == ''){$errores[] = "Introduzca el nombre.<br/>";}
     else{$_POST['nombre'] = filter_input(INPUT_POST, "nombre", FILTER_SANITIZE_STRING);} 
     
@@ -197,11 +198,10 @@ function comprobarDatosFormulario(){
     if(!isset($_POST['terminos'])){$errores[] = "Acepte los términos y condiciones.<br/>";}
     
     if(!isset($errores)){
-        return True;
-    }else {
-        foreach($errores as $e) echo $e;
-        return False;
+        $resultado = True;
     }
+
+    return $resultado;
 }
 function buscarCliente(){
     $enc = False;
@@ -368,6 +368,334 @@ function redireccionar(){
     }
     require_once("footer.php");
     ?>
+
+<script>
+        function validar(){
+            var salida = true;
+
+            if(!validarNombre()){
+                var spanNombre = document.createElement('span');
+                spanNombre.setAttribute("id", "spanNombre");
+
+                if(document.getElementById("spanNombre")){
+                    var padre = document.getElementById("spanNombre").parentNode;
+                    padre.removeChild(document.getElementById("spanNombre"));
+                }
+
+                var txt1 = document.createTextNode('(Nombre no válido)');
+                spanNombre.style.color = "red";
+                spanNombre.appendChild(txt1);
+                document.getElementById("labelNombre").appendChild(spanNombre);
+                document.getElementById("nombre").style.borderColor = "red";
+                salida = false;
+            }else{
+                if(document.getElementById("spanNombre")){
+                    var padre = document.getElementById("spanNombre").parentNode;
+                    padre.removeChild(document.getElementById("spanNombre"));
+                    document.getElementById("nombre").style.borderColor = "";
+                }
+            }
+
+            if(!validarApellidos()){
+                var spanApellidos = document.createElement('span');
+                spanApellidos.setAttribute("id", "spanApellidos");
+
+                if(document.getElementById("spanApellidos")){
+                    var padre = document.getElementById("spanApellidos").parentNode;
+                    padre.removeChild(document.getElementById("spanApellidos"));
+                }
+
+                var txt1 = document.createTextNode('(Apellidos no válidos)');
+                spanApellidos.style.color = "red";
+                spanApellidos.appendChild(txt1);
+                document.getElementById("labelApellidos").appendChild(spanApellidos);
+                document.getElementById("apellidos").style.borderColor = "red";
+                salida = false;
+            }else{
+                if(document.getElementById("spanApellidos")){
+                    var padre = document.getElementById("spanApellidos").parentNode;
+                    padre.removeChild(document.getElementById("spanApellidos"));
+                    document.getElementById("nombre").style.borderColor = "";
+                }
+            }
+
+            if(!validarDNI()){
+                var spanDNI = document.createElement('span');
+                spanDNI.setAttribute("id", "spanDNI");
+
+                if(document.getElementById("spanDNI")){
+                    var padre = document.getElementById("spanDNI").parentNode;
+                    padre.removeChild(document.getElementById("spanDNI"));
+                }
+
+                var txt1 = document.createTextNode('(DNI no válido)');
+                spanDNI.style.color = "red";
+                spanDNI.appendChild(txt1);
+                document.getElementById("labelDNI").appendChild(spanDNI);
+                document.getElementById("dni").style.borderColor = "red";
+                salida = false;
+            }else{
+                if(document.getElementById("spanDNI")){
+                    var padre = document.getElementById("spanDNI").parentNode;
+                    padre.removeChild(document.getElementById("spanDNI"));
+                    document.getElementById("dni").style.borderColor = "";
+                }
+            }
+
+            if(!validarFecha()){
+                var spanFecha = document.createElement('span');
+                spanFecha.setAttribute("id", "spanFecha");
+
+                if(document.getElementById("spanFecha")){
+                    var padre = document.getElementById("spanFecha").parentNode;
+                    padre.removeChild(document.getElementById("spanFecha"));
+                }
+
+                var txt1 = document.createTextNode('(Fecha no válida)');
+                spanFecha.style.color = "red";
+                spanFecha.appendChild(txt1);
+                document.getElementById("labelFecha").appendChild(spanFecha);
+                document.getElementById("fecha").style.borderColor = "red";
+                salida = false;
+            }else{
+                if(document.getElementById("spanFecha")){
+                    var padre = document.getElementById("spanFecha").parentNode;
+                    padre.removeChild(document.getElementById("spanFecha"));
+                    document.getElementById("fecha").style.borderColor = "";
+                }
+            }
+
+            if(!validarEmail()){
+                var spanEmail = document.createElement('span');
+                spanEmail.setAttribute("id", "spanEmail");
+
+                if(document.getElementById("spanEmail")){
+                    var padre = document.getElementById("spanEmail").parentNode;
+                    padre.removeChild(document.getElementById("spanEmail"));
+                }
+
+                var txt1 = document.createTextNode('(Email no válido)');
+                spanEmail.style.color = "red";
+                spanEmail.appendChild(txt1);
+                document.getElementById("labelEmail").appendChild(spanEmail);
+                document.getElementById("email").style.borderColor = "red";
+                salida = false;
+            }else{
+                if(document.getElementById("spanEmail")){
+                    var padre = document.getElementById("spanEmail").parentNode;
+                    padre.removeChild(document.getElementById("spanEmail"));
+                    document.getElementById("email").style.borderColor = "";
+                }
+            }
+
+            if(!validarTelefono()){
+                var spanTelefono = document.createElement('span');
+                spanTelefono.setAttribute("id", "spanTelefono");
+
+                if(document.getElementById("spanTelefono")){
+                    var padre = document.getElementById("spanTelefono").parentNode;
+                    padre.removeChild(document.getElementById("spanTelefono"));
+                }
+
+                var txt1 = document.createTextNode('(Telefono no válido)');
+                spanTelefono.style.color = "red";
+                spanTelefono.appendChild(txt1);
+                document.getElementById("labelTelefono").appendChild(spanTelefono);
+                document.getElementById("telefono").style.borderColor = "red";
+                salida = false;
+            }else{
+                if(document.getElementById("spanTelefono")){
+                    var padre = document.getElementById("spanTelefono").parentNode;
+                    padre.removeChild(document.getElementById("spanTelefono"));
+                    document.getElementById("telefono").style.borderColor = "";
+                }
+            }
+
+            if(!validarDireccion()){
+                var spanDireccion = document.createElement('span');
+                spanDireccion.setAttribute("id", "spanDireccion");
+
+                if(document.getElementById("spanDireccion")){
+                    var padre = document.getElementById("spanDireccion").parentNode;
+                    padre.removeChild(document.getElementById("spanDireccion"));
+                }
+
+                var txt1 = document.createTextNode('(Direccion no válida)');
+                spanDireccion.style.color = "red";
+                spanDireccion.appendChild(txt1);
+                document.getElementById("labelDireccion").appendChild(spanDireccion);
+                document.getElementById("direccion").style.borderColor = "red";
+                salida = false;
+            }else{
+                if(document.getElementById("spanDireccion")){
+                    var padre = document.getElementById("spanDireccion").parentNode;
+                    padre.removeChild(document.getElementById("spanDireccion"));
+                    document.getElementById("direccion").style.borderColor = "";
+                }
+            }
+
+            if(!validarCiudad()){
+                var spanCiudad = document.createElement('span');
+                spanCiudad.setAttribute("id", "spanCiudad");
+
+                if(document.getElementById("spanCiudad")){
+                    var padre = document.getElementById("spanCiudad").parentNode;
+                    padre.removeChild(document.getElementById("spanCiudad"));
+                }
+
+                var txt1 = document.createTextNode('(Ciudad no válido)');
+                spanCiudad.style.color = "red";
+                spanCiudad.appendChild(txt1);
+                document.getElementById("labelCiudad").appendChild(spanCiudad);
+                document.getElementById("ciudad").style.borderColor = "red";
+                salida = false;
+            }else{
+                if(document.getElementById("spanCiudad")){
+                    var padre = document.getElementById("spanCiudad").parentNode;
+                    padre.removeChild(document.getElementById("spanCiudad"));
+                    document.getElementById("ciudad").style.borderColor = "";
+                }
+            }
+
+            if(!validarProvincia()){
+                var spanProvincia = document.createElement('span');
+                spanProvincia.setAttribute("id", "spanProvincia");
+
+                if(document.getElementById("spanProvincia")){
+                    var padre = document.getElementById("spanProvincia").parentNode;
+                    padre.removeChild(document.getElementById("spanProvincia"));
+                }
+
+                var txt1 = document.createTextNode('(Provincia no válido)');
+                spanProvincia.style.color = "red";
+                spanProvincia.appendChild(txt1);
+                document.getElementById("labelProvincia").appendChild(spanProvincia);
+                document.getElementById("provincia").style.borderColor = "red";
+                salida = false;
+            }else{
+                if(document.getElementById("spanProvincia")){
+                    var padre = document.getElementById("spanProvincia").parentNode;
+                    padre.removeChild(document.getElementById("spanProvincia"));
+                    document.getElementById("provincia").style.borderColor = "";
+                }
+            }
+
+            if(!validarPostal()){
+                var spanPostal = document.createElement('span');
+                spanPostal.setAttribute("id", "spanPostal");
+
+                if(document.getElementById("spanPostal")){
+                    var padre = document.getElementById("spanPostal").parentNode;
+                    padre.removeChild(document.getElementById("spanPostal"));
+                }
+
+                var txt1 = document.createTextNode('(Código postal no válido)');
+                spanPostal.style.color = "red";
+                spanPostal.appendChild(txt1);
+                document.getElementById("labelPostal").appendChild(spanPostal);
+                document.getElementById("postal").style.borderColor = "red";
+                salida = false;
+            }else{
+                if(document.getElementById("spanPostal")){
+                    var padre = document.getElementById("spanPostal").parentNode;
+                    padre.removeChild(document.getElementById("spanPostal"));
+                    document.getElementById("postal").style.borderColor = "";
+                }
+            }
+
+            if(!validarTerminos()){
+                var spanTerminos = document.createElement('span');
+                spanTerminos.setAttribute("id", "spanTerminos");
+
+                if(document.getElementById("spanTerminos")){
+                    var padre = document.getElementById("spanTerminos").parentNode;
+                    padre.removeChild(document.getElementById("spanTerminos"));
+                }
+
+                var txt1 = document.createTextNode('(Terminos no válido)');
+                spanTerminos.style.color = "red";
+                spanTerminos.appendChild(txt1);
+                document.getElementById("labelTerminos").appendChild(spanTerminos);
+                document.getElementById("terminos").style.borderColor = "red";
+                salida = false;
+            }else{
+                if(document.getElementById("spanTerminos")){
+                    var padre = document.getElementById("spanTerminos").parentNode;
+                    padre.removeChild(document.getElementById("spanTerminos"));
+                    document.getElementById("terminos").style.borderColor = "";
+                }
+            }
+
+            return salida;
+        }
+
+        function validarNombre(){
+            var expr = /^([A-Z]+)$/;
+            var nombre = document.getElementById("nombre").value;
+            return nombre !== undefined && expr.test(nombre);
+        }
+
+        function validarApellidos(){
+            var expr = /^([A-Z]+)$/;
+            var apellidos = document.getElementById("apellidos").value;
+            return apellidos !== undefined && expr.test(apellidos);
+        }
+
+        function validarDNI(){
+            var expr = /^([0-9]{8})([A-Z])$/;
+            var dni = document.getElementById("dni").value;
+            return dni !== undefined && expr.test(dni);
+        }
+
+        function validarFecha(){
+            var fecha = document.getElementById("fecha").value;
+            return fecha !== undefined;
+        }
+
+        function validarEmail(){
+            var expr = /^[^@]+@[^@]+\.[a-zA-Z]{2,}$/;
+            var email = document.getElementById("email").value;
+            return email !== undefined && expr.test(email);
+        }
+
+        function validarTelefono(){
+            var expr = /^([0-9]{9})$/;
+            var telefono = document.getElementById("telefono").value;
+            return telefono !== undefined && expr.test(telefono);
+        }
+
+        function validarDireccion(){
+            var expr = /^([A-Z]+)$/;
+            var direccion = document.getElementById("direccion").value;
+            return direccion !== undefined && expr.test(direccion);
+        }
+
+        function validarCiudad(){
+            var expr = /^([A-Z]+)$/;
+            var ciudad = document.getElementById("ciudad").value;
+            return ciudad !== undefined && expr.test(ciudad);
+        }
+
+        function validarProvincia(){
+            var expr = /^([A-Z]+)$/;
+            var provincia = document.getElementById("provincia").value;
+            return provincia !== undefined && expr.test(provincia);
+        }
+
+        function validarPostal(){
+            var expr = /^([0-9]{5})$/;
+            var postal = document.getElementById("postal").value;
+            return postal !== undefined && expr.test(postal);
+        }
+
+        function validarTerminos(){
+            if(document.getElementById("terminos").checked){
+                return true;
+            }else{
+                return false;
+            }
+        }
+    </script>
 
     <script src="https://cdn.jsdelivr.net/npm/jquery@2.2.4/dist/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.4/dist/umd/popper.min.js"></script>

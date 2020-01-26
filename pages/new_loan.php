@@ -172,7 +172,8 @@
 
         $con = mysqli_connect("localhost", "root", "Pistacho99!");
         $cuota = number_format($cuota, 2);
-        str_replace(",", "", $cuota);
+        $cuota1 = explode(",", $cuota);
+        $cuota = implode("", $cuota1);
         
         if(!$con){
             die('No puedo conectar: ' . mysqli_error($con));

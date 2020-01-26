@@ -2,6 +2,16 @@
     session_start();    
     require_once("cookie_alert.php");
 
+    if(isset($_SESSION["register"])){
+        echo '<div class="sufee-alert alert with-close alert-primary alert-dismissible fade show cookie-alert">
+        <span>'. $_SESSION["register"] .'</span>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Entendido">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        </div>';
+    }
+
+
     function comprobarFormulario(){
         $resultado = False; ## le damos este valor para que muestre el login
     
@@ -163,6 +173,13 @@
                     $message = 'Tu nueva clave de acceso es: '.$password;
                     $headers = "From:" . $from;
                     mail($to,$subject,$message, $headers);
+
+                    echo '<div class="sufee-alert alert with-close alert-primary alert-dismissible fade show cookie-alert">
+                    <span>Su nueva clave ha sido enviada a su correo.</span>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Entendido">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    </div>';
                 }              
             }else{
                 echo '<div class="sufee-alert alert with-close alert-danger alert-dismissible fade show alert">

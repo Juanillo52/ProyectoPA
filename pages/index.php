@@ -169,7 +169,7 @@
                     error_reporting( E_ALL );
                     $from = 'infomensabank@gmail.com';
                     $to = $email;
-                    $subject = 'Aquí tienes tu nueva clave, '.$nombre;
+                    $subject = '[noreply] Esta es tu nueva clave, '.$nombre;
                     $message = 'Tu nueva clave de acceso es: '.$password;
                     $headers = "From:" . $from;
                     mail($to,$subject,$message, $headers);

@@ -28,6 +28,7 @@
                                         <th>Pagado</th>
                                         <th>Fecha límite</th>
                                         <th>Estado</th>
+                                        <th></th>
                                     </tr>
                                 </thead>
                                 <tbody>';

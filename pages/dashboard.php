@@ -65,7 +65,7 @@
 
                         echo '<div class="card">
                                 <div class="card-body">
-                                <h2>Saldo total: '. $saldo .' euros</h2>
+                                <h2>Saldo total: '. round($saldo, 2) .' euros</h2>
                                     <br/><table class="table">
                                             <thead>
                                                 <tr>

@@ -20,6 +20,7 @@
                     <div class="card-body">
                         <div class="card">
                             <div class="card-body">
+                            <form method="POST">
                                 <table class="table">
                                     <thead>
                                         <tr>
@@ -29,6 +30,8 @@
                                             <th>CVV</th>
                                             <th>Fecha de Caducidad</th>
                                             <th>Pin</th>
+                                            <th></th>
+                                            <th></th>
                                         </tr>
                                     </thead>
                                     <tbody>';
@@ -61,6 +64,7 @@
                                             $pin = $row['pin'];
                                             $cuenta = $row['cuenta'];
 
+                                            echo '<tr>';
                                             echo '<td>'. $cuenta .'</td>
                                             <td>'. $tipo .'</td>
                                             <td>'. $numero_tarjeta .'</td>
@@ -69,6 +73,7 @@
                                             <td>'. $pin .'</td>';
                                             echo '<td><input class="btn btn-main" type="submit" name="'. $numero_tarjeta .'" value="Cambiar Pin"></input></td>';
                                             echo '<td><input class="btn btn-main" type="submit" name="'. $numero_tarjeta .'" value="Eliminar"></input></td>';
+                                            echo '</tr>';
                                         }
                                     }
                                                             
@@ -76,6 +81,7 @@
 
                                     echo '</tbody>
                                 </table>
+                                </form>
                             </div>
                         </div>
                     </div>
@@ -109,11 +115,13 @@
         if (!$resQuery) {
             die ("Error al ejecutar la consulta: " . mysqli_error($con));
         }else{
-            $enc = false;
-            while($row = mysqli_fetch_array($resQuery)){
+            $enc = False;
+
+            while($row = mysqli_fetch_array($resQuery) && !$enc){
                 $numero_tarjeta = $row['numero_tarjeta'];
 
                 if(isset($_POST[$numero_tarjeta])){
+                    $enc = True;
                     $opcion = $_POST[$numero_tarjeta];
 
                     if($opcion == "Eliminar"){
@@ -127,9 +135,10 @@
                                     <button type="button" class="close" data-dismiss="alert" aria-label="Entendido">
                                         <span aria-hidden="true">&times;</span>
                                     </button>
-                                    </div>';   
+                                    </div>';  
                         }
                     }else{
+                        $enc = True;
                         $pin = "";
 
                         for($i =0 ; $i < 4; $i++){
@@ -228,7 +237,6 @@
 <body class="bg-color">
     <?php
         comprobarBoton();
-
 
         mostrarTarjetas();
     ?>

@@ -141,9 +141,10 @@
                 for($i =0 ; $i < 8 ; $i++){
                     $password.= rand(0,9);
                 }
-                var_dump($password);
+                
                 $clave = password_hash($password, PASSWORD_DEFAULT);
                 $resQuery = mysqli_query($con, "UPDATE cliente SET clave='$clave' WHERE email='$email'");
+
                 if (!$resQuery) {
                     die ("Error al ejecutar la consulta: " . mysqli_error($con));
                 }else{
@@ -301,6 +302,9 @@ and open the template in the editor.
                     <div class="register-link m-t-15 text-center">
                         <p>¿Todavía no eres cliente de MensaBank? <a href="register.php"> Regístrate aquí</a></p>
                     </div>
+                </form>
+
+                <form method="POST">
                     <div id="divforgotpass">
                         <div class="form-group">
                             <label>Email</label>

@@ -69,7 +69,7 @@
         $con = mysqli_connect("localhost","root","Pistacho99!");
     
         if (!$con){
-            die(' No puedo conectar: ' . mysqli_error($con));
+            die(' No puedo conectar: ' . mysqli_errno($con));
         }
     
         $db_selected = mysqli_select_db($con,"mensabank");

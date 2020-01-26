@@ -27,6 +27,7 @@
                                         <th>Interés</th>
                                         <th>Pagado</th>
                                         <th>Fecha límite</th>
+                                        <th>Estado</th>
                                     </tr>
                                 </thead>
                                 <tbody>';
@@ -55,20 +56,20 @@
 
                                             while($row = mysqli_fetch_array($resQuery)){
                                                 echo '<tr>
-                                                            <td>'. $row['credito'] .' euros</td>
-                                                            <td>'. $row['tipo'] .'</td>
-                                                            <td>'. $row['cuenta'] .'</td>
-                                                            <td>'. $row['cuota'] .' euros</td>
-                                                            <td>'. $row['intereses'] .'</td>
-                                                            <td>'. $row['pagado'] .'</td>
-                                                            <td>'. $row['fecha_limite'] .'</td>
-                                                            <td>'. $row['estado'] .'</td>';
-                                                            if($row['estado']=='En proceso'){
-                                                                echo '<td><input class="btn btn-main" type="submit" name="'. $row['id'] .'" value="Pagar"></input></td>';
-                                                            }else{
-                                                                echo '<td><input class="btn btn-main" type="submit" name="'. $row['id'] .'" value="Pagar" disabled></input></td>';
-                                                            }
-                                                        echo '</tr>';
+                                                    <td>'. $row['credito'] .' euros</td>
+                                                    <td>'. $row['tipo'] .'</td>
+                                                    <td>'. $row['cuenta'] .'</td>
+                                                    <td>'. $row['cuota'] .' euros</td>
+                                                    <td>'. $row['intereses'] .'</td>
+                                                    <td>'. $row['pagado'] .'</td>
+                                                    <td>'. $row['fecha_limite'] .'</td>
+                                                    <td>'. $row['estado'] .'</td>';
+                                                    if($row['estado']=='En proceso'){
+                                                        echo '<td><input class="btn btn-main" type="submit" name="'. $row['id'] .'" value="Pagar"></input></td>';
+                                                    }else{
+                                                        echo '<td><input class="btn btn-main" type="submit" name="'. $row['id'] .'" value="Pagar" disabled></input></td>';
+                                                    }
+                                                echo '</tr>';
                                             }
                                         }
                                     }

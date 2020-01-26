@@ -424,7 +424,7 @@ function redireccionar(){
                 if(document.getElementById("spanApellidos")){
                     var padre = document.getElementById("spanApellidos").parentNode;
                     padre.removeChild(document.getElementById("spanApellidos"));
-                    document.getElementById("nombre").style.borderColor = "";
+                    document.getElementById("apellidos").style.borderColor = "";
                 }
             }
 

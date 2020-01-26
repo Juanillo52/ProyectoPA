@@ -674,7 +674,7 @@ function redireccionar(){
         }
 
         function validarDireccion(){
-            var expr = /^([A-Za-zñ\s]+)$/;
+            var expr = /^([A-Za-zñ\s0-9]+)$/;
             var direccion = document.getElementById("direccion").value;
             return direccion !== undefined && expr.test(direccion);
         }

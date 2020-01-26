@@ -1,5 +1,5 @@
 <?php
-    //require_once("test_log.php");
+    require_once("test_log.php");
 ?>
 
 <?php
@@ -258,7 +258,7 @@
             }
         }else{
             echo '<div class="sufee-alert alert with-close alert-danger alert-dismissible fade show alert">
-            <span> Saldo insuficiente, no se pudo realizar la transferencia.
+            <span> Saldo insuficiente, no se pudo realizar la transferencia.</span>
             <button type="button" class="close" data-dismiss="alert" aria-label="Entendido">
                 <span aria-hidden="true">&times;</span>
             </button>

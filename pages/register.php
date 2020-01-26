@@ -144,11 +144,10 @@ function comprobarFormulario(){
     $resultado = False; ## le damos este valor para que muestre el login
 
     if(isset($_POST['submit'])){
-
-            $ok = comprobarDatosFormulario();
-            if($ok){
-                $resultado = !buscarCliente();
-            }         
+        $ok = comprobarDatosFormulario();
+        if($ok){
+            $resultado = !buscarCliente();
+        }         
     }
     return $resultado;
 }
@@ -226,7 +225,12 @@ function buscarCliente(){
     }else{
         $data = mysqli_fetch_array($resQuery);
         if(isset($data['dni'])){
-            echo "El DNI introducido ya está siendo usado.<br/>";
+            echo '<div class="sufee-alert alert with-close alert-danger alert-dismissible fade show alert">
+                            <span> El DNI introducido ya está siendo utilizado. </span>
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Entendido">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                           </div>';
             $enc = True;
         }
     }
@@ -238,7 +242,12 @@ function buscarCliente(){
         $data = mysqli_fetch_array($resQuery);
 
         if(isset($data['email'])){
-            echo "El email introducido ya está siendo usado.<br/>";
+            echo '<div class="sufee-alert alert with-close alert-danger alert-dismissible fade show alert">
+                            <span> El email introducido ya está siendo utilizado. </span>
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Entendido">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                           </div>';
             $enc = True;
         }
     }
@@ -314,8 +323,8 @@ function enviarEmail($password){
                 El equipo de soporte de MensaBank.";
     $headers = "From:" . $from;
     mail($to,$subject,$message, $headers);
-    echo "The email message was sent.";
 }
+
 function redireccionar(){
     $_SESSION["register"] = "Se ha registrado correctamente. La clave de acceso será enviada a su correo en breves momentos.";
     header("Location: index.php");

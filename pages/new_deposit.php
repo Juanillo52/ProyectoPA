@@ -134,7 +134,7 @@
                 $plan = $rowp['id'];
             }else{
                 echo '<div class="sufee-alert alert with-close alert-danger alert-dismissible fade show alert">
-                    <span> No tiene contratado ningún plan de pensiones.
+                    <span> No tiene contratado ningún plan de pensiones. </span>
                     <button type="button" class="close" data-dismiss="alert" aria-label="Entendido">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -229,7 +229,7 @@
             }
         }else{
             echo '<div class="sufee-alert alert with-close alert-danger alert-dismissible fade show alert">
-            <span> Saldo insuficiente, no se pudo realizar la transferencia.
+            <span> Saldo insuficiente, no se pudo realizar el depósito. </span>
             <button type="button" class="close" data-dismiss="alert" aria-label="Entendido">
                 <span aria-hidden="true">&times;</span>
             </button>
